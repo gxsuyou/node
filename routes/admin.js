@@ -291,7 +291,7 @@ router.get('/game',function (req,res,next) {
     })
 });
 router.get('/gameAdmin',function (req,res,next) {
-    // console.log(req.query.id);
+    console.log(req.query.id);
     admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
         res.json({game:result[0],cls:result[1]});
     })
@@ -474,8 +474,15 @@ router.get('/gameMsg',function (req,res,next) {
 router.get('/login',function (req,res,next) {
     res.render('index');
 });
+
+router.post('/login',function (req,res,next) {
+    admin.adminLogin(req.body.name,req.body.password,function (result) {
+        result.length>0?res.json({state:1,user:result}):res.json({state:0,user:{}});
+    })
+});
+
 router.get('/add/user',function (req,res,next) {
-    console.log(req.query.type);
+    // console.log(req.query.type);
     admin.addUser(req.query.name,req.query.password,req.query.type,req.query.comment,function (result) {
         result.affectedRows?res.json({state:1}):res.json({state:0});
     })
