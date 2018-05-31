@@ -5,6 +5,12 @@ var query = require('../config/config');
 
 //收藏、取消收藏
 var admin = {
+    adminLogin:function(username,password,callback){
+        var sql="select * from t_admin where name=? and password=?";
+        query(sql,[username,password],function (result) {
+            return callback(result);
+        })
+    },
     addGame:function (obj,callback) {
         var sql = "INSERT INTO t_game (game_name,game_packagename,game_recommend,game_download_num,game_version,game_update_date,game_company,game_install_num,activation,sys,add_time,update_detail,game_detail,type,admin,cls,grade) values (?,?,?,0,?,?,?,0,?,?,?,?,?,?,?,?,7.8)";
         query(sql,[obj.game_name,obj.game_packagename,obj.game_recommend,obj.game_version,obj.game_update_date,obj.game_company,obj.activation,obj.sys,obj.add_time,obj.update_detail,obj.game_detail,obj.type,obj.admin,obj.cls],function (result) {

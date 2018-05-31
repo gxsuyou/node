@@ -13,6 +13,7 @@ var admin = require('./routes/admin');
 var store = require('./routes/store');
 var news = require('./routes/news');
 var h5 = require('./routes/h5');
+var page = require('./routes/page');
 var adminNews = require('./routes/adminNews');
 var adminH5 = require('./routes/adminH5');
 var adminGame=require('./routes/adminGame');
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'resource')));
 app.use('/', index);
 app.use("/game",game);
 app.use('/users',users);
+app.use('/page',page);
 app.use('/admin',admin);
 app.use('/store',store);
 app.use("/news",news);
@@ -78,4 +80,7 @@ app.use(haltOnTimedout);
 function haltOnTimedout (req, res, next) {
     if (!req.timedout) next()
 }
+app.listen(3301,function(){
+  console.log(3301);
+})
 module.exports = app;
