@@ -3,7 +3,6 @@ var page = {
 
     getGamePageCount: function (callback) {
         var sql = "SELECT * FROM `t_game`";
-        console.log(sql);
         query(sql, [], function (result) {
             return callback(result);
         })
