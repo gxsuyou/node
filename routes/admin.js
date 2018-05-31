@@ -471,9 +471,9 @@ router.get('/gameMsg',function (req,res,next) {
         res.json({game:result[0]})
     })
 });
-router.get('/login',function (req,res,next) {
-    res.render('index');
-});
+// router.get('/login',function (req,res,next) {
+//     res.render('index');
+// });
 
 router.post('/login',function (req,res,next) {
     admin.adminLogin(req.body.name,req.body.password,function (result) {

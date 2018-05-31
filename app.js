@@ -21,17 +21,17 @@ var adminStrategy=require("./routes/adminStrategy");
 var app = express();
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,content-type");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By",' 3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
     next();
 });
 // view engine setup
-app.set('views', path.join(__dirname, 'botSup/html/'));
+// app.set('views', path.join(__dirname, 'botSup/html/'));
 // app.set('view engine', 'html');
-app.engine('.html', require('ejs').__express);
-app.set('view engine', 'html');
+// app.engine('.html', require('ejs').__express);
+// app.set('view engine', 'html');
 // app.engine('.html',require('html').__express);
 
 // uncomment after placing your favicon in /public
@@ -80,4 +80,7 @@ app.use(haltOnTimedout);
 function haltOnTimedout (req, res, next) {
     if (!req.timedout) next()
 }
+app.listen(3000,()=>{
+    console.log("3000");
+});
 module.exports = app;
