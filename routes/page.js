@@ -54,7 +54,7 @@ router.get('/gamePage', function (req, res, next) {
                     nextPage: nextPage,
                     prevPage: prevPage,
                     totalPage: pageCount,
-                    page_num: page_num,
+                    // page_num: page_num,
                     min_page: min_page,
                     max_page: max_page
                 };
