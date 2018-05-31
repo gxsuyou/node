@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var timeout = require('connect-timeout');
+var crypto = require('crypto');
+var md5 = crypto.createHash('md5');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
