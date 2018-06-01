@@ -190,7 +190,7 @@ var admin = {
         }
     },
     getActive:function (callback) {
-        var sql="select * from t_activity order by type";
+        var sql="select * from   order by type";
         query(sql,[],function (result) {
             return callback(result);
         })

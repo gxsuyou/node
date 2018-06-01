@@ -82,13 +82,8 @@ app.use(haltOnTimedout);
 function haltOnTimedout (req, res, next) {
     if (!req.timedout) next()
 }
-<<<<<<< HEAD
-app.listen(3301,function(){
-  console.log(3301);
-})
-=======
+
 app.listen(3000,()=>{
     console.log("3000");
 });
->>>>>>> 9bd4bd979a93c92e2ce43037b1364697c5863e54
 module.exports = app;
