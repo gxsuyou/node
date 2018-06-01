@@ -304,7 +304,7 @@ router.get('/gameAdmin', function (req, res, next) {
     if (req.query.p > 0) {
         p = req.query.p;
     }
-    common.page(p, tables, where, function (result) {
+    common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })
     // admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
@@ -376,7 +376,7 @@ router.get('/active', function (req, res, next) {
     if (req.query.p > 0) {
         p = req.query.p;
     }
-    common.page(p, tables, where, function (result) {
+    common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })
 
@@ -502,7 +502,7 @@ router.get('/gameMsg', function (req, res, next) {
 router.post('/login', function (req, res, next) {
     //console.log(req.body);
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
-      //  console.log(result);
+        //  console.log(result);
         result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
     })
 
@@ -996,9 +996,18 @@ router.post("/addNews", function (req, res, next) {
     })
 });
 router.get("/getNewsByPage", function (req, res, next) {
-    admin.getNewsByPage(req.query.page, function (result) {
-        result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
+    var p = 1;
+    var tables = 't_news';
+    var where = " ORDER BY up DESC,add_time DESC ";
+    if (req.query.p > 0) {
+        p = req.query.p;
+    }
+    common.page(tables, p, where, "", "", function (result) {
+        res.json(result);
     })
+    // admin.getNewsByPage(req.query.page, function (result) {
+    //     result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
+    // })
 });
 router.get('/getNewsById', function (req, res, next) {
     admin.getNewsById(req.query.id, function (result) {
