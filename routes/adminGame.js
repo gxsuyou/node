@@ -1,6 +1,7 @@
 var router=require('express').Router();
 var game =require("../DAO/adminGame");
 var formidable = require('formidable');
+var common = require('../DAO/common');
 Date.prototype.Format = function(formatStr)
 {
     var str = formatStr;
@@ -173,9 +174,19 @@ router.get('/addSubject',function (req,res) {
     }
 });
 router.get('/getSubject',function (req,res) {
-    game.getSubject(function (result) {
-        res.json({state:1,subject:result})
+    var p = 1;
+    var tables = 't_subject';
+    var where = " order by id desc ";
+    if (req.query.p > 0) {
+        p = req.query.p;
+    }
+    common.page(p, tables, where, function (result) {
+        console.log(result);
+        res.json(result);
     })
+    // game.getSubject(function (result) {
+    //     res.json({state:1,subject:result})
+    // })
 });
 router.get('/addSubjectGame',function (req,res) {
     var data=req.query;
