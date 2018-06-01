@@ -5,13 +5,25 @@ var page = require("../DAO/page")
 
 
 var common = {
+    /**
+     * md5加密
+     * @param pwd
+     * @param callback
+     * @returns {*}
+     */
     pwdMd5: function (pwd, callback) {
-        // console.log(pwd);
         var result = md5.update(pwd).digest('hex');
         return callback(result)
     },
 
-    page: function (p, tabels, callback) {
+    /**
+     * 分页page，查询单个表
+     * @param p
+     * @param tables
+     * @param where
+     * @param callback
+     */
+    page: function (p, tables, where, callback) {
         var pageCount = 0;
         var sizeCount = 0;
         var p_num = 15;
@@ -40,7 +52,7 @@ var common = {
             min_page = p;
             max_page = p + 9;
         }
-        page.getgamePage(p, p_num, function (result) {
+        page.getPage(p, p_num, tables, where, function (result) {
             sizeCount = result.count;
             if (sizeCount > 0) {
                 pageCount = sizeCount % p_num == 0 ? sizeCount / p_num : sizeCount / p_num + 1;

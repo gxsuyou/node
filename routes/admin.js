@@ -299,11 +299,12 @@ router.get('/game', function (req, res, next) {
 });
 router.get('/gameAdmin', function (req, res, next) {
     var p = 1;
-    var tables = ["t_game"];
+    var tables = 't_game';
+    var where = " order by id desc,add_time desc ";
     if (req.query.p > 0) {
         p = req.query.p;
     }
-    common.page(p, tables, function (result) {
+    common.page(p, tables, where, function (result) {
         res.json(result);
     })
     // admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
@@ -369,9 +370,19 @@ router.get('/setClsActive', function (req, res, next) {
 
 });
 router.get('/active', function (req, res, next) {
-    admin.getActive(function (result) {
-        res.json({active: result})
+    var p = 1;
+    var tables = 't_activity';
+    var where = " order by type ";
+    if (req.query.p > 0) {
+        p = req.query.p;
+    }
+    common.page(p, tables, where, function (result) {
+        res.json(result);
     })
+
+    // admin.getActive(function (result) {
+    //     res.json({active: result})
+    // })
 });
 router.post('/addActive', function (req, res, next) {
     try {
@@ -491,10 +502,10 @@ router.get('/gameMsg', function (req, res, next) {
 // });
 
 router.post('/login', function (req, res, next) {
-    common.pwdMd5(req.body.pwd, function (passMd5) {
-        admin.adminLogin(req.body.name, passMd5, function (result) {
-            result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
-        })
+    console.log(req.body);
+    admin.adminLogin(req.body.name, req.body.pwd, function (result) {
+        console.log(result);
+        result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
     })
 
 });
