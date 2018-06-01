@@ -7,6 +7,7 @@ var PATH=require("../path");
 var path=PATH.game;
 var resource=PATH.resource;
 var admin=require('../DAO/admin');
+var common=require('../DAO/common');
 
 //qiniu
 var qiniu = require('qiniu');
@@ -472,6 +473,7 @@ router.get('/gameMsg',function (req,res,next) {
         res.json({game:result[0]})
     })
 });
+<<<<<<< HEAD
 router.get('/login',function (req,res,next) {
     //res.render('index');
       res.json({game:1})
@@ -483,6 +485,21 @@ router.post('/login',function (req,res,next) {
     })
 });
 
+=======
+// router.get('/login',function (req,res,next) {
+//     res.render('index');
+// });
+
+router.post('/login',function (req,res,next) {
+    common.pwdMd5(req.body.pwd,function (passMd5) {
+        admin.adminLogin(req.body.name,passMd5,function (result) {
+            result.length>0?res.json({state:1,user:result}):res.json({state:0,user:{}});
+        })
+    })
+
+});
+
+>>>>>>> 9bd4bd979a93c92e2ce43037b1364697c5863e54
 router.get('/add/user',function (req,res,next) {
     // console.log(req.query.type);
     admin.addUser(req.query.name,req.query.password,req.query.type,req.query.comment,function (result) {

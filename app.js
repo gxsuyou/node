@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var timeout = require('connect-timeout');
+var crypto = require('crypto');
+var md5 = crypto.createHash('md5');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -21,17 +23,17 @@ var adminStrategy=require("./routes/adminStrategy");
 var app = express();
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,content-type");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By",' 3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
     next();
 });
 // view engine setup
-app.set('views', path.join(__dirname, 'botSup/html/'));
+// app.set('views', path.join(__dirname, 'botSup/html/'));
 // app.set('view engine', 'html');
-app.engine('.html', require('ejs').__express);
-app.set('view engine', 'html');
+// app.engine('.html', require('ejs').__express);
+// app.set('view engine', 'html');
 // app.engine('.html',require('html').__express);
 
 // uncomment after placing your favicon in /public
@@ -80,7 +82,13 @@ app.use(haltOnTimedout);
 function haltOnTimedout (req, res, next) {
     if (!req.timedout) next()
 }
+<<<<<<< HEAD
 app.listen(3301,function(){
   console.log(3301);
 })
+=======
+app.listen(3000,()=>{
+    console.log("3000");
+});
+>>>>>>> 9bd4bd979a93c92e2ce43037b1364697c5863e54
 module.exports = app;
