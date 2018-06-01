@@ -11,9 +11,10 @@ var common = {
      * @param callback
      * @returns {*}
      */
-    pwdMd5: function (pwd, callback) {
-        var result = md5.update(pwd).digest('hex');
-        return callback(result)
+    pwdMd5: function (pwd) {
+        //var result =
+        return md5.update(pwd).digest('hex');
+        //return callback(result)
     },
 
     /**

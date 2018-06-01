@@ -497,29 +497,19 @@ router.get('/gameMsg', function (req, res, next) {
         res.json({game: result[0]})
     })
 });
-<<<<<<< HEAD
 
-=======
->>>>>>> e2b2cad4f94419d41b9898165d99bf1a895ddaab
-// router.get('/login',function (req,res,next) {
-//     res.render('index');
-// });
 
 router.post('/login', function (req, res, next) {
-    console.log(req.body);
+    //console.log(req.body);
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
-        console.log(result);
+      //  console.log(result);
         result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
     })
 
 });
 
-<<<<<<< HEAD
 
-router.get('/add/user',function (req,res,next) {
-=======
 router.get('/add/user', function (req, res, next) {
->>>>>>> e2b2cad4f94419d41b9898165d99bf1a895ddaab
     // console.log(req.query.type);
     admin.addUser(req.query.name, req.query.password, req.query.type, req.query.comment, function (result) {
         result.affectedRows ? res.json({state: 1}) : res.json({state: 0});

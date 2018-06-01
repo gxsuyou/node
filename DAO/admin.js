@@ -8,9 +8,14 @@ var md5 = require('../DAO/common')
 var admin = {
     adminLogin: function (username, password, callback) {
         // md5.pwdMd5(password,function (md5Pass) {
-        var sql = "select * from t_admin where name=? and password=md5(?)";
-        query(sql, [username, password], function (result) {
-            return callback(result);
+        // console.log(md5.pwdMd5(password));
+        // return false;
+        var pwd=md5.pwdMd5(password);
+        var sql = "select * from t_admin where name=? and password=?";
+        query(sql,[username,pwd],function (result) {
+            console.log(66766+result);
+            // return false;
+            // return callback(result);
         })
         // })
     },
