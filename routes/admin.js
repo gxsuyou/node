@@ -304,12 +304,12 @@ router.get('/gameAdmin', function (req, res, next) {
     var tables = ['t_game', 't_admin'];
     var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
 
-    var field = "t_game.*,t_admin.comment"
+    var field = "t_game.*,t_admin.comment";
 
     common.page(tables, p, where, "left", field, function (result) {
         // console.log(result);
         res.json(result);
-    })
+    });
     // admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
     //     res.json({game:result[0],cls:result[1]});
     // })
