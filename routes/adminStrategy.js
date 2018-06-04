@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var strategy=require('../DAO/adminStrategy');
+var common = require('../DAO/common');
 router.get('/getStrategyByMsg',function (req,res) {
     var data = req.query;
     if(data.sort && data.page){
@@ -18,15 +19,26 @@ router.get('/getStrategyByMsg',function (req,res) {
     }
 });
 router.get('/getStrategyByMsgPage',function (req,res) {
-    var data = req.query;
-    if(data.page && data.page>0){
-        console.log(1);
-        strategy.getStrategyByMsgPage(data.msg,data.page,function (result) {
-            res.json({state:1,len:result.len,strategy:result})
-        })
-    }else {
-        res.json({state:0})
-    }
+    var p = req.query.p > 0 ? req.query.p : 1;
+    var msg = req.query.msg;
+
+    var tables = ["t_strategy", "t_user"];
+    var where = "t_strategy.user_id = t_user.id where title like '%"+msg+"%' order by t_strategy.add_time";
+
+    var field = "t_strategy.*,t_user.nick_name";
+    common.page(tables, p, where, "left", field, function (result) {
+        res.json(result);
+    })
+
+    // var data = req.query;
+    // if(data.page && data.page>0){
+    //     console.log(1);
+    //     strategy.getStrategyByMsgPage(data.msg,data.page,function (result) {
+    //         res.json({state:1,len:result.len,strategy:result})
+    //     })
+    // }else {
+    //     res.json({state:0})
+    // }
 });
 router.get('/getStrategyCount',function (req,res) {
     strategy.getStrategyCount(function (result) {
