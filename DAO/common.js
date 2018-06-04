@@ -27,7 +27,7 @@ var common = {
     page: function (tables, p, where = "", sqlType = "", field = "", callback) {
         var pageCount = 0;
         var sizeCount = 0;
-        var p_num = 15;
+        var p_num = 10;
         var lastPage = "";
         var firstPage = "";
         var arr = {};
