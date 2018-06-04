@@ -30,7 +30,7 @@ var page = {
                         "LEFT JOIN  " + tables[1] + "\n" +
                         "ON " + where + "";
                 }
-                query(sql_1, [(pages - 1) * page, page], function (lists) {
+                query(sql_1, [], function (lists) {
                     var arr = {
                         count: result[0]["count"],
                         lists: lists,
