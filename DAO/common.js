@@ -24,7 +24,7 @@ var common = {
      * @param where
      * @param callback
      */
-    page: function (p, tables, where, callback) {
+    page: function (tables, p, where = "", sqlType = "", field = "", callback) {
         var pageCount = 0;
         var sizeCount = 0;
         var p_num = 15;
@@ -53,7 +53,7 @@ var common = {
             min_page = p;
             max_page = p + 9;
         }
-        page.getPage(p, p_num, tables, where, function (result) {
+        page.getPage(tables, p, p_num, where, sqlType, field, function (result) {
             sizeCount = result.count;
             if (sizeCount > 0) {
                 pageCount = sizeCount % p_num == 0 ? sizeCount / p_num : sizeCount / p_num + 1;
