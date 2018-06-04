@@ -300,10 +300,13 @@ router.get('/game', function (req, res, next) {
 router.get('/gameAdmin', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
-    var tables = 't_game';
-    var where = "order by id desc,add_time desc";
+    // var tables = 't_game';
+    var tables = ['t_game', 't_admin'];
+    var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
 
-    common.page(tables, p, where, "", "", function (result) {
+    var field = "t_game.*,t_admin.comment"
+
+    common.page(tables, p, where, "left", field, function (result) {
         // console.log(result);
         res.json(result);
     })
@@ -311,6 +314,14 @@ router.get('/gameAdmin', function (req, res, next) {
     //     res.json({game:result[0],cls:result[1]});
     // })
 });
+router.get('/gameAdminAdd', function (req, res, next) {
+    res.json({state: 1});
+});
+router.post('/gameAdminAdd', function (req, res, next) {
+
+    res.json({state: 1});
+});
+
 router.get('/gameName', function (req, res, next) {
     if (req.query.sys) {
         admin.getGameName(req.query.sys, function (result) {
@@ -503,16 +514,16 @@ router.post('/login', function (req, res, next) {
     // res.json({status:0});
     // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
-      //  console.log(result);
+        //  console.log(result);
         result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
     })
 
 });
 
-router.options("/login",function(req,res){
-  console.log("options");
-  //res.json({statue:0});
-  return ;
+router.options("/login", function (req, res) {
+    console.log("options");
+    //res.json({statue:0});
+    return;
 });
 
 router.get('/add/user', function (req, res, next) {
