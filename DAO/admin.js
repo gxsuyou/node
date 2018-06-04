@@ -7,17 +7,15 @@ var md5 = require('../DAO/common')
 //收藏、取消收藏
 var admin = {
     adminLogin: function (username, password, callback) {
-        // md5.pwdMd5(password,function (md5Pass) {
-        console.log(md5.pwdMd5(password));
-        return false;
         var pwd=md5.pwdMd5(password);
         var sql = "select * from t_admin where name=? and password=?";
+        console.log(username,pwd);
         query(sql,[username,pwd],function (result) {
             console.log(66766+result);
             // return false;
-            // return callback(result);
+            return callback(result);
         })
-        // })
+
     },
     addGame: function (obj, callback) {
         var sql = "INSERT INTO t_game (game_name,game_packagename,game_recommend,game_download_num,game_version,game_update_date,game_company,game_install_num,activation,sys,add_time,update_detail,game_detail,type,admin,cls,grade) values (?,?,?,0,?,?,?,0,?,?,?,?,?,?,?,?,7.8)";

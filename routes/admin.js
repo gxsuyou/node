@@ -500,9 +500,9 @@ router.get('/gameMsg', function (req, res, next) {
 
 
 router.post('/login', function (req, res, next) {
-    console.log(req.body,req.query);
-    res.json({status:0});
-    return false;
+    // console.log(req.body.name,req.body.pwd);
+    // res.json({status:0});
+    // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
       //  console.log(result);
         result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
