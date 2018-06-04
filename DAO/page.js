@@ -24,13 +24,13 @@ var page = {
         query(sql, [], function (result) {
 
             if (result[0].count > 0) {
-                var sql_1 = "SELECT " + fields + " FROM " + tables + " " + where + " limit ?,?";
+                var sql_1 = "SELECT " + fields + " FROM " + tables + " " + where + "";
                 if (sqlTypes == "left") {
                     sql_1 = "SELECT " + fields + " FROM " + tables[0] + " \n" +
                         "LEFT JOIN  " + tables[1] + "\n" +
-                        "ON " + where + " limit ?,?";
+                        "ON " + where + "";
                 }
-                query(sql_1, [(pages - 1) * page, page], function (lists) {
+                query(sql_1, [], function (lists) {
                     var arr = {
                         count: result[0]["count"],
                         lists: lists,
