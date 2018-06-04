@@ -65,6 +65,9 @@ var common = {
                 if (result.lists.length < p_num) {
                     lastPage = 1;
                 }
+                if (pageCount < max_page) {//TODO：暂定
+                    max_page = pageCount;
+                }
                 arr = {
                     result: result.lists,
                     nowPage: p,

@@ -180,7 +180,6 @@ router.get('/getSubject', function (req, res) {
         p = req.query.p;
     }
     common.page(tables, p, where, "", "", function (result) {
-        console.log(result);
         res.json(result);
     })
     // game.getSubject(function (result) {
@@ -235,14 +234,12 @@ router.get('/deleteSubject', function (req, res) {
     }
 });
 router.get('/getTag', function (req, res) {
-    var p = 1;
+    var p = req.query.p > 0 ? req.query.p : 1;
+
     var tables = 't_tag';
     var where = " order by id desc ";
-    if (req.query.p > 0) {
-        p = req.query.p;
-    }
+
     common.page(tables, p, where, "", "", function (result) {
-        console.log(result);
         res.json(result);
     })
     // game.getTag(function (result) {

@@ -7,6 +7,8 @@ var path=PATH.game;
 var resource=PATH.resource;
 var h5=require('../DAO/adminH5');
 var qiniu=require('../public/javascripts/public');
+var common = require('../DAO/common');
+
 var rmdirSync = (function(){
     function iterator(url,dirs){
         var stat = fs.statSync(url);
@@ -90,9 +92,19 @@ router.post('/addH5',function (req,res,next) {;
     }
 });
 router.get("/getH5",function (req,res,next) {
-    h5.getH5(1,function (result) {
-        res.json({state:1,h5:result})
+    var p = req.query.p > 0 ? req.query.p : 1;
+
+    var tables = "t_h5";
+    var where = "order by sort desc";
+
+    common.page(tables, p, where, "", "", function (result) {
+        console.log(result);
+        res.json(result);
     })
+
+    // h5.getH5(1,function (result) {
+    //     res.json({state:1,h5:result})
+    // })
 });
 router.get("/deleteH5",function (req,res,next) {
     if(req.query.id){

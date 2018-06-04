@@ -107,28 +107,33 @@ router.get("/addSlideGame", function (req, res, next) {
     }
 });
 router.get("/getHeadGame", function (req, res) {
-    var p = 1;
-    var tables = {
-        t_news_headGame,
-        t_game
-    };
-    var where = " order by id desc ";
-    if (req.query.p > 0) {
-        p = req.query.p;
-    }
-    common.page(tables, p, where, "", "", function (result) {
-        console.log(result);
+    var p = req.query.p > 0 ? req.query.p : 1;
+
+    var tables = ["t_news_headGame", "t_game"];
+    var where = " t_news_headGame.`game_id`=t_game.`id` order by t_news_headGame.id desc ";
+
+    var field = "t_game.game_name,t_news_headGame.id";
+    common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
 
-    news.getHeadGame(function (result) {
-        res.json({state: 1, list: result})
-    })
+    // news.getHeadGame(function (result) {
+    //     res.json({state: 1, list: result})
+    // })
 });
 router.get("/getSlideGame", function (req, res) {
-    news.getSlideGame(function (result) {
-        res.json({state: 1, list: result})
+    var p = req.query.p > 0 ? req.query.p : 1;
+
+    var tables = ["t_news_slideGame", "t_game"];
+    var where = "t_news_slideGame.`game_id`=t_game.`id` order by t_news_slideGame.id desc";
+
+    var field = "t_game.game_name,t_news_slideGame.id";
+    common.page(tables, p, where, "left", field, function (result) {
+        res.json(result);
     })
+    // news.getSlideGame(function (result) {
+    //     res.json({state: 1, list: result})
+    // })
 });
 router.get("/deleteSlideGameById", function (req, res) {
     if (req.query.id) {

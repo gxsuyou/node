@@ -298,13 +298,13 @@ router.get('/game', function (req, res, next) {
     })
 });
 router.get('/gameAdmin', function (req, res, next) {
-    var p = 1;
+    var p = req.query.p > 0 ? req.query.p : 1;
+
     var tables = 't_game';
-    var where = " order by id desc,add_time desc ";
-    if (req.query.p > 0) {
-        p = req.query.p;
-    }
-    common.page(p, tables, where, function (result) {
+    var where = "order by id desc,add_time desc";
+
+    common.page(tables, p, where, "", "", function (result) {
+        // console.log(result);
         res.json(result);
     })
     // admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
@@ -370,13 +370,12 @@ router.get('/setClsActive', function (req, res, next) {
 
 });
 router.get('/active', function (req, res, next) {
-    var p = 1;
+    var p = req.query.p > 0 ? req.query.p : 1;
+
     var tables = 't_activity';
     var where = " order by type ";
-    if (req.query.p > 0) {
-        p = req.query.p;
-    }
-    common.page(p, tables, where, function (result) {
+
+    common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })
 
@@ -1003,9 +1002,15 @@ router.post("/addNews", function (req, res, next) {
     })
 });
 router.get("/getNewsByPage", function (req, res, next) {
-    admin.getNewsByPage(req.query.page, function (result) {
-        result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
+    var p = req.query.p > 0 ? req.query.p : 1;
+    var tables = 't_news';
+    var where = " ORDER BY up DESC,add_time DESC ";
+    common.page(tables, p, where, "", "", function (result) {
+        res.json(result);
     })
+    // admin.getNewsByPage(req.query.page, function (result) {
+    //     result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
+    // })
 });
 router.get('/getNewsById', function (req, res, next) {
     admin.getNewsById(req.query.id, function (result) {
