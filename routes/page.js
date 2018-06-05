@@ -2,6 +2,8 @@ var router = require('express').Router();
 var page = require("../DAO/page");
 
 router.get('/gamePage', function (req, res, next) {
+   res.json({status:0});
+   return false;
     var pageCount = 0;
     var sizeCount = 0;
     var p_num = 15;

@@ -314,13 +314,6 @@ router.get('/gameAdmin', function (req, res, next) {
     //     res.json({game:result[0],cls:result[1]});
     // })
 });
-router.get('/gameAdminAdd', function (req, res, next) {
-    res.json({state: 1});
-});
-router.post('/gameAdminAdd', function (req, res, next) {
-
-    res.json({state: 1});
-});
 
 router.get('/gameName', function (req, res, next) {
     if (req.query.sys) {

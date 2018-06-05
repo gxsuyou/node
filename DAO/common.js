@@ -1,6 +1,6 @@
 var query = require('../config/config');
 var crypto = require('crypto');
-var md5 = crypto.createHash('md5');
+
 var page = require("../DAO/page")
 
 
@@ -12,8 +12,10 @@ var common = {
      * @returns {*}
      */
     pwdMd5: function (pwd) {
+        var md5 = crypto.createHash('md5');
         //var result =
-        return md5.update(pwd).digest('hex');
+        var pwd=md5.update(pwd).digest('hex')
+        return pwd;
         //return callback(result)
     },
 
