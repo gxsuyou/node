@@ -14,9 +14,18 @@ var game = {
         })
     },
     gameMsgInfo: function (obj, callback) {
-        var tag_sql = "SELECT tag_id FROM t_tag_relation WHERE game_id = ? ";
-        query(tag_sql, [obj], function (tag_result) {
-            return callback(tag_result);
+        var game_sql = "SELECT * FROM t_game WHERE id = ? "
+        query(game_sql, [obj], function (result) {
+            if (result.length > 0) {
+                var tag_sql = "SELECT tag_id FROM t_tag_relation WHERE game_id = ? ";
+                query(tag_sql, [obj], function (tag_result) {
+                    var arr = {
+                        type: result[0].type,
+                        tag_result: tag_result,
+                    };
+                    return callback(arr);
+                })
+            }
         })
     },
     gameTags: function (obj, callback) {
