@@ -51,14 +51,18 @@ router.get('/addGameMsg', function (req, res, next) {
                     updateDetail: data.addTime || null,
                     gameDetail: data.gameDetail || null,
                     admin: data.admin,
-                    type: data.type
+                    type: data.type,
+                    cls_ids: data.cls,
+                    tag_ids: data.tag
                 };
                 console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
                     console.log(result.insertId);
+
                     if (result.insertId) {
                         console.log(1);
                         var cls = data.cls.split(',');
+                        console.log(data.cls);
                         for (var i = 0; i < cls.length; i++) {
                             game.addCls(result.insertId, cls[i], function () {
 
@@ -84,29 +88,22 @@ router.get('/gameAdminDetail', function (req, res, next) {
         res.json({state: 0});
     }
     game.gameMsgInfo(id, function (result) {
-        var tags = result.tag_result
-        if (tags.length > 0) {
-            var ids = "";
-            for (var i = 0; i < tags.length; i++) {
-                if (i >= tags.length) {
-                    break;
-                }
-                ids += tags[i].tag_id + ","
+        game.gameTag(id, function (data) {
+            var arr = {
+                "cls": result,
+                "tag": data
             }
-            ids = ids.substring(0, ids.length - 1);
-            game.gameCls(ids, function (data) {
-                var obj = {
-                    type: result.type,
-                    data: data
-                }
-                res.json(obj);
-            })
-        } else {
-            res.json({state: 0});
-        }
+            res.json(arr);
+        })
 
     })
 })
+
+// router.get('/setGame', function (req, res, next) {
+//     game.gameTagSet("", function (result) {
+//         res.json(result);
+//     })
+// })
 
 router.get('/SetGameMsg', function (req, res, next) {
     var data = req.query;
