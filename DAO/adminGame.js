@@ -2,7 +2,7 @@ var query = require('../config/config');
 var game = {
     addGameMsg: function (obj, callback) {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [];
         for (var x in obj) {
             arr.push(obj[x])
@@ -14,17 +14,85 @@ var game = {
         })
     },
     gameMsgInfo: function (obj, callback) {
-        var tag_sql = "SELECT tag_id FROM t_tag_relation WHERE game_id = ? ";
-        query(tag_sql, [obj], function (tag_result) {
-            return callback(tag_result);
+        var game_sql = "SELECT * FROM t_game WHERE id = ? "
+        query(game_sql, [obj], function (result) {
+            if (result.length > 0) {
+                var cls_sql = "SELECT id,cls_name,cls FROM t_game_cls WHERE cls = ? ";
+                query(cls_sql, [result[0].type], function (cls_result) {
+                    var cls_sql2 = "SELECT * FROM t_game_cls WHERE id IN (" + result[0].cls_ids + ") ";
+                    query(cls_sql2, [], function (cls_list) {
+                        console.log(cls_list)
+                        for (var i = 0; i < cls_result.length; i++) {
+                            cls_result[i].checked = 0;
+                            for (var ii = 0; ii < cls_list.length; ii++) {
+                                if (cls_list[ii].id == cls_result[i].id) {
+
+                                    cls_result[i].checked = 1;
+                                }
+                            }
+                        }
+                        var arr = {
+                            type: cls_result,
+                            cls_list: cls_list,
+                        };
+                        return callback(cls_result);
+                    })
+                })
+            }
         })
     },
-    gameTags: function (obj, callback) {
-        var sql = "SELECT name FROM t_tag where id IN ( " + obj + " )";
-        query(sql, [], function (result) {
-            return callback(result);
+    gameTag: function (obj, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id = ? "
+        query(game_sql, [obj], function (result) {
+            if (result.length > 0) {
+                var sql = "SELECT name FROM t_tag where id IN ( " + result[0].tag_ids + " )";
+                query(sql, [], function (result) {
+                    return callback(result);
+                })
+            }
         })
     },
+    // gameTagSet: function (obj, callback) {
+    //     var game_sql = "SELECT * FROM t_game WHERE cls_ids IS NULL AND id > 400 AND id < 700 "
+    //     query(game_sql, [], function (result) {
+    //         if (result.length > 0) {
+    //
+    //             for (var i = 0; i < result.length; i++) {
+    //                 if (i >= result.length) {
+    //                     break;
+    //                 }
+    //                 console.log(result[i].id);
+    //
+    //                 var sql = "SELECT game_id,cls_id FROM t_game_cls_relation where game_id = ?";
+    //                 query(sql, [result[i].id], function (results) {
+    //                     var ids = "";
+    //                     console.log(results);
+    //                     if (results.length > 0) {
+    //                         for (var a = 0; a < result.length; a++) {
+    //                             if (a >= results.length) {
+    //                                 continue;
+    //                             }
+    //                             ids += results[a].cls_id + ",";
+    //                         }
+    //                         ids = ids.substring(0, ids.length - 1);
+    //                         // console.log(ids);
+    //                         var setsql = "UPDATE t_game SET cls_ids = ? WHERE id = ?"
+    //                         query(setsql, [ids, results[0].game_id], function (results) {
+    //
+    //                         })
+    //                     }
+    //
+    //
+    //                 })
+    //             }
+    //             return callback(1);
+    //             // ids = ids.substring(0, ids.length - 1)
+    //             // return callback(ids);
+    //
+    //
+    //         }
+    //     })
+    // },
 
     hasGame: function (gameName, callback) {
         var sql = "select id from t_game where game_name=?";
@@ -148,6 +216,7 @@ var game = {
         })
     },
     addTagByGame: function (gameId, tagId, callback) {
+        console.log(101);
         var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
         query(sql, [gameId, tagId], function (result) {
             return callback(result)
