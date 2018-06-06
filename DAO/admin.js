@@ -7,11 +7,11 @@ var md5 = require('../DAO/common')
 //收藏、取消收藏
 var admin = {
     adminLogin: function (username, password, callback) {
-        var pwd=md5.pwdMd5(password);
+        var pwd = md5.pwdMd5(password);
         var sql = "select * from t_admin where name=? and password=?";
-        console.log(username,pwd);
-        query(sql,[username,pwd],function (result) {
-            console.log(66766+result);
+        console.log(username, pwd);
+        query(sql, [username, pwd], function (result) {
+            console.log(66766 + result);
             // return false;
             return callback(result);
         })
@@ -154,10 +154,19 @@ var admin = {
         })
     },
     delectGameByID: function (id, callback) {
-        var sql = "DELETE FROM t_game where id=?";
-        query(sql, [id], function (result) {
-            return callback(result);
+        var clsSql = "DELETE FROM t_game_cls_relation where game_id = ?";
+        query(clsSql, [id], function (result) {
+
+            var tagSql = "DELETE FROM t_tag_relation where game_id = ?";
+            query(tagSql, [id], function (result) {
+
+                var sql = "DELETE FROM t_game where id=?";
+                query(sql, [id], function (result) {
+                    return callback(result);
+                })
+            })
         })
+
     },
     getGameMsgById: function (id, callback) {
         var sql = 'select * from t_game where id=?';

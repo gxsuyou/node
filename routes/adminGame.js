@@ -94,7 +94,7 @@ router.get('/gameAdminDetail', function (req, res, next) {
                 ids += tags[i].tag_id + ","
             }
             ids = ids.substring(0, ids.length - 1);
-            game.gameTags(ids, function (data) {
+            game.gameCls(ids, function (data) {
                 var obj = {
                     type: result.type,
                     data: data
@@ -151,6 +151,7 @@ router.get('/SetGameMsg', function (req, res, next) {
         res.json({state: 0, info: "数据错误"})
     }
 });
+
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
         game.updateDownloadAndroid(req.query.id, req.query.url, req.query.size, function (result) {

@@ -17,7 +17,7 @@ var game = {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
-                var tag_sql = "SELECT tag_id FROM t_tag_relation WHERE game_id = ? ";
+                var tag_sql = "SELECT tag_id FROM t_game_cls_relation WHERE game_id = ? ";
                 query(tag_sql, [obj], function (tag_result) {
                     var arr = {
                         type: result[0].type,
@@ -26,6 +26,12 @@ var game = {
                     return callback(arr);
                 })
             }
+        })
+    },
+    gameCls: function (obj, callback) {
+        var sql = "SELECT name FROM t_game_cls_relation where id IN ( " + obj + " )";
+        query(sql, [], function (result) {
+            return callback(result);
         })
     },
     gameTags: function (obj, callback) {
@@ -157,6 +163,7 @@ var game = {
         })
     },
     addTagByGame: function (gameId, tagId, callback) {
+        console.log(101);
         var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
         query(sql, [gameId, tagId], function (result) {
             return callback(result)
