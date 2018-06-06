@@ -108,32 +108,25 @@ router.get('/gameAdminDetail', function (req, res, next) {
 // })
 
 router.post('/SetGameMsg', function (req, res, next) {
-    var form = formidable.IncomingForm({
-        encoding: 'utf-8',//上传编码
-        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
-        keepExtensions: true,//保留后缀
-        maxFieldsSize: 2000 * 1024//byte//最大可上传大小
-    });
+    var data = req.body;
+    res.json(data);
+    return false;
+    var game = {
+        name: data.name,//游戏名称
+        activation: data.activation,
+        company: data.company,//公司
+        version: data.version,//版本
+        download_num: data.download_num,//下载数
+        sort: data.sort,//首页排列
+        sort2: data.sort2,//热搜排列
+        size: data.size.slice(0, data.size.length - 2),//大小
+        id: data.id,//id
+        cls_ids: data.cls_ids,//分类
+        // tag_ids: fields.tag_ids
+    };
 
-    form.parse(req, function (err, fields, files) {
-        console.log(fields.size.slice(0, fields.size.length - 2));
-        var game = {
-            name: fields.name,//游戏名称
-            activation: fields.activation,
-            company: fields.company,//公司
-            version: fields.version,//版本
-            download_num: fields.download_num,//下载数
-            sort: fields.sort,//首页排列
-            sort2: fields.sort2,//热搜排列
-            size: fields.size.slice(0, fields.size.length - 2),//大小
-            id: fields.id,//id
-            cls_ids: fields.cls_ids,//分类
-            // tag_ids: fields.tag_ids
-        };
-
-        game.setGameMsg(game, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
+    game.setGameMsg(game, function (result) {
+        result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
     })
 });
 
