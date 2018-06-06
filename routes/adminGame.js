@@ -53,6 +53,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     admin: data.admin,
                     type: data.type
                 };
+                console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
                     console.log(result.insertId);
                     if (result.insertId) {
@@ -63,18 +64,87 @@ router.get('/addGameMsg', function (req, res, next) {
 
                             })
                         }
-                        res.json({state: 1})
+                        res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片&安装包"})
                     } else {
                         console.log(2);
-                        res.json({state: 0})
+                        res.json({state: 0, info: "添加失败"})
                     }
                 })
             } else {
-                res.json({state: 4})
+                res.json({state: 0, info: "游戏已存在"})
             }
         });
     } else {
-        res.json({state: 0})
+        res.json({state: 0, info: "数据错误"})
+    }
+});
+router.get('/gameAdminDetail', function (req, res, next) {
+    var id = req.query.id;
+    if(!id){
+        res.json({state: 0});
+    }
+    game.gameMsgInfo(id, function (result) {
+        if (result.length > 0) {
+            var ids = "";
+            for (var i = 0; i < result.length; i++) {
+                if (i >= result.length) {
+                    break;
+                }
+                ids += result[i].tag_id + ","
+            }
+            ids = ids.substring(0, ids.length - 1);
+            game.gameTags(ids, function (data) {
+                res.json(data);
+            })
+
+        } else {
+            res.json({state: 0});
+        }
+
+    })
+})
+
+router.get('/SetGameMsg', function (req, res, next) {
+    var data = req.query;
+    var date = new Date();
+    if (data.gameName) {
+        game.hasGame(data.gameName, function (result) {
+            if (!result.length) {
+                res.json({state: 0, info: "游戏不存在"})
+            } else {
+                var gameMsg = {
+                    gameName: data.gameName,
+                    activation: data.activation || null,
+                    gameVersion: data.gameVersion || null,
+                    game_download_num: data.game_download_num || null,
+                    sort: data.sort || null,
+                    sort2: data.sort2 || null,
+                    game_size: data.game_size || null,
+                    sys: data.sys || null,
+                    updateDetail: data.addTime || null,
+                    gameDetail: data.gameDetail || null,
+                };
+                console.log(gameMsg);
+                game.addGameMsg(gameMsg, function (result) {
+                    console.log(result.insertId);
+                    if (result.insertId) {
+                        console.log(1);
+                        var cls = data.cls.split(',');
+                        for (var i = 0; i < cls.length; i++) {
+                            game.addCls(result.insertId, cls[i], function () {
+
+                            })
+                        }
+                        res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片&安装包"})
+                    } else {
+                        console.log(2);
+                        res.json({state: 0, info: "添加失败"})
+                    }
+                })
+            }
+        });
+    } else {
+        res.json({state: 0, info: "数据错误"})
     }
 });
 router.get('/updateDownloadAndroid', function (req, res, next) {
