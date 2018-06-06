@@ -80,23 +80,27 @@ router.get('/addGameMsg', function (req, res, next) {
 });
 router.get('/gameAdminDetail', function (req, res, next) {
     var id = req.query.id;
-    if(!id){
+    if (!id) {
         res.json({state: 0});
     }
     game.gameMsgInfo(id, function (result) {
-        if (result.length > 0) {
+        var tags = result.tag_result
+        if (tags.length > 0) {
             var ids = "";
-            for (var i = 0; i < result.length; i++) {
-                if (i >= result.length) {
+            for (var i = 0; i < tags.length; i++) {
+                if (i >= tags.length) {
                     break;
                 }
-                ids += result[i].tag_id + ","
+                ids += tags[i].tag_id + ","
             }
             ids = ids.substring(0, ids.length - 1);
-            game.gameTags(ids, function (data) {
-                res.json(data);
+            game.gameCls(ids, function (data) {
+                var obj = {
+                    type: result.type,
+                    data: data
+                }
+                res.json(obj);
             })
-
         } else {
             res.json({state: 0});
         }
@@ -147,6 +151,7 @@ router.get('/SetGameMsg', function (req, res, next) {
         res.json({state: 0, info: "数据错误"})
     }
 });
+
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
         game.updateDownloadAndroid(req.query.id, req.query.url, req.query.size, function (result) {
