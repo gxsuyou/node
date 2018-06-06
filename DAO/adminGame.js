@@ -17,24 +17,27 @@ var game = {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
-                var cls_sql = "SELECT id,cls_name,cls FROM t_game_cls WHERE cls = ? ";
+                var cls_sql = "SELECT id,cls_name,cls,pid FROM t_game_cls WHERE cls = ? ORDER BY pid ASC";
                 query(cls_sql, [result[0].type], function (cls_result) {
                     var cls_sql2 = "SELECT * FROM t_game_cls WHERE id IN (" + result[0].cls_ids + ") ";
                     query(cls_sql2, [], function (cls_list) {
-                        console.log(cls_list)
                         for (var i = 0; i < cls_result.length; i++) {
+                            if (i >= cls_result.length) continue;
+                            if (cls_result[i].pid == 0) continue;
                             cls_result[i].checked = 0;
                             for (var ii = 0; ii < cls_list.length; ii++) {
+                                if (ii >= cls_list.length) continue;
                                 if (cls_list[ii].id == cls_result[i].id) {
 
                                     cls_result[i].checked = 1;
                                 }
                             }
+
                         }
-                        var arr = {
-                            type: cls_result,
-                            cls_list: cls_list,
-                        };
+                        // var arr = {
+                        //     type: cls_result,
+                        //     cls_list: cls_list,
+                        // };
                         return callback(cls_result);
                     })
                 })
@@ -45,10 +48,23 @@ var game = {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
-                var sql = "SELECT name FROM t_tag where id IN ( " + result[0].tag_ids + " )";
-                query(sql, [], function (result) {
-                    return callback(result);
+                var tag_sql = "SELECT * FROM t_tag ";
+                query(tag_sql, [], function (tag_result) {
+                    var sql = "SELECT id,name FROM t_tag where id IN ( " + result[0].tag_ids + " )";
+                    query(sql, [], function (tag_list) {
+                        for (var i = 0; i < tag_result.length; i++) {
+                            tag_result[i].checked = 0;
+                            for (var ii = 0; ii < tag_list.length; ii++) {
+                                if (tag_list[ii].id == tag_result[i].id) {
+                                    tag_result[i].checked = 1;
+                                }
+                            }
+                        }
+                        return callback(tag_result);
+                    })
+
                 })
+
             }
         })
     },
