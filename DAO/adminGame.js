@@ -40,10 +40,6 @@ var game = {
                             }
 
                         }
-                        // var arr = {
-                        //     type: cls_result,
-                        //     cls_list: cls_list,
-                        // };
                         return callback(cls_result);
                     })
                 })
@@ -239,9 +235,13 @@ var game = {
     },
     addTagByGame: function (gameId, tagId, callback) {
         console.log(101);
-        var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
-        query(sql, [gameId, tagId], function (result) {
-            return callback(result)
+        // var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
+        // query(sql, [gameId, tagId], function (result) {
+        //     return callback(result)
+        // })
+        var sql = "update t_game set tag_ids = ? where id = ?"
+        query(sql, [tagId, gameId], function (result) {
+            return callback(result);
         })
     },
     getGameName: function (sys, msg, callback) {

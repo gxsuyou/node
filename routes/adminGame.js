@@ -309,8 +309,11 @@ router.get('/getTag', function (req, res) {
 router.get('/getTagByGame', function (req, res) {
     var data = req.query;
     if (data.gameId) {
-        game.getTagByGame(data.gameId, function (result) {
-            res.json({state: 1, tag: result})
+        // game.getTagByGame(data.gameId, function (result) {
+        //     res.json({state: 1, tag: result})
+        // })
+        game.gameTag(data.gameId, function (result) {
+            res.json({state: 1, tag: result});
         })
     } else {
         res.json({state: 0})
