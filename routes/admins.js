@@ -307,7 +307,6 @@ router.get('/gameAdmin', function (req, res, next) {
     var field = "t_game.*,t_admin.comment";
 
     common.page(tables, p, where, "left", field, function (result) {
-        // console.log(result);
         res.json(result);
     });
     // admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
@@ -913,7 +912,9 @@ router.post("/edit/game", function (req, res, next) {
             sort: fields.sort,
             sort2: fields.sort2,
             size: fields.size.slice(0, fields.size.length - 2),
-            id: fields.id
+            id: fields.id,
+            cls_ids: fields.cls_ids,
+            tag_ids: fields.tag_ids
         };
 
         admin.editGame(game, function (result) {

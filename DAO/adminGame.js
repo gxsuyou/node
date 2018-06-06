@@ -13,6 +13,12 @@ var game = {
             return callback(result)
         })
     },
+    setGameMsg: function (obj, callback) {
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=? where id =?";
+        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id], function (result) {
+            return callback(result)
+        })
+    },
     gameMsgInfo: function (obj, callback) {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
         query(game_sql, [obj], function (result) {
