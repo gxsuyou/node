@@ -52,17 +52,12 @@ router.get('/addGameMsg', function (req, res, next) {
                     gameDetail: data.gameDetail || null,
                     admin: data.admin,
                     type: data.type,
-                    cls_ids: data.cls,
-                    tag_ids: data.tag
+                    // cls_ids: data.cls,
+                    // tag_ids: data.tag
                 };
-                console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
-                    console.log(result.insertId);
-
                     if (result.insertId) {
-                        console.log(1);
                         var cls = data.cls.split(',');
-                        console.log(data.cls);
                         for (var i = 0; i < cls.length; i++) {
                             game.addCls(result.insertId, cls[i], function () {
 
@@ -70,7 +65,6 @@ router.get('/addGameMsg', function (req, res, next) {
                         }
                         res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片&安装包"})
                     } else {
-                        console.log(2);
                         res.json({state: 0, info: "添加失败"})
                     }
                 })
@@ -305,6 +299,7 @@ router.get('/getTagByGame', function (req, res) {
         // game.getTagByGame(data.gameId, function (result) {
         //     res.json({state: 1, tag: result})
         // })
+
         game.gameMsgInfo(data.gameId, function (result) {
             game.gameTag(data.gameId, function (data) {
                 var arr = {
@@ -321,10 +316,14 @@ router.get('/getTagByGame', function (req, res) {
 });
 router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
-    if (data.gameId) {
-        game.setTagAndCls(data.gameId, data.tag_ids, data.cls_ids, function (result) {
+    console.log(data);
+    if (data.id) {
+        game.setTagAndCls(data.id, data.tag_ids, data.cls_ids, function (result) {
+            console.log(result.affectedRows);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
+    } else {
+        res.json({state: 0})
     }
 });
 router.get('/getGameName', function (req, res) {
@@ -333,7 +332,6 @@ router.get('/getGameName', function (req, res) {
         game.getGameName(data.sys, data.msg, function (result) {
             res.json({state: 1, name: result})
         })
-
     } else {
         res.json({state: 0})
     }

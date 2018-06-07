@@ -4,12 +4,12 @@ var game = {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         return callback(obj);
         return false;
-        var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        // var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids,tag_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [];
         for (var x in obj) {
             arr.push(obj[x])
         }
-        console.log(arr);
         query(sql, arr, function (result) {
             return callback(result)
         })
@@ -37,11 +37,9 @@ var game = {
                             for (var ii = 0; ii < cls_list.length; ii++) {
                                 if (ii >= cls_list.length) continue;
                                 if (cls_list[ii].id == cls_result[i].id) {
-
                                     cls_result[i].checked = 1;
                                 }
                             }
-
                         }
                         return callback(cls_result);
                     })
@@ -69,7 +67,6 @@ var game = {
                     })
 
                 })
-
             }
         })
     },
