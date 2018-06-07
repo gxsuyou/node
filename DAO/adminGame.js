@@ -237,7 +237,6 @@ var game = {
         })
     },
     setTagAndCls: function (gameId, tagId, clsId, callback) {
-        console.log(101);
         // var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
         // query(sql, [gameId, tagId], function (result) {
         //     return callback(result)

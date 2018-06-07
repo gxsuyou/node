@@ -321,9 +321,9 @@ router.get('/getTagByGame', function (req, res) {
 });
 router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
-    if (data.gameId && data.tagId) {
-        game.setTagAndCls(data.gameId, data.tagId, function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+    if (data.gameId) {
+        game.setTagAndCls(data.gameId, data.tag_ids, data.cls_ids, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     }
 });
