@@ -109,8 +109,6 @@ router.get('/gameAdminDetail', function (req, res, next) {
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
-    res.json(data);
-    return false;
     var game = {
         name: data.name,//游戏名称
         activation: data.activation,
