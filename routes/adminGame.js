@@ -2,8 +2,6 @@ var router = require('express').Router();
 var game = require("../DAO/adminGame");
 var formidable = require('formidable');
 var common = require('../DAO/common');
-var PATH = require("../path");
-var resource = PATH.resource;
 Date.prototype.Format = function (formatStr) {
     var str = formatStr;
     var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -101,15 +99,12 @@ router.get('/gameAdminDetail', function (req, res, next) {
     })
 })
 
-// router.get('/setGame', function (req, res, next) {
-//     game.gameTagSet("", function (result) {
-//         res.json(result);
-//     })
-// })
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
-    var game = {
+    // console.log(1);
+    //
+    var gameArr = {
         name: data.name,//游戏名称
         activation: data.activation,
         company: data.company,//公司
@@ -117,15 +112,22 @@ router.post('/SetGameMsg', function (req, res, next) {
         download_num: data.download_num,//下载数
         sort: data.sort,//首页排列
         sort2: data.sort2,//热搜排列
-        size: data.size.slice(0, data.size.length - 2),//大小
+        size: data.size,//大小
         id: data.id,//id
-        cls_ids: data.cls_ids,//分类
-        // tag_ids: fields.tag_ids
+        // cls_ids: data.cls_ids,//分类id
+        // tag_ids: fields.tag_ids//标签id
     };
-
-    game.setGameMsg(game, function (result) {
-        result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+    // // res.json(game);
+    // // return false;
+    common.postMsgcheck(gameArr, function (ret_check) {
+        if (ret_check.state != 1) {
+            res.json({state: 0, info: ret_check.info})
+        }
+        game.editGameMsg(gameArr, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        })
     })
+
 });
 
 router.get('/updateDownloadAndroid', function (req, res, next) {
@@ -317,10 +319,10 @@ router.get('/getTagByGame', function (req, res) {
         res.json({state: 0})
     }
 });
-router.get('/addTagByGame', function (req, res) {
+router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
     if (data.gameId && data.tagId) {
-        game.addTagByGame(data.gameId, data.tagId, function (result) {
+        game.setTagAndCls(data.gameId, data.tagId, function (result) {
             result.insertId ? res.json({state: 1}) : res.json({state: 0})
         })
     }
