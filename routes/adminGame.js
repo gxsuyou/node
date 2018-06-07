@@ -305,8 +305,15 @@ router.get('/getTagByGame', function (req, res) {
         // game.getTagByGame(data.gameId, function (result) {
         //     res.json({state: 1, tag: result})
         // })
-        game.gameTag(data.gameId, function (result) {
-            res.json({state: 1, tag: result});
+        game.gameMsgInfo(data.gameId, function (result) {
+            game.gameTag(data.gameId, function (data) {
+                var arr = {
+                    "cls": result,
+                    "tag": data
+                }
+                res.json(arr);
+            })
+
         })
     } else {
         res.json({state: 0})
