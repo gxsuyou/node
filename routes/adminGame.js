@@ -2,6 +2,8 @@ var router = require('express').Router();
 var game = require("../DAO/adminGame");
 var formidable = require('formidable');
 var common = require('../DAO/common');
+var PATH = require("../path");
+var resource = PATH.resource;
 Date.prototype.Format = function (formatStr) {
     var str = formatStr;
     var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -105,48 +107,34 @@ router.get('/gameAdminDetail', function (req, res, next) {
 //     })
 // })
 
-router.get('/SetGameMsg', function (req, res, next) {
-    var data = req.query;
-    var date = new Date();
-    if (data.gameName) {
-        game.hasGame(data.gameName, function (result) {
-            if (!result.length) {
-                res.json({state: 0, info: "游戏不存在"})
-            } else {
-                var gameMsg = {
-                    gameName: data.gameName,
-                    activation: data.activation || null,
-                    gameVersion: data.gameVersion || null,
-                    game_download_num: data.game_download_num || null,
-                    sort: data.sort || null,
-                    sort2: data.sort2 || null,
-                    game_size: data.game_size || null,
-                    sys: data.sys || null,
-                    updateDetail: data.addTime || null,
-                    gameDetail: data.gameDetail || null,
-                };
-                console.log(gameMsg);
-                game.addGameMsg(gameMsg, function (result) {
-                    console.log(result.insertId);
-                    if (result.insertId) {
-                        console.log(1);
-                        var cls = data.cls.split(',');
-                        for (var i = 0; i < cls.length; i++) {
-                            game.addCls(result.insertId, cls[i], function () {
+router.post('/SetGameMsg', function (req, res, next) {
+    var form = formidable.IncomingForm({
+        encoding: 'utf-8',//上传编码
+        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
+        keepExtensions: true,//保留后缀
+        maxFieldsSize: 2000 * 1024//byte//最大可上传大小
+    });
 
-                            })
-                        }
-                        res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片&安装包"})
-                    } else {
-                        console.log(2);
-                        res.json({state: 0, info: "添加失败"})
-                    }
-                })
-            }
-        });
-    } else {
-        res.json({state: 0, info: "数据错误"})
-    }
+    form.parse(req, function (err, fields, files) {
+        console.log(fields.size.slice(0, fields.size.length - 2));
+        var game = {
+            name: fields.name,//游戏名称
+            activation: fields.activation,
+            company: fields.company,//公司
+            version: fields.version,//版本
+            download_num: fields.download_num,//下载数
+            sort: fields.sort,//首页排列
+            sort2: fields.sort2,//热搜排列
+            size: fields.size.slice(0, fields.size.length - 2),//大小
+            id: fields.id,//id
+            cls_ids: fields.cls_ids,//分类
+            // tag_ids: fields.tag_ids
+        };
+
+        game.setGameMsg(game, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        })
+    })
 });
 
 router.get('/updateDownloadAndroid', function (req, res, next) {
@@ -321,8 +309,11 @@ router.get('/getTag', function (req, res) {
 router.get('/getTagByGame', function (req, res) {
     var data = req.query;
     if (data.gameId) {
-        game.getTagByGame(data.gameId, function (result) {
-            res.json({state: 1, tag: result})
+        // game.getTagByGame(data.gameId, function (result) {
+        //     res.json({state: 1, tag: result})
+        // })
+        game.gameTag(data.gameId, function (result) {
+            res.json({state: 1, tag: result});
         })
     } else {
         res.json({state: 0})
