@@ -36,8 +36,12 @@ router.get('/gameAdmin', function (req, res, next) {
 router.get('/addGameMsg', function (req, res, next) {
     var data = req.query;
     var date = new Date();
+
     if (data.gameName) {
         game.hasGame(data.gameName, function (result) {
+             // console.log(result.length);
+             // res.json({state:0,info:"dd"});
+             // return false;
             if (!result.length) {
                 var gameMsg = {
                     gameName: data.gameName,
@@ -55,14 +59,11 @@ router.get('/addGameMsg', function (req, res, next) {
                     admin: data.admin,
                     type: data.type,
                     cls_ids: data.cls,
-                    tag_ids: data.tag
+                    // tag_ids: data.tag
                 };
-                console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
                     console.log(result.insertId);
-
                     if (result.insertId) {
-                        console.log(1);
                         var cls = data.cls.split(',');
                         console.log(data.cls);
                         for (var i = 0; i < cls.length; i++) {
@@ -70,9 +71,8 @@ router.get('/addGameMsg', function (req, res, next) {
 
                             })
                         }
-                        res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片&安装包"})
+                        res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片和安装包"})
                     } else {
-                        console.log(2);
                         res.json({state: 0, info: "添加失败"})
                     }
                 })
@@ -84,6 +84,11 @@ router.get('/addGameMsg', function (req, res, next) {
         res.json({state: 0, info: "数据错误"})
     }
 });
+
+
+
+
+
 router.get('/gameAdminDetail', function (req, res, next) {
     var id = req.query.id;
     if (!id) {
@@ -101,15 +106,12 @@ router.get('/gameAdminDetail', function (req, res, next) {
     })
 })
 
-// router.get('/setGame', function (req, res, next) {
-//     game.gameTagSet("", function (result) {
-//         res.json(result);
-//     })
-// })
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
-    var game = {
+    // console.log(1);
+    //
+    var gameArr = {
         name: data.name,//游戏名称
         activation: data.activation,
         company: data.company,//公司
@@ -117,15 +119,22 @@ router.post('/SetGameMsg', function (req, res, next) {
         download_num: data.download_num,//下载数
         sort: data.sort,//首页排列
         sort2: data.sort2,//热搜排列
-        size: data.size.slice(0, data.size.length - 2),//大小
+        size: data.size,//大小
         id: data.id,//id
-        cls_ids: data.cls_ids,//分类
-        // tag_ids: fields.tag_ids
+        // cls_ids: data.cls_ids,//分类id
+        // tag_ids: fields.tag_ids//标签id
     };
-
-    game.setGameMsg(game, function (result) {
-        result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+    // // res.json(game);
+    // // return false;
+    common.postMsgcheck(gameArr, function (ret_check) {
+        if (ret_check.state != 1) {
+            res.json({state: 0, info: ret_check.info})
+        }
+        game.editGameMsg(gameArr, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        })
     })
+
 });
 
 router.get('/updateDownloadAndroid', function (req, res, next) {
@@ -303,6 +312,7 @@ router.get('/getTagByGame', function (req, res) {
         // game.getTagByGame(data.gameId, function (result) {
         //     res.json({state: 1, tag: result})
         // })
+
         game.gameMsgInfo(data.gameId, function (result) {
             game.gameTag(data.gameId, function (data) {
                 var arr = {
@@ -317,12 +327,16 @@ router.get('/getTagByGame', function (req, res) {
         res.json({state: 0})
     }
 });
-router.get('/addTagByGame', function (req, res) {
+router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
-    if (data.gameId && data.tagId) {
-        game.addTagByGame(data.gameId, data.tagId, function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+    console.log(data);
+    if (data.id) {
+        game.setTagAndCls(data.id, data.tag_ids, data.cls_ids, function (result) {
+            console.log(result.affectedRows);
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
+    } else {
+        res.json({state: 0})
     }
 });
 router.get('/getGameName', function (req, res) {
@@ -331,7 +345,6 @@ router.get('/getGameName', function (req, res) {
         game.getGameName(data.sys, data.msg, function (result) {
             res.json({state: 1, name: result})
         })
-
     } else {
         res.json({state: 0})
     }
