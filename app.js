@@ -84,8 +84,6 @@ function haltOnTimedout (req, res, next) {
     if (!req.timedout) next()
 }
 
-app.listen(8080,()=>{
-    console.log("8080");
-});
+app.listen(8080,"192.168.0.104");
 
 module.exports = app;
