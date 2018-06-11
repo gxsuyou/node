@@ -159,8 +159,11 @@ var game = {
             return callback(result)
         })
     },
-    getActiveGame: function (callback) {
-        var sql = "SELECT * FROM t_game "
+    getActiveGame: function (obj = "", callback) {
+        var sql = "SELECT * FROM t_game ";
+        if (obj) {
+            var sql = "SELECT * FROM t_game WHERE game_name LIKE '%" + obj + "%' LIMIT 0,30";
+        }
         query(sql, [], function (result) {
             return callback(result);
         })
@@ -245,12 +248,12 @@ var game = {
         })
     },
     setTagAndCls: function (gameId, tagId, clsId, callback) {
-        // var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
-        // query(sql, [gameId, tagId], function (result) {
-        //     return callback(result)
-        // })
         var sql = "update t_game set tag_ids = ?, cls_ids = ? where id = ?"
         query(sql, [tagId, clsId, gameId], function (result) {
+            // var sql = 'insert into t_tag_relation (game_id,tag_id) values (?,?)';
+            // query(sql, [gameId, tagId], function (result) {
+            //     return callback(result)
+            // })
             return callback(result);
         })
     },

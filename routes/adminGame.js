@@ -135,11 +135,11 @@ router.post('/SetGameMsg', function (req, res, next) {
     })
 
 });
-router.get('setcats', function (req, res, next) {
-    game.gameTagSet("a", function (msg) {
-        res.json(msg);
-    })
-})
+// router.get('setcats', function (req, res, next) {
+//     game.gameTagSet("a", function (msg) {
+//         res.json(msg);
+//     })
+// })
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
         console.log(req.query);
