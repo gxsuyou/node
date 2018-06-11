@@ -159,6 +159,16 @@ var game = {
             return callback(result)
         })
     },
+    getActiveGame: function () {
+
+    },
+    searchActive: function (msg, callback) {
+        //TODO 未完成
+        var sql = "SELECT * FROM t_activity  WHERE name like '%" + msg + "%' LIMIT 0,30";
+        query(sql, [], function (result) {
+            return callback(result)
+        })
+    },
     hasActive: function (gameId, type, callback) {
         var sql = 'select * from t_activity where game_id=? and type=?';
         query(sql, [gameId, type], function (result) {
