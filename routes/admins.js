@@ -243,11 +243,12 @@ var qiniuBucket = {
     img: "oneyouxiimg",
     apk: "oneyouxiapk"
     // img:"oneyouxitestimg",
-    //  apk:"oneyouxitestapk"
+    // apk: "oneyouxitestapk"
 };
 router.get('/getUptokenByMsg', function (req, res, next) {
     if (req.query.scope && req.query.key) {
-        res.json({state: 1, upToken: getUpToken(req.query.scope, req.query.key)})
+        var token = getUpToken(req.query.scope, req.query.key);//获取token
+        res.json({state: 1, upToken: token})
     } else {
         res.json({state: 0})
     }

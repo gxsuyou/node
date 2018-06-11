@@ -69,7 +69,7 @@ var game = {
         })
     },
     gameTagSet: function (obj, callback) {
-        var game_sql = "SELECT * FROM t_game WHERE cls_ids IS NULL AND id > 0 AND id < 100 "
+        var game_sql = "SELECT * FROM t_game WHERE tag_ids IS NULL AND id > 0 AND id < 100 "
         query(game_sql, [], function (result) {
             if (result.length > 0) {
 
@@ -79,7 +79,7 @@ var game = {
                     }
                     console.log(result[i].id);
 
-                    var sql = "SELECT game_id,cls_id FROM t_game_cls_relation where game_id = ?";
+                    var sql = "SELECT game_id,tag_id FROM t_tag_relation where game_id = ?";
                     query(sql, [result[i].id], function (results) {
                         var ids = "";
                         console.log(results);
@@ -88,11 +88,11 @@ var game = {
                                 if (a >= results.length) {
                                     continue;
                                 }
-                                ids += results[a].cls_id + ",";
+                                ids += results[a].tag_id + ",";
                             }
                             ids = ids.substring(0, ids.length - 1);
                             // console.log(ids);
-                            var setsql = "UPDATE t_game SET cls_ids = ? WHERE id = ?"
+                            var setsql = "UPDATE t_game SET tag_ids = ? WHERE id = ?"
                             query(setsql, [ids, results[0].game_id], function (results) {
 
                             })
