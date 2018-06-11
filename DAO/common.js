@@ -8,22 +8,23 @@ var common = {
     /**
      * md5加密
      * @param pwd
-     * @param callback
-     * @returns {*}
+     * @returns {PromiseLike<ArrayBuffer>}
      */
     pwdMd5: function (pwd) {
         var md5 = crypto.createHash('md5');
         //var result =
-        var pwd=md5.update(pwd).digest('hex')
+        var pwd = md5.update(pwd).digest('hex')
         return pwd;
         //return callback(result)
     },
 
     /**
-     * 分页page，查询单个表
-     * @param p
-     * @param tables
+     * 分页page
+     * @param tables 表名
+     * @param p 当前页
      * @param where
+     * @param sqlType
+     * @param field 查找的字段
      * @param callback
      */
     page: function (tables, p, where = "", sqlType = "", field = "", callback) {
@@ -86,6 +87,19 @@ var common = {
                 return callback(arr);
             }
         });
+    },
+
+    postMsgcheck: function (post, callback) {
+        var info = ""
+        var msg = {state: 1};
+        for (var i in post) {
+            if (!post[i]) {
+                info = "提交参数不能为空";
+                msg = {state: 0, info: info}
+                break;
+            }
+        }
+        return callback(msg);
     }
 }
 
