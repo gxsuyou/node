@@ -68,47 +68,47 @@ var game = {
             }
         })
     },
-    // gameTagSet: function (obj, callback) {
-    //     var game_sql = "SELECT * FROM t_game WHERE cls_ids IS NULL AND id > 400 AND id < 700 "
-    //     query(game_sql, [], function (result) {
-    //         if (result.length > 0) {
-    //
-    //             for (var i = 0; i < result.length; i++) {
-    //                 if (i >= result.length) {
-    //                     break;
-    //                 }
-    //                 console.log(result[i].id);
-    //
-    //                 var sql = "SELECT game_id,cls_id FROM t_game_cls_relation where game_id = ?";
-    //                 query(sql, [result[i].id], function (results) {
-    //                     var ids = "";
-    //                     console.log(results);
-    //                     if (results.length > 0) {
-    //                         for (var a = 0; a < result.length; a++) {
-    //                             if (a >= results.length) {
-    //                                 continue;
-    //                             }
-    //                             ids += results[a].cls_id + ",";
-    //                         }
-    //                         ids = ids.substring(0, ids.length - 1);
-    //                         // console.log(ids);
-    //                         var setsql = "UPDATE t_game SET cls_ids = ? WHERE id = ?"
-    //                         query(setsql, [ids, results[0].game_id], function (results) {
-    //
-    //                         })
-    //                     }
-    //
-    //
-    //                 })
-    //             }
-    //             return callback(1);
-    //             // ids = ids.substring(0, ids.length - 1)
-    //             // return callback(ids);
-    //
-    //
-    //         }
-    //     })
-    // },
+    gameTagSet: function (obj, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE cls_ids IS NULL AND id > 0 AND id < 100 "
+        query(game_sql, [], function (result) {
+            if (result.length > 0) {
+
+                for (var i = 0; i < result.length; i++) {
+                    if (i >= result.length) {
+                        break;
+                    }
+                    console.log(result[i].id);
+
+                    var sql = "SELECT game_id,cls_id FROM t_game_cls_relation where game_id = ?";
+                    query(sql, [result[i].id], function (results) {
+                        var ids = "";
+                        console.log(results);
+                        if (results.length > 0) {
+                            for (var a = 0; a < result.length; a++) {
+                                if (a >= results.length) {
+                                    continue;
+                                }
+                                ids += results[a].cls_id + ",";
+                            }
+                            ids = ids.substring(0, ids.length - 1);
+                            // console.log(ids);
+                            var setsql = "UPDATE t_game SET cls_ids = ? WHERE id = ?"
+                            query(setsql, [ids, results[0].game_id], function (results) {
+
+                            })
+                        }
+
+
+                    })
+                }
+                return callback(1);
+                // ids = ids.substring(0, ids.length - 1)
+                // return callback(ids);
+
+
+            }
+        })
+    },
 
     hasGame: function (gameName, callback) {
         var sql = "select id from t_game where game_name=?";
