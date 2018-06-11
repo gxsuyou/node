@@ -159,8 +159,11 @@ var game = {
             return callback(result)
         })
     },
-    getActiveGame: function () {
-
+    getActiveGame: function (callback) {
+        var sql = "SELECT * FROM t_game "
+        query(sql, [], function (result) {
+            return callback(result);
+        })
     },
     searchActive: function (msg, callback) {
         //TODO 未完成
