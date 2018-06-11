@@ -39,9 +39,9 @@ router.get('/addGameMsg', function (req, res, next) {
 
     if (data.gameName) {
         game.hasGame(data.gameName, function (result) {
-             // console.log(result.length);
-             // res.json({state:0,info:"dd"});
-             // return false;
+            // console.log(result.length);
+            // res.json({state:0,info:"dd"});
+            // return false;
             if (!result.length) {
                 var gameMsg = {
                     gameName: data.gameName,
@@ -84,9 +84,6 @@ router.get('/addGameMsg', function (req, res, next) {
         res.json({state: 0, info: "数据错误"})
     }
 });
-
-
-
 
 
 router.get('/gameAdminDetail', function (req, res, next) {
@@ -136,7 +133,11 @@ router.post('/SetGameMsg', function (req, res, next) {
     })
 
 });
-
+router.get('setcats', function (req, res, next) {
+    game.gameTagSet("a", function (msg) {
+        res.json(msg);
+    })
+})
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
         game.updateDownloadAndroid(req.query.id, req.query.url, req.query.size, function (result) {
