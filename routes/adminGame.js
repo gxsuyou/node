@@ -36,8 +36,8 @@ router.get('/gameAdmin', function (req, res, next) {
 router.get('/addGameMsg', function (req, res, next) {
     var data = req.query;
     var date = new Date();
-    var cls = 0;
-    var tag = 0;
+    var cls = '0';
+    var tag = '0';
 
     if (data.gameName) {
         game.hasGame(data.gameName, function (result) {
