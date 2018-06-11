@@ -36,12 +36,14 @@ router.get('/gameAdmin', function (req, res, next) {
 router.get('/addGameMsg', function (req, res, next) {
     var data = req.query;
     var date = new Date();
+    var cls = '0';
+    var tag = '0';
 
     if (data.gameName) {
         game.hasGame(data.gameName, function (result) {
-             // console.log(result.length);
-             // res.json({state:0,info:"dd"});
-             // return false;
+            // console.log(result.length);
+            // res.json({state:0,info:"dd"});
+            // return false;
             if (!result.length) {
                 var gameMsg = {
                     gameName: data.gameName,
@@ -58,8 +60,8 @@ router.get('/addGameMsg', function (req, res, next) {
                     gameDetail: data.gameDetail || null,
                     admin: data.admin,
                     type: data.type,
-                    cls_ids: data.cls,
-                    // tag_ids: data.tag
+                    cls_ids: data.cls ? data.cls : cls,
+                    tag_ids: data.tag ? data.tag : tag
                 };
                 game.addGameMsg(gameMsg, function (result) {
                     console.log(result.insertId);
@@ -84,9 +86,6 @@ router.get('/addGameMsg', function (req, res, next) {
         res.json({state: 0, info: "数据错误"})
     }
 });
-
-
-
 
 
 router.get('/gameAdminDetail', function (req, res, next) {
@@ -136,9 +135,14 @@ router.post('/SetGameMsg', function (req, res, next) {
     })
 
 });
-
+// router.get('setcats', function (req, res, next) {
+//     game.gameTagSet("a", function (msg) {
+//         res.json(msg);
+//     })
+// })
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
+        console.log(req.query);
         game.updateDownloadAndroid(req.query.id, req.query.url, req.query.size, function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
@@ -186,6 +190,20 @@ router.get('/deleteGameImg', function (req, res) {
         res.json({state: 0})
     }
 });
+router.get('/activeSearch', function (req, res, next) {
+    if (req.query.name) {
+        game.searchActive(req.query.name, function (result) {
+            res.json({game: result})
+        })
+    }
+});
+
+router.get('/activeGameDetail', function (req, res, next) {
+    game.getActiveGame(function (result) {
+        res.json(result);
+    })
+});
+
 router.get('/addGameActive', function (req, res) {
     var data = req.query;
     if (data.game_id && data.type) {
