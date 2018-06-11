@@ -8,7 +8,7 @@ var md5 = require('../DAO/common')
 var admin = {
     adminLogin: function (username, password, callback) {
         var pwd = md5.pwdMd5(password);
-        var sql = "select * from t_admin where name=? and password=?";
+        var sql = "select id,name,comment from t_admin where name=? and password=?";
         console.log(username, pwd);
         query(sql, [username, pwd], function (result) {
             console.log(66766 + result);
