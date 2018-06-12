@@ -14,7 +14,7 @@ var game = {
     },
     editGameMsg: function (obj, callback) {
         var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=? where id =?";
-        console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
+        // console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
         query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id], function (result) {
             return callback(result)
         })
@@ -179,10 +179,17 @@ var game = {
         })
     },
     addActive: function (obj, callback) {
-        var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type,sys) values (?,?,?,?,?,?,?,?)';
-        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type, obj.sys], function (result) {
+        var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type) values (?,?,?,?,?,?,?)';
+        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type], function (result) {
             return callback(result)
         })
+    },
+    setActive: function (obj, callback) {
+        var sql = "UPDATE t_activity SET name = ?, title = ?, sort = ?, active_img = ?, active = ?, type = ? WHERE id = ?";
+        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.type, obj.id], function (result) {
+            return callback(result)
+        })
+
     },
     addSubject: function (img, title, detail, up, sys, callback) {
         var sql = 'insert into t_subject (img,title,detail,active,sys) values (?,?,?,?,?)';

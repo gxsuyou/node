@@ -108,18 +108,21 @@ router.get('/gameAdminDetail', function (req, res, next) {
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
+    var date = new Date();
     // console.log(1);
     //
     var gameArr = {
-        name: data.name,//游戏名称
-        activation: data.activation,
-        company: data.company,//公司
-        version: data.version,//版本
-        download_num: data.download_num,//下载数
-        sort: data.sort,//首页排列
-        sort2: data.sort2,//热搜排列
-        size: data.size,//大小
-        id: data.id,//id
+        name: data.name || null,//游戏名称
+        activation: data.activation || null,//是否上架
+        company: data.company || null,//公司
+        version: data.version || null,//版本
+        download_num: data.download_num || null,//下载数
+        sort: data.sort || null,//首页排列
+        sort2: data.sort2 || null,//热搜排列
+        size: data.size || null,//大小
+        id: data.id || null,//id
+        up_time: date.Format("yyyy-MM-dd HH:mm") || null,//修改时间
+        up_admin: data.up_admin || null//修改者管理员
         // cls_ids: data.cls_ids,//分类id
         // tag_ids: fields.tag_ids//标签id
     };
@@ -194,8 +197,15 @@ router.get('/activeSearch', function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        common.getGameSearch(data.name, function (result) {
-            res.json(result);
+        game.hasGame(data.name, function (game) {
+            common.getGameSearch(data.name, function (result) {
+                // console.log(result);
+                if (result.length > 0) {
+                    res.json({state: 1, result: result});
+                } else {
+                    res.json({state: 0, result: []});
+                }
+            })
         })
     } else {
         common.getGameSearch(data, function (result) {
@@ -204,44 +214,80 @@ router.get('/activeSearch', function (req, res, next) {
     }
 });
 
-router.get('/activeGameDetail', function (req, res, next) {
-    var data = "";
-    if (req.query) {
-        data = req.query;
-        common.getGameSearch(data.name, function (result) {
-            res.json(result);
-        })
-    } else {
-        common.getGameSearch(data, function (result) {
-            res.json(result);
-        })
-    }
+router.get('/hasGame', function (req, res, next) {
+    var data = req.query;
+    game.hasGame(data.name, function (game) {
+        if (game.length) {
+            res.json({state: 1});
+        } else {
+            res.json({state: 0});
+        }
+    })
 });
+
 
 router.get('/addGameActive', function (req, res) {
     var data = req.query;
-    if (data.game_id && data.type) {
+    if (data.game_name && data.type) {
         var active = {
-            name: data.name || "",
-            title: data.title || "",
-            sort: data.sort || "",
-            active_img: data.active_img || "",
-            active: data.active || "",
-            game_id: data.game_id || "",
-            type: data.type || "",
-            sys: data.sys || ""
+            name: data.name || "",//活动民称
+            title: data.title || "",//标题
+            sort: data.sort || "",//排序
+            active_img: data.active_img || "",//活动图片地址
+            active: data.active || "",//1激活;0不激活
+            // game_id: data.game_id || "",//游戏id
+            type: data.type || "",//推荐位类型
+            // sys: data.sys || ""//1:ios   2：andriod
+        };
+
+        game.hasGame(data.game_name, function (game) {
+            if (game.length) {
+                active.game_id = game[0].id
+                game.hasActive(data.game_id, data.type, function (result) {
+                    if (result.length) {
+                        game.deleteActive(data.game_id, data.type, function (result) {
+                            if (result.affectedRows) {
+                                game.addActive(active, function (result) {
+                                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                                })
+                            } else {
+                                console.log('2:::' + result);
+                                res.json({state: 0})
+                            }
+                        })
+                    } else {
+                        game.addActive(active, function (result) {
+                            console.log('1:::' + result);
+                            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                        })
+                    }
+                })
+            } else {
+                res.json({state: 0})
+            }
+        });
+    } else {
+        res.json({state: 0})
+    }
+});
+router.get('/setGameActive', function (req, res) {
+    var data = req.query;
+    if (data.id && data.type) {
+        var active = {
+            id: data.id,//活动id
+            name: data.name || "",//活动民称
+            title: data.title || "",//标题
+            sort: data.sort || "",//排序
+            active_img: data.active_img || "",//活动图片地址
+            active: data.active || "",//1激活;0不激活
+            game_id: data.game_id || "",//游戏id
+            type: data.type || "",//推荐位类型
+            // sys: data.sys || ""//1:ios   2：andriod
         };
         game.hasActive(data.game_id, data.type, function (result) {
             if (result.length) {
-                game.deleteActive(data.game_id, data.type, function (result) {
-                    if (result.affectedRows) {
-                        game.addActive(active, function (result) {
-                            result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                        })
-                    } else {
-                        console.log('2:::' + result);
-                        res.json({state: 0})
-                    }
+                game.setActive(active, function (result) {
+                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
                 })
             } else {
                 game.addActive(active, function (result) {
