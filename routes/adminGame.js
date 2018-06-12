@@ -191,9 +191,15 @@ router.get('/deleteGameImg', function (req, res) {
     }
 });
 router.get('/activeSearch', function (req, res, next) {
-    if (req.query.name) {
-        game.searchActive(req.query.name, function (result) {
-            res.json({game: result})
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        common.getGameSearch(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
         })
     }
 });
@@ -202,12 +208,11 @@ router.get('/activeGameDetail', function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        console.log(data.name)
-        game.getActiveGame(data.name, function (result) {
+        common.getGameSearch(data.name, function (result) {
             res.json(result);
         })
     } else {
-        game.getActiveGame(data, function (result) {
+        common.getGameSearch(data, function (result) {
             res.json(result);
         })
     }

@@ -159,15 +159,6 @@ var game = {
             return callback(result)
         })
     },
-    getActiveGame: function (obj = "", callback) {
-        var sql = "SELECT * FROM t_game ";
-        if (obj) {
-            sql = "SELECT * FROM t_game WHERE game_name LIKE '%" + obj + "%' LIMIT 0,30";
-        }
-        query(sql, [], function (result) {
-            return callback(result);
-        })
-    },
     searchActive: function (msg, callback) {
         //TODO 未完成
         var sql = "SELECT * FROM t_activity  WHERE name like '%" + msg + "%' LIMIT 0,30";

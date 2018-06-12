@@ -924,6 +924,23 @@ router.post("/edit/game", function (req, res, next) {
     })
 });
 
+/**
+ * 游戏名称模糊查询
+ */
+router.get("/getGameSearch", function (req, res, next) {
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        common.getGameSearch(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
+        })
+    }
+});
+
 //资讯
 router.post("/addNews", function (req, res, next) {
     var form = formidable.IncomingForm({

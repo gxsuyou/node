@@ -100,7 +100,17 @@ var common = {
             }
         }
         return callback(msg);
-    }
+    },
+
+    getGameSearch: function (obj = "", callback) {
+        var sql = "SELECT * FROM t_game LIMIT 0,30";
+        if (obj) {
+            sql = "SELECT * FROM t_game WHERE game_name LIKE '%" + obj + "%' LIMIT 0,30";
+        }
+        query(sql, [], function (result) {
+            return callback(result);
+        })
+    },
 }
 
 module.exports = common;
