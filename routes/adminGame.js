@@ -199,9 +199,18 @@ router.get('/activeSearch', function (req, res, next) {
 });
 
 router.get('/activeGameDetail', function (req, res, next) {
-    game.getActiveGame(req.query.name, function (result) {
-        res.json(result);
-    })
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        console.log(data.name)
+        game.getActiveGame(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        game.getActiveGame(data, function (result) {
+            res.json(result);
+        })
+    }
 });
 
 router.get('/addGameActive', function (req, res) {
