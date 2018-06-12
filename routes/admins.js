@@ -349,11 +349,22 @@ router.get("/gameByType", function (req, res, next) {
 
 });
 router.get("/searchGameByMsg", function (req, res, next) {
-    if (req.query.type && req.query.msg) {
-        admin.searchGameByMsg(req.query.type, req.query.msg, function (result) {
-            res.json({game: result})
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        common.getGameSearch(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
         })
     }
+    // if (req.query.type && req.query.msg) {
+    //     admin.searchGameByMsg(req.query.type, req.query.msg, function (result) {
+    //         res.json({game: result})
+    //     })
+    // }
 });
 router.get("/getClsActive", function (req, res, next) {
     admin.getClsActive(function (result) {
@@ -363,7 +374,7 @@ router.get("/getClsActive", function (req, res, next) {
 router.get('/setClsActive', function (req, res, next) {
     var type = req.query.type,
         sys = req.query.sys;
-    console.log(type, sys);
+    // console.log(type, sys);
     if (JSON.parse(req.query.arr).length = 4) {
         admin.setClsActive(type, sys, JSON.parse(req.query.arr), function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
@@ -922,6 +933,23 @@ router.post("/edit/game", function (req, res, next) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     })
+});
+
+/**
+ * 游戏名称模糊查询
+ */
+router.get("/getGameSearch", function (req, res, next) {
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        common.getGameSearch(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
+        })
+    }
 });
 
 //资讯

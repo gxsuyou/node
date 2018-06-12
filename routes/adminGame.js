@@ -101,25 +101,26 @@ router.get('/gameAdminDetail', function (req, res, next) {
             }
             res.json(arr);
         })
-
     })
 })
 
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
-    // console.log(1);
-    //
+    var date = new Date();
+
     var gameArr = {
-        name: data.name,//游戏名称
-        activation: data.activation,
-        company: data.company,//公司
-        version: data.version,//版本
-        download_num: data.download_num,//下载数
-        sort: data.sort,//首页排列
-        sort2: data.sort2,//热搜排列
-        size: data.size,//大小
-        id: data.id,//id
+        name: data.name || null,//游戏名称
+        activation: data.activation || null,//是否上架
+        company: data.company || null,//公司
+        version: data.version || null,//版本
+        download_num: data.download_num || null,//下载数
+        sort: data.sort || null,//首页排列
+        sort2: data.sort2 || null,//热搜排列
+        size: data.size || null,//大小
+        id: data.id || null,//id
+        up_time: date.Format("yyyy-MM-dd HH:mm") || null,//修改时间
+        up_admin: data.up_admin || null//修改者管理员
         // cls_ids: data.cls_ids,//分类id
         // tag_ids: fields.tag_ids//标签id
     };
@@ -191,43 +192,94 @@ router.get('/deleteGameImg', function (req, res) {
     }
 });
 router.get('/activeSearch', function (req, res, next) {
-    if (req.query.name) {
-        game.searchActive(req.query.name, function (result) {
-            res.json({game: result})
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        game.hasGame(data.name, function (game) {
+            common.getGameSearch(data.name, function (result) {
+                // console.log(result);
+                if (result.length > 0) {
+                    res.json({state: 1, result: result});
+                } else {
+                    res.json({state: 0, result: []});
+                }
+            })
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
         })
     }
 });
 
-router.get('/activeGameDetail', function (req, res, next) {
-    game.getActiveGame(function (result) {
-        res.json(result);
+router.get('/hasGame', function (req, res, next) {
+    var data = req.query;
+    game.hasGame(data.name, function (games) {
+        if (games.length) {
+            res.json({state: 1});
+        } else {
+            res.json({state: 0});
+        }
     })
 });
 
+
 router.get('/addGameActive', function (req, res) {
     var data = req.query;
-    if (data.game_id && data.type) {
+    if (data.game_name && data.type) {
         var active = {
             name: data.name || "",
             title: data.title || "",
             sort: data.sort || "",
             active_img: data.active_img || "",
             active: data.active || "",
-            game_id: data.game_id || "",
+            // game_id: data.game_id || "",
             type: data.type || "",
-            sys: data.sys || ""
+            // sys: data.sys || ""
         };
-        game.hasActive(data.game_id, data.type, function (result) {
-            if (result.length) {
-                game.deleteActive(data.game_id, data.type, function (result) {
+
+        game.hasGame(data.game_name, function (games) {
+            if (games.length) {
+                active.game_id = games[0].id;
+                game.getHasActive(active.game_id, data.type, function (result) {
                     if (result.affectedRows) {
-                        game.addActive(active, function (result) {
-                            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                        game.addActive(active, function (addresult) {
+                            addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
+                        })
+                    } else if (result.length < 1) {
+                        game.addActive(active, function (addresult) {
+                            addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
                         })
                     } else {
-                        console.log('2:::' + result);
-                        res.json({state: 0})
+                        res.json({state: 0, info: "添加失败"})
                     }
+                })
+            } else {
+                res.json({state: 0, info: "游戏不存在"})
+            }
+        });
+    } else {
+        res.json({state: 0})
+    }
+});
+router.get('/setGameActive', function (req, res) {
+    var data = req.query;
+    if (data.id && data.type) {
+        var active = {
+            id: data.id,
+            name: data.name || "",
+            title: data.title || "",
+            sort: data.sort || "",
+            active_img: data.active_img || "",
+            active: data.active || "",
+            game_id: data.game_id || "",
+            // type: data.type || "",
+            // sys: data.sys || ""
+        };
+        game.getHasActive(data.game_id, data.type, function (result) {
+            if (result.length) {
+                game.setActive(active, function (result) {
+                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
                 })
             } else {
                 game.addActive(active, function (result) {
@@ -266,17 +318,21 @@ router.get('/getSubject', function (req, res) {
 });
 router.get('/addSubjectGame', function (req, res) {
     var data = req.query;
-    if (data.gameId && data.subjectId) {
-        game.hasSubjectGame(data.gameId, data.subjectId, function (result) {
-            if (!result.length) {
-                game.addSubjectGame(data.gameId, data.subjectId, function (result) {
-                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0})
-            }
-        });
+    if (data.game_name && data.subjectId) {
+        game.hasGame(data.game_name, function (games) {
+            if (!games.length) res.json({state: 0});
 
+            var gameid = games[0].id;
+            game.hasSubjectGame(gameid, data.subjectId, function (result) {
+                if (!result.length) {
+                    game.addSubjectGame(gameid, data.subjectId, function (result) {
+                        result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                    })
+                } else {
+                    res.json({state: 0})
+                }
+            })
+        });
     } else {
         res.json({state: 0})
     }
