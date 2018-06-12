@@ -199,7 +199,7 @@ router.get('/activeSearch', function (req, res, next) {
 });
 
 router.get('/activeGameDetail', function (req, res, next) {
-    game.getActiveGame(function (result) {
+    game.getActiveGame(req.query.name, function (result) {
         res.json(result);
     })
 });
