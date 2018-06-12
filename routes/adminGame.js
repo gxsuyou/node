@@ -101,7 +101,6 @@ router.get('/gameAdminDetail', function (req, res, next) {
             }
             res.json(arr);
         })
-
     })
 })
 
@@ -109,8 +108,7 @@ router.get('/gameAdminDetail', function (req, res, next) {
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
     var date = new Date();
-    // console.log(1);
-    //
+
     var gameArr = {
         name: data.name || null,//游戏名称
         activation: data.activation || null,//是否上架
@@ -216,8 +214,8 @@ router.get('/activeSearch', function (req, res, next) {
 
 router.get('/hasGame', function (req, res, next) {
     var data = req.query;
-    game.hasGame(data.name, function (game) {
-        if (game.length) {
+    game.hasGame(data.name, function (games) {
+        if (games.length) {
             res.json({state: 1});
         } else {
             res.json({state: 0});
@@ -230,40 +228,34 @@ router.get('/addGameActive', function (req, res) {
     var data = req.query;
     if (data.game_name && data.type) {
         var active = {
-            name: data.name || "",//活动民称
-            title: data.title || "",//标题
-            sort: data.sort || "",//排序
-            active_img: data.active_img || "",//活动图片地址
-            active: data.active || "",//1激活;0不激活
-            // game_id: data.game_id || "",//游戏id
-            type: data.type || "",//推荐位类型
-            // sys: data.sys || ""//1:ios   2：andriod
+            name: data.name || "",
+            title: data.title || "",
+            sort: data.sort || "",
+            active_img: data.active_img || "",
+            active: data.active || "",
+            // game_id: data.game_id || "",
+            type: data.type || "",
+            // sys: data.sys || ""
         };
 
-        game.hasGame(data.game_name, function (game) {
-            if (game.length) {
-                active.game_id = game[0].id
-                game.hasActive(data.game_id, data.type, function (result) {
-                    if (result.length) {
-                        game.deleteActive(data.game_id, data.type, function (result) {
-                            if (result.affectedRows) {
-                                game.addActive(active, function (result) {
-                                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                                })
-                            } else {
-                                console.log('2:::' + result);
-                                res.json({state: 0})
-                            }
+        game.hasGame(data.game_name, function (games) {
+            if (games.length) {
+                active.game_id = games[0].id;
+                game.getHasActive(active.game_id, data.type, function (result) {
+                    if (result.affectedRows) {
+                        game.addActive(active, function (addresult) {
+                            addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
+                        })
+                    } else if (result.length < 1) {
+                        game.addActive(active, function (addresult) {
+                            addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
                         })
                     } else {
-                        game.addActive(active, function (result) {
-                            console.log('1:::' + result);
-                            result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                        })
+                        res.json({state: 0, info: "添加失败"})
                     }
                 })
             } else {
-                res.json({state: 0})
+                res.json({state: 0, info: "游戏不存在"})
             }
         });
     } else {
@@ -274,17 +266,17 @@ router.get('/setGameActive', function (req, res) {
     var data = req.query;
     if (data.id && data.type) {
         var active = {
-            id: data.id,//活动id
-            name: data.name || "",//活动民称
-            title: data.title || "",//标题
-            sort: data.sort || "",//排序
-            active_img: data.active_img || "",//活动图片地址
-            active: data.active || "",//1激活;0不激活
-            game_id: data.game_id || "",//游戏id
-            type: data.type || "",//推荐位类型
-            // sys: data.sys || ""//1:ios   2：andriod
+            id: data.id,
+            name: data.name || "",
+            title: data.title || "",
+            sort: data.sort || "",
+            active_img: data.active_img || "",
+            active: data.active || "",
+            game_id: data.game_id || "",
+            // type: data.type || "",
+            // sys: data.sys || ""
         };
-        game.hasActive(data.game_id, data.type, function (result) {
+        game.getHasActive(data.game_id, data.type, function (result) {
             if (result.length) {
                 game.setActive(active, function (result) {
                     result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
@@ -326,17 +318,21 @@ router.get('/getSubject', function (req, res) {
 });
 router.get('/addSubjectGame', function (req, res) {
     var data = req.query;
-    if (data.gameId && data.subjectId) {
-        game.hasSubjectGame(data.gameId, data.subjectId, function (result) {
-            if (!result.length) {
-                game.addSubjectGame(data.gameId, data.subjectId, function (result) {
-                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0})
-            }
-        });
+    if (data.game_name && data.subjectId) {
+        game.hasGame(data.game_name, function (games) {
+            if (!games.length) res.json({state: 0});
 
+            var gameid = games[0].id;
+            game.hasSubjectGame(gameid, data.subjectId, function (result) {
+                if (!result.length) {
+                    game.addSubjectGame(gameid, data.subjectId, function (result) {
+                        result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                    })
+                } else {
+                    res.json({state: 0})
+                }
+            })
+        });
     } else {
         res.json({state: 0})
     }
