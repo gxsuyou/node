@@ -242,6 +242,7 @@ router.get('/addGameActive', function (req, res) {
             if (games.length) {
                 active.game_id = games[0].id;
                 game.getHasActive(active.game_id, data.type, function (result) {
+                    console.log(result);
                     if (result.affectedRows) {
                         game.addActive(active, function (addresult) {
                             addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
@@ -273,7 +274,7 @@ router.get('/setGameActive', function (req, res) {
             active_img: data.active_img || "",
             active: data.active || "",
             game_id: data.game_id || "",
-            // type: data.type || "",
+            type: data.type || "",
             // sys: data.sys || ""
         };
         game.getHasActive(data.game_id, data.type, function (result) {
@@ -294,6 +295,7 @@ router.get('/setGameActive', function (req, res) {
 });
 router.get('/addSubject', function (req, res) {
     var data = req.query;
+    console.log(data);
     if (data.title && data.img) {
         game.addSubject(data.img, data.title, data.detail, data.active, data.sys, function (result) {
             result.insertId ? res.json({state: 1}) : res.json({state: 0})
@@ -339,7 +341,6 @@ router.get('/addSubjectGame', function (req, res) {
 });
 router.get('/deleteSubjectGame', function (req, res) {
     var data = req.query;
-    console.log(data);
     if (data.id) {
         game.deleteSubjectGame(data.id, function (result) {
             console.log(result);

@@ -236,9 +236,12 @@ var game = {
         })
     },
     deleteSubject: function (subjectId, callback) {
-        var sql = 'delete from t_subject where id = ?';
-        query(sql, [subjectId], function (result) {
-            return callback(result);
+        var sql_relation = 'delete from t_subject_relation where subject_id = ?';
+        query(sql_relation, [subjectId], function (msg) {
+            var sql = 'delete from t_subject where id = ?';
+            query(sql, [subjectId], function (result) {
+                return callback(result);
+            })
         })
     },
     // getTag: function (callback) {

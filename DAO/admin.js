@@ -361,6 +361,20 @@ var admin = {
         query(sql, [startTime, endTime], function (result) {
             return callback(result)
         })
+    },
+    hasAdminPwd: function (obj, callback) {
+        var pwd = md5.pwdMd5(obj.oldPwd);
+        var sql = "SELECT id,name,comment,login_ip FROM t_admin WHERE id = ? AND password = ?"
+        query(sql, [obj.id, pwd], function (result) {
+            return callback(result)
+        })
+    },
+    setAdminPwd: function (obj, callback) {
+        var pwd = md5.pwdMd5(obj.pwd);
+        var sql = "UPDATE t_admin SET password = ? WHERE id = ?"
+        query(sql, [pwd, obj.id], function (result) {
+            return callback(result)
+        })
     }
 };
 

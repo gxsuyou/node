@@ -196,7 +196,7 @@ var rmdirSync = (function () {
 
     return function (dir, cb) {
         cb = cb || function () {
-        };
+            };
         var dirs = [];
 
         try {
@@ -388,7 +388,7 @@ router.get('/active', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_activity';
-    var where = " order by type ";
+    var where = " order by id desc ";
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
@@ -514,7 +514,7 @@ router.get('/gameMsg', function (req, res, next) {
 
 
 router.post('/login', function (req, res, next) {
-    // console.log(req.body.name,req.body.pwd);
+     console.log(req.body);
     // res.json({status:0});
     // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
@@ -1155,6 +1155,23 @@ router.get("/getRegUserByDate", function (req, res, next) {
         res.json({state: 1, co: result[0]})
     })
 });
+
+router.post("/setPassword", function (req, res, next) {
+    var data = req.body;
+    if (data.id && data.pwd && data.oldPwd) {
+        admin.hasAdminPwd(data, function (oldAdmin) {
+            if (oldAdmin.length) {
+                admin.setAdminPwd(data, function (result) {
+                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+                })
+            } else {
+                res.json({state: 0})
+            }
+        })
+    } else {
+        res.json({state: 0})
+    }
+})
 
 function getDate(index) {
     var date = new Date(); //当前日期
