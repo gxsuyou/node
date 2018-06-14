@@ -63,6 +63,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     cls_ids: data.cls ? data.cls : cls,
                     tag_ids: data.tag ? data.tag : tag
                 };
+                console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
                     console.log(result.insertId);
                     if (result.insertId) {
@@ -115,6 +116,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         company: data.company || null,//公司
         version: data.version || null,//版本
         download_num: data.download_num || null,//下载数
+        gameRecommend: data.gameRecommend || null,
         sort: data.sort || null,//首页排列
         sort2: data.sort2 || null,//热搜排列
         size: data.size || null,//大小
@@ -125,15 +127,18 @@ router.post('/SetGameMsg', function (req, res, next) {
         // tag_ids: fields.tag_ids//标签id
     };
     // // res.json(game);
-    // // return false;
-    common.postMsgcheck(gameArr, function (ret_check) {
-        if (ret_check.state != 1) {
-            res.json({state: 0, info: ret_check.info})
-        }
-        game.editGameMsg(gameArr, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
+    //return false;
+    console.log(data.up_admin);
+    //common.postMsgcheck(gameArr, function (ret_check) {
+    //    if (ret_check.state != 1) {
+    //        res.json({state: 0, info: ret_check.info})
+    //        return false;
+    //    }
+    game.editGameMsg(gameArr, function (result) {
+        result.affectedRows ? res.json({state: 1}) : res.json({state: 0});
+        return false;
     })
+    //})
 
 });
 // router.get('setcats', function (req, res, next) {
@@ -195,16 +200,16 @@ router.get('/activeSearch', function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        game.hasGame(data.name, function (game) {
-            common.getGameSearch(data.name, function (result) {
-                // console.log(result);
-                if (result.length > 0) {
-                    res.json({state: 1, result: result});
-                } else {
-                    res.json({state: 0, result: []});
-                }
-            })
+        //game.hasGame(data.name, function (game) {
+        common.getGameSearch(data.name, function (result) {
+            // console.log(result);
+            if (result.length > 0) {
+                res.json({state: 1, result: result});
+            } else {
+                res.json({state: 0, result: []});
+            }
         })
+        //})
     } else {
         common.getGameSearch(data, function (result) {
             res.json(result);
@@ -242,7 +247,7 @@ router.get('/addGameActive', function (req, res) {
             if (games.length) {
                 active.game_id = games[0].id;
                 game.getHasActive(active.game_id, data.type, function (result) {
-                    console.log(result);
+                    //console.log(result);
                     if (result.affectedRows) {
                         game.addActive(active, function (addresult) {
                             addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
@@ -343,7 +348,7 @@ router.get('/deleteSubjectGame', function (req, res) {
     var data = req.query;
     if (data.id) {
         game.deleteSubjectGame(data.id, function (result) {
-            console.log(result);
+            //console.log(result);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {
@@ -404,10 +409,10 @@ router.get('/getTagByGame', function (req, res) {
 });
 router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
-    console.log(data);
+    //console.log(data);
     if (data.id) {
         game.setTagAndCls(data.id, data.tag_ids, data.cls_ids, function (result) {
-            console.log(result.affectedRows);
+            //console.log(result.affectedRows);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {

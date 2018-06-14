@@ -41,17 +41,18 @@ router.get('/getStrategyByMsgPage', function (req, res) {
     var msg = req.query.msg;
 
     var tables = ["t_strategy", "t_user"];
-    var where = "t_strategy.user_id = t_user.id where title like '%" + msg + "%' order by t_strategy.add_time";
+    var where = "t_strategy.user_id = t_user.id " +
+        "LEFT JOIN t_admin ON t_strategy.admin = t_admin.id " +
+        "WHERE title LIKE '%" + msg + "%' ORDER BY t_strategy.add_time";
 
-    var field = "t_strategy.*,t_user.nick_name";
+    var field = "t_strategy.*,t_user.nick_name,t_admin.comment AS admin_comment";
     common.page(tables, p, where, "left", field, function (result) {
-        console.log(result);
+        console.log(result.result)
         res.json(result);
     })
 
     // var data = req.query;
     // if(data.page && data.page>0){
-    //     console.log(1);
     //     strategy.getStrategyByMsgPage(data.msg,data.page,function (result) {
     //         res.json({state:1,len:result.len,strategy:result})
     //     })
@@ -59,19 +60,61 @@ router.get('/getStrategyByMsgPage', function (req, res) {
     //     res.json({state:0})
     // }
 });
-router.get('/addStrategy', function (req, res, next) {
-    var data = req.query
+router.post('/addStrategy', function (req, res, next) {
+    var data = req.body
     var date = new Date();
-    if (data.adminId && data.game_name && data.title) {
+    if (data.game_name && data.title) {
         strategy.hasUserAndGame(data, function (result) {
-            if (result.length) {
-                data.add_time = date.Format("yyyy-MM-dd") || null
+            if (result.game_id && result.admin) {
+                data.add_time = date.Format("yyyy-MM-dd-HH-mm-ss") || null
                 data.admin = result.admin;
                 strategy.addStratgy(data, function (add_result) {
+                    if (add_result.insertId) {
+                        data.StrategyId = add_result.insertId;
+                        data.sort_id = 0;
+                        strategy.addStrategyImg(data, function (img_result) {
+                            img_result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                        })
+                    }
+                })
+            }
+        })
+    }
+});
+router.post('/addStrategyImg', function (req, res, next) {
+    var data = req.query;
+    data.sort_id = 0;
+    if (data.id && data.src) {
+        strategy.addStrategyImg(data, function (result) {
+            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+        })
+    } else {
+        res.json({state: 0})
+    }
+});
+
+router.get("/setStrategy", function () {
+    var data = req.query
+    if (data.game_name && data.title) {
+        strategy.hasUserAndGame(data, function (result) {
+            if (result.length) {
+                strategy.setStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1}) : res.json({state: 0})
                 })
             }
         })
+    }
+});
+
+router.get('/setStrategyImg', function (req, res, next) {
+    var data = req.query;
+    data.sort_id = 0;
+    if (data.id && data.src) {
+        strategy.addStrategyImg(data, function (result) {
+            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+        })
+    } else {
+        res.json({state: 0})
     }
 });
 router.get('/getStrategyCount', function (req, res) {

@@ -43,8 +43,8 @@ var strategy = {
         })
     },
     hasUserAndGame: function (obj, callback) {
-        var admin_sql = "select id form t_admin where id = ?";
-        query(admin_sql, [obj.adminId], function (admin_result) {
+        var admin_sql = "select id from t_admin where id = ?";
+        query(admin_sql, [obj.admin], function (admin_result) {
             if (admin_result.length) {
                 var game_sql = "select * from t_game where game_name = ?";
                 query(game_sql, [obj.game_name], function (game_result) {
@@ -68,11 +68,37 @@ var strategy = {
         var sql = "INSERT INTO t_strategy (title,detail,game_name,add_time,admin) VALUES (?,?,?,?,?)"
         query(sql, [obj.title, obj.detail, obj.game_name, obj.add_time, obj.admin], function (result) {
             return callback(result);
+            //if (result.insertId) {
+            //    var sql = "INSERT INTO t_strategy_img (src,strategy_id) VALUES (?,?)";
+            //    query(sql, [obj.img_src, result.insertId], function (img_result) {
+            //        return callback(img_result)
+            //    })
+            //}
+        })
+    },
+    setStratgy: function (obj, callback) {
+        var sql = "UPDATE t_strategy SET title=?,detail=? WHERE id=?"
+        query(sql, [obj.title, obj.detail, obj.id], function (result) {
+            return callback(result);
+        })
+    },
+
+    addStrategyImg: function (obj, callback) {
+        var sql = "INSERT INTO t_strategy_img (src,strategy_id,sort_id) VALUES (?,?,?)";
+        query(sql, [obj.img_src, obj.StrategyId, obj.sort_id], function (result) {
+            return callback(result)
         })
     },
     deleteStrategy: function (strategyId, callback) {
         var sql = "delete from  t_strategy where id =? ";
         query(sql, [strategyId], function (result) {
+            return callback(result)
+        })
+    },
+
+    hasAdmin: function (obj, callback) {
+        var admin_sql = "SELECT id,comment FROM t_admin WHERE id = ?";
+        query(admin_sql, [obj], function (result) {
             return callback(result)
         })
     }

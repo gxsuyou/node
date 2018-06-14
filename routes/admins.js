@@ -914,7 +914,6 @@ router.post("/edit/game", function (req, res, next) {
     });
 
     form.parse(req, function (err, fields, files) {
-        console.log(fields.size.slice(0, fields.size.length - 2));
         var game = {
             name: fields.name,
             activation: fields.activation,
