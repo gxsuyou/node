@@ -300,7 +300,7 @@ router.get('/game', function (req, res, next) {
 });
 router.get('/gameAdmin', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-
+    //console.log(req.connection.remoteAddress);
     // var tables = 't_game';
     var tables = ['t_game', 't_admin'];
     var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
@@ -1130,6 +1130,18 @@ router.post("/setPassword", function (req, res, next) {
     } else {
         res.json({state: 0})
     }
+})
+
+router.post("/addIps", function (req, res, next) {
+    var data = req.body;
+    var date = new Date();
+    data.add_time = date.Format('yyyy-MM-dd-HH-mm-SS')
+    if (data.id && data.ips) {
+
+    } else {
+        res.json({state: 0})
+    }
+
 })
 
 function getDate(index) {

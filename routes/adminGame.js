@@ -196,6 +196,7 @@ router.get('/deleteGameImg', function (req, res) {
         res.json({state: 0})
     }
 });
+
 router.get('/activeSearch', function (req, res, next) {
     var data = "";
     if (req.query) {
@@ -262,6 +263,7 @@ router.get('/addGameActive', function (req, res) {
             type: data.type || "",
             // sys: data.sys || ""
         };
+
 
         game.hasGame(data.game_name, function (games) {
             if (games.length) {

@@ -16,7 +16,7 @@ var game = {
     editGameMsg: function (obj, callback) {
         var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=?,up_admin=? where id =?";
         // console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2,obj.up_admin, obj.id], function (result) {
+        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.up_admin, obj.id], function (result) {
             return callback(result)
         })
     },
@@ -188,13 +188,23 @@ var game = {
         })
     },
     addActive: function (obj, callback) {
-        var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type) values (?,?,?,?,?,?,?)';
-        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type], function (result) {
-            return callback(result)
-        })
+        if (obj.type == 5 || obj.type == 6) {
+            obj.active = obj.active ? obj.active : 0;
+            sql = 'insert into t_activity (game_id,type,active) values (?,?,?)';
+            query(sql, [obj.game_id, obj.type, obj.active], function (result) {
+                return callback(result)
+            })
+        } else {
+            var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type) values (?,?,?,?,?,?,?)';
+            query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type], function (result) {
+                return callback(result)
+            })
+        }
+
     },
     setActive: function (obj, callback) {
         var sql = "UPDATE t_activity SET name = ?, title = ?, sort = ?, active_img = ?, active = ? WHERE id = ?";
+        console.log(obj);
         query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.id], function (result) {
             return callback(result)
         })

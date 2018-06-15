@@ -39,7 +39,6 @@ router.get('/getStrategyByMsg', function (req, res) {
 router.get('/getStrategyByMsgPage', function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var msg = req.query.msg;
-
     var tables = ["t_strategy", "t_user"];
     var where = "t_strategy.user_id = t_user.id " +
         "LEFT JOIN t_admin ON t_strategy.admin = t_admin.id " +

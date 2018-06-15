@@ -356,6 +356,9 @@ var admin = {
         query(sql, [pwd, obj.id], function (result) {
             return callback(result)
         })
+    },
+    addIps: function (obj, callback) {
+        var sql = "INSERT INTO t_admin_ipwhite (ip_,type,cost,stock,now_stock) values (?,?,?,?,?)";
     }
 };
 
