@@ -63,7 +63,7 @@ router.get("/getNewsByPage", function (req, res, next) {
 
     var field = "t_news.id,t_news.title,t_news.agree,t_news.`comment`,t_news.browse,t_news.up,t_news.add_time,t_user.nick_name,t_admin.comment AS admin_comment"
     common.page(tables, p, where, "left", field, function (result) {
-        console.log(result);
+        //console.log(result);
         res.json(result);
     })
     // admin.getNewsByPage(req.query.page, function (result) {
