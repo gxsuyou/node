@@ -267,6 +267,9 @@ var game = {
             return callback(result);
         })
     },
+    setTAndC: function (gameId, tagId, clsId, callback) {
+
+    },
     getGameName: function (sys, msg, callback) {
         var sql = "select id,game_name from t_game where game_name like  '%" + msg + "%' and sys =?";
         query(sql, [sys], function (result) {
