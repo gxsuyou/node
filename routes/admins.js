@@ -196,7 +196,7 @@ var rmdirSync = (function () {
 
     return function (dir, cb) {
         cb = cb || function () {
-        };
+            };
         var dirs = [];
 
         try {
@@ -349,11 +349,22 @@ router.get("/gameByType", function (req, res, next) {
 
 });
 router.get("/searchGameByMsg", function (req, res, next) {
-    if (req.query.type && req.query.msg) {
-        admin.searchGameByMsg(req.query.type, req.query.msg, function (result) {
-            res.json({game: result})
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        common.getGameSearch(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
         })
     }
+    // if (req.query.type && req.query.msg) {
+    //     admin.searchGameByMsg(req.query.type, req.query.msg, function (result) {
+    //         res.json({game: result})
+    //     })
+    // }
 });
 router.get("/getClsActive", function (req, res, next) {
     admin.getClsActive(function (result) {
@@ -363,7 +374,7 @@ router.get("/getClsActive", function (req, res, next) {
 router.get('/setClsActive', function (req, res, next) {
     var type = req.query.type,
         sys = req.query.sys;
-    console.log(type, sys);
+    // console.log(type, sys);
     if (JSON.parse(req.query.arr).length = 4) {
         admin.setClsActive(type, sys, JSON.parse(req.query.arr), function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
@@ -377,7 +388,7 @@ router.get('/active', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_activity';
-    var where = " order by type ";
+    var where = " order by id desc ";
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
@@ -503,7 +514,7 @@ router.get('/gameMsg', function (req, res, next) {
 
 
 router.post('/login', function (req, res, next) {
-    // console.log(req.body.name,req.body.pwd);
+     console.log(req.body);
     // res.json({status:0});
     // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
@@ -903,7 +914,6 @@ router.post("/edit/game", function (req, res, next) {
     });
 
     form.parse(req, function (err, fields, files) {
-        console.log(fields.size.slice(0, fields.size.length - 2));
         var game = {
             name: fields.name,
             activation: fields.activation,
@@ -922,6 +932,23 @@ router.post("/edit/game", function (req, res, next) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     })
+});
+
+/**
+ * 游戏名称模糊查询
+ */
+router.get("/getGameSearch", function (req, res, next) {
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        common.getGameSearch(data.name, function (result) {
+            res.json(result);
+        })
+    } else {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
+        })
+    }
 });
 
 //资讯
@@ -1127,6 +1154,23 @@ router.get("/getRegUserByDate", function (req, res, next) {
         res.json({state: 1, co: result[0]})
     })
 });
+
+router.post("/setPassword", function (req, res, next) {
+    var data = req.body;
+    if (data.id && data.pwd && data.oldPwd) {
+        admin.hasAdminPwd(data, function (oldAdmin) {
+            if (oldAdmin.length) {
+                admin.setAdminPwd(data, function (result) {
+                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+                })
+            } else {
+                res.json({state: 0})
+            }
+        })
+    } else {
+        res.json({state: 0})
+    }
+})
 
 function getDate(index) {
     var date = new Date(); //当前日期

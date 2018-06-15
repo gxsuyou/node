@@ -5,6 +5,7 @@ var game = {
         var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids,tag_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         // var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [];
+        console.log(arr);
         for (var x in obj) {
             arr.push(obj[x])
         }
@@ -13,9 +14,9 @@ var game = {
         })
     },
     editGameMsg: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=? where id =?";
-        console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id], function (result) {
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=?,up_admin=? where id =?";
+        // console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
+        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2,obj.up_admin, obj.id], function (result) {
             return callback(result)
         })
     },
@@ -159,15 +160,6 @@ var game = {
             return callback(result)
         })
     },
-    getActiveGame:function(obj = "", callback){
-        var sql = "SELECT * FROM t_game ";
-        if (obj) {
-            sql = "SELECT * FROM t_game WHERE game_name LIKE '%" + obj + "%' LIMIT 0,30";
-        }
-        query(sql, [], function (result) {
-            return callback(result);
-        })
-    },
     searchActive: function (msg, callback) {
         //TODO 未完成
         var sql = "SELECT * FROM t_activity  WHERE name like '%" + msg + "%' LIMIT 0,30";
@@ -175,10 +167,18 @@ var game = {
             return callback(result)
         })
     },
-    hasActive: function (gameId, type, callback) {
+    getHasActive: function (gameId, type, callback) {//验证是否存在并删除
         var sql = 'select * from t_activity where game_id=? and type=?';
         query(sql, [gameId, type], function (result) {
-            return callback(result)
+            if (result.length) {
+                var del_sql = "delete from t_activity where game_id=? and type=?"
+                query(del_sql, [gameId, type], function (del_result) {
+                    return callback(del_result)
+                })
+            } else {
+                return callback(result)
+            }
+            // return callback(result)
         })
     },
     deleteActive: function (gameId, type, callback) {
@@ -188,10 +188,17 @@ var game = {
         })
     },
     addActive: function (obj, callback) {
-        var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type,sys) values (?,?,?,?,?,?,?,?)';
-        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type, obj.sys], function (result) {
+        var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type) values (?,?,?,?,?,?,?)';
+        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type], function (result) {
             return callback(result)
         })
+    },
+    setActive: function (obj, callback) {
+        var sql = "UPDATE t_activity SET name = ?, title = ?, sort = ?, active_img = ?, active = ? WHERE id = ?";
+        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.id], function (result) {
+            return callback(result)
+        })
+
     },
     addSubject: function (img, title, detail, up, sys, callback) {
         var sql = 'insert into t_subject (img,title,detail,active,sys) values (?,?,?,?,?)';
@@ -199,54 +206,57 @@ var game = {
             return callback(result)
         })
     },
-    getSubject: function (callback) {
-        var sql = 'select * from t_subject';
-        query(sql, [], function (result) {
-            return callback(result)
-        })
-    },
+    // getSubject: function (callback) {
+    //     var sql = 'select * from t_subject';
+    //     query(sql, [], function (result) {
+    //         return callback(result)
+    //     })
+    // },
     hasSubjectGame: function (gameId, subjectId, callback) {
         var sql = 'select * from t_subject_relation where game_id=? and subject_id=?';
         query(sql, [gameId, subjectId], function (result) {
-            return callback(result)
+            return callback(result);
         })
     },
     addSubjectGame: function (gameId, subjectId, callback) {
         var sql = 'insert into t_subject_relation (game_id,subject_id) values (?,?)';
         query(sql, [gameId, subjectId], function (result) {
-            return callback(result)
+            return callback(result);
         })
     },
     deleteSubjectGame: function (id, callbck) {
         var sql = 'delete from t_subject_relation where id = ?';
         query(sql, [id], function (result) {
-            return callbck(result)
+            return callbck(result);
         })
     },
     getSubjectGame: function (subjectId, callbcak) {
         var sql = 'SELECT t_subject_relation.id as relationId,t_game.game_name,t_game.id AS gameId,t_subject.title,t_subject.id AS subjectId FROM (t_subject_relation LEFT JOIN t_subject ON t_subject_relation.subject_id = t_subject.id ) LEFT JOIN t_game ON t_subject_relation.game_id = t_game.id WHERE t_subject_relation.`subject_id`=?';
         query(sql, [subjectId], function (result) {
-            return callbcak(result)
+            return callbcak(result);
         })
     },
     deleteSubject: function (subjectId, callback) {
-        var sql = 'delete from t_subject where id = ?';
-        query(sql, [subjectId], function (result) {
-            callback(result)
+        var sql_relation = 'delete from t_subject_relation where subject_id = ?';
+        query(sql_relation, [subjectId], function (msg) {
+            var sql = 'delete from t_subject where id = ?';
+            query(sql, [subjectId], function (result) {
+                return callback(result);
+            })
         })
     },
-    getTag: function (callback) {
-        var sql = 'select * from t_tag';
-        query(sql, [], function (resule) {
-            return callback(resule)
-        })
-    },
-    getTagByGame: function (gameId, callback) {
-        var sql = 'select t_tag.*,t_tag_relation.id as tagRelationId from t_tag_relation left join t_tag on t_tag_relation.tag_id = t_tag.id where t_tag_relation.game_id = ?';
-        query(sql, [gameId], function (result) {
-            return callback(result)
-        })
-    },
+    // getTag: function (callback) {
+    //     var sql = 'select * from t_tag';
+    //     query(sql, [], function (resule) {
+    //         return callback(resule)
+    //     })
+    // },
+    // getTagByGame: function (gameId, callback) {
+    //     var sql = 'select t_tag.*,t_tag_relation.id as tagRelationId from t_tag_relation left join t_tag on t_tag_relation.tag_id = t_tag.id where t_tag_relation.game_id = ?';
+    //     query(sql, [gameId], function (result) {
+    //         return callback(result)
+    //     })
+    // },
     setTagAndCls: function (gameId, tagId, clsId, callback) {
         var sql = "update t_game set tag_ids = ?, cls_ids = ? where id = ?"
         query(sql, [tagId, clsId, gameId], function (result) {

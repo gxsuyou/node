@@ -9,7 +9,7 @@ var admin = {
     adminLogin: function (username, password, callback) {
         var pwd = md5.pwdMd5(password);
         var sql = "select id,name,comment from t_admin where name=? and password=?";
-        console.log(username, pwd);
+        // console.log(username, pwd);
         query(sql, [username, pwd], function (result) {
             console.log(66766 + result);
             // return false;
@@ -359,6 +359,20 @@ var admin = {
     getRegUserByDate: function (startTime, endTime, callback) {
         var sql = "select count(id) as co from t_user where time_logon>? and time_logon<?";
         query(sql, [startTime, endTime], function (result) {
+            return callback(result)
+        })
+    },
+    hasAdminPwd: function (obj, callback) {
+        var pwd = md5.pwdMd5(obj.oldPwd);
+        var sql = "SELECT id,name,comment,login_ip FROM t_admin WHERE id = ? AND password = ?"
+        query(sql, [obj.id, pwd], function (result) {
+            return callback(result)
+        })
+    },
+    setAdminPwd: function (obj, callback) {
+        var pwd = md5.pwdMd5(obj.pwd);
+        var sql = "UPDATE t_admin SET password = ? WHERE id = ?"
+        query(sql, [pwd, obj.id], function (result) {
             return callback(result)
         })
     }

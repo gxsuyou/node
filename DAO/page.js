@@ -17,6 +17,7 @@ var page = {
         //     "LEFT JOIN t_game AS b ON a.`game_id`=b.`id` order by a.up desc,a.add_time desc limit ?,5";
         var sqlTypes = sqlType;
         var fields = field ? field : "*";
+        var LEFT = "";
         var sql = "SELECT COUNT(*) AS count FROM `" + tables + "`";
         if (sqlTypes == "left") {//关联查询
             sql = "SELECT COUNT(*) AS count FROM `" + tables[0] + "`";
@@ -26,6 +27,9 @@ var page = {
             if (result[0].count > 0) {
                 var sql_1 = "SELECT " + fields + " FROM " + tables + " " + where + " limit ?,?";
                 if (sqlTypes == "left") {
+                    if (tables[2]) {
+                        var LEFT = "LEFT JOIN  " + tables[2] + "\n";
+                    }
                     sql_1 = "SELECT " + fields + " FROM " + tables[0] + " \n" +
                         "LEFT JOIN  " + tables[1] + "\n" +
                         "ON " + where + " limit ?,?";
