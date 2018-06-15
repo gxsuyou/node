@@ -118,7 +118,7 @@ router.post("/editH5", function (req, res, next) {
     var data = req.body;
     if (data.id) {
         h5.updateH5(data.id, data.name, data.url, data.commend, data.sort, function (result) {
-            console.log(result);
+            //console.log(result);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     }

@@ -47,7 +47,7 @@ router.get('/getStrategyByMsgPage', function (req, res) {
 
     var field = "t_strategy.*,t_user.nick_name,t_admin.comment AS admin_comment";
     common.page(tables, p, where, "left", field, function (result) {
-        console.log(result.result)
+        //console.log(result.result)
         res.json(result);
     })
 

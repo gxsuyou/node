@@ -220,9 +220,9 @@ router.get("/deleteSlideGameById", function (req, res) {
 });
 router.get("/deleteHeadGameById", function (req, res) {
     if (req.query.id) {
-        console.log(req.query.id);
+        //console.log(req.query.id);
         news.getHeadGameById(req.query.id, function (result) {
-            console.log(result);
+            //console.log(result);
             if (result.length) {
                 console.log(2);
                 deleteByBucketKey(qiniuBucket.img, result[0].img);
