@@ -135,13 +135,14 @@ router.post('/SetGameMsg', function (req, res, next) {
     })
 
 });
-router.get('setcats', function (req, res, next) {
-    game.gameTagSet("a", function (msg) {
-        res.json(msg);
-    })
-})
+// router.get('setcats', function (req, res, next) {
+//     game.gameTagSet("a", function (msg) {
+//         res.json(msg);
+//     })
+// })
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
+        console.log(req.query);
         game.updateDownloadAndroid(req.query.id, req.query.url, req.query.size, function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
@@ -190,16 +191,17 @@ router.get('/deleteGameImg', function (req, res) {
     }
 });
 router.get('/activeSearch', function (req, res, next) {
-    if (req.query.type && req.query.msg) {
-        game.searchActive(req.query.type, req.query.msg, function (result) {
+    if (req.query.name!=""){
+        game.searchActive(req.query.name, function (result) {
             res.json({game: result})
         })
     }
 });
 
-router.get('/activeGameDetail', function () {
-  //  game.
-
+router.get('/activeGameDetail', function (req, res, next) {
+    game.getActiveGame(req.query.name, function (result) {
+        res.json(result);
+    })
 });
 
 router.get('/addGameActive', function (req, res) {
