@@ -298,25 +298,6 @@ var admin = {
             return callback(result);
         })
     },
-    editNewsById: function (id, title, agree, browse, comment, add_time, callback) {
-        var sql = "update t_news set title=?,agree=?,browse=?,comment=?,add_time=? where id=?";
-        query(sql, [title, agree, browse, comment, add_time, id], function (result) {
-            return callback(result)
-        })
-    },
-    upNews: function (id, callback) {
-        var sql = "update t_news set up=1 where id=?";
-        query(sql, [id], function (result) {
-            return callback(result)
-        })
-    },
-    downNews: function (id, callback) {
-        var sql = "update t_news set up=0 where id=?";
-        query(sql, [id], function (result) {
-            return callback(result)
-        })
-    },
-
     //渠道
     getQudao: function (callback) {
         var sql = "select * from t_admin where jurisdiction=3";

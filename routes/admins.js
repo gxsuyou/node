@@ -352,7 +352,7 @@ router.get("/searchGameByMsg", function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        common.getGameSearch(data.name, function (result) {
+        common.getGameSearch(data.msg, function (result) {
             res.json(result);
         })
     } else {
@@ -514,7 +514,7 @@ router.get('/gameMsg', function (req, res, next) {
 
 
 router.post('/login', function (req, res, next) {
-     console.log(req.body);
+    console.log(req.body);
     // res.json({status:0});
     // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
@@ -1034,22 +1034,6 @@ router.post("/addNews", function (req, res, next) {
         });
     })
 });
-router.get("/getNewsByPage", function (req, res, next) {
-    var p = req.query.p > 0 ? req.query.p : 1;
-    var tables = 't_news';
-    var where = " ORDER BY up DESC,add_time DESC ";
-    common.page(tables, p, where, "", "", function (result) {
-        res.json(result);
-    })
-    // admin.getNewsByPage(req.query.page, function (result) {
-    //     result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
-    // })
-});
-router.get('/getNewsById', function (req, res, next) {
-    admin.getNewsById(req.query.id, function (result) {
-        result.length ? res.json({state: 1, news: result[0]}) : res.json({state: 0})
-    })
-});
 router.get("/deleteNewsById", function (req, res, next) {
     if (req.query.id) {
         admin.getNewsById(req.query.id, function (result) {
@@ -1074,30 +1058,6 @@ router.get("/deleteNewsById", function (req, res, next) {
         })
     } else {
         res.json({state: 0});
-    }
-});
-router.post("/editNewsById", function (req, res, next) {
-    var data = req.body;
-    if (data.id && data.title && data.browse && data.agree && data.comment && data.add_time) {
-        admin.editNewsById(data.id, data.title, data.agree, data.browse, data.comment, data.add_time, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
-    } else {
-        res.json({state: 0})
-    }
-});
-router.get("/upNews", function (req, res, next) {
-    if (req.query.id) {
-        admin.upNews(req.query.id, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
-    }
-});
-router.get("/downNews", function (req, res, next) {
-    if (req.query.id) {
-        admin.downNews(req.query.id, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
     }
 });
 

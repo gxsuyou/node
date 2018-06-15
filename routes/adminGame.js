@@ -216,6 +216,26 @@ router.get('/activeSearch', function (req, res, next) {
         })
     }
 });
+router.get('/getActiveSearch', function (req, res, next) {
+    var data = "";
+    if (req.query) {
+        data = req.query;
+        //game.hasGame(data.name, function (game) {
+        common.getActiveSearch(data.name, function (result) {
+            // console.log(result);
+            if (result.length > 0) {
+                res.json({state: 1, result: result});
+            } else {
+                res.json({state: 0, result: []});
+            }
+        })
+        //})
+    } else {
+        common.getActiveSearch(data, function (result) {
+            res.json(result);
+        })
+    }
+});
 
 router.get('/hasGame', function (req, res, next) {
     var data = req.query;

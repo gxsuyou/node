@@ -73,7 +73,7 @@ var common = {
                 }
                 arr = {
                     result: result.lists,
-                    nowPage: p,
+                    nowPage: parseInt(p),
                     firstPage: firstPage,
                     lastPage: lastPage,
                     nextPage: nextPage,
@@ -106,6 +106,19 @@ var common = {
         var sql = "SELECT * FROM t_game LIMIT 0,30";
         if (obj) {
             sql = "SELECT * FROM t_game WHERE game_name LIKE '%" + obj + "%' LIMIT 0,30";
+        }
+        query(sql, [], function (result) {
+            if (result) {
+                return callback(result);
+            } else {
+                return callback([]);
+            }
+        })
+    },
+    getActiveSearch: function (obj, callback) {
+        var sql = "SELECT * FROM t_activity LIMIT 0,30";
+        if (obj) {
+            sql = "SELECT * FROM t_activity WHERE name LIKE '%" + obj + "%' LIMIT 0,30";
         }
         query(sql, [], function (result) {
             if (result) {
