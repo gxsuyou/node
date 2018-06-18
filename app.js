@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var fs=require("fs");
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -7,7 +8,7 @@ var bodyParser = require('body-parser');
 var timeout = require('connect-timeout');
 var crypto = require('crypto');
 var md5 = crypto.createHash('md5');
-
+var multer =require('multer');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var game  = require('./routes/game');
@@ -21,15 +22,33 @@ var adminH5 = require('./routes/adminH5');
 var adminGame=require('./routes/adminGame');
 var adminStrategy=require("./routes/adminStrategy");
 var app = express();
-app.all('*', function(req, res, next) {
+app.use('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers","X-Requested-With,content-type");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By",' 3.2.1');
-    res.header("Content-Type", "application/json;charset=utf-8");
-   //res.header("Content-Type", "text/html");
+    //res.header("Content-Type", "application/json;charset=utf-8");
+    //res.header("Content-Type", "text/html");
     next();
 });
+app.use(function(req,res,next){
+   if(req.url.indexOf("www/upload")!==-1){
+     fs.readFile("./"+req.url,function(err,data){
+        if(err){
+        }else{
+          res.write(data);
+          res.end();
+        }
+     });
+
+   }else{
+     next();
+   }
+
+});
+//http://192.168.0.104:8878/upload/Stragey_IMG_15042018_091317_0.png
+
+
 // view engine setup
 // app.set('views', path.join(__dirname, '/views'));
 // app.set('view engine', 'html');
@@ -39,12 +58,13 @@ app.all('*', function(req, res, next) {
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
+var objMulter=multer({dest:"./www/upload/"});
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'views')));
+app.use(objMulter.any());
+//app.use(static('./upload'));
 // app.use(express.bodyParser());
 
 app.use('/', index);

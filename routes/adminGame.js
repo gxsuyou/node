@@ -273,7 +273,7 @@ router.get('/setGameActive', function (req, res) {
             active_img: data.active_img || "",
             active: data.active || "",
             game_id: data.game_id || "",
-            // type: data.type || "",
+            type: data.type || "",
             // sys: data.sys || ""
         };
         game.getHasActive(data.game_id, data.type, function (result) {
