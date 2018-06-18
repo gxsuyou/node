@@ -73,7 +73,7 @@ var common = {
                 }
                 arr = {
                     result: result.lists,
-                    nowPage: p,
+                    nowPage: parseInt(p),
                     firstPage: firstPage,
                     lastPage: lastPage,
                     nextPage: nextPage,
@@ -93,7 +93,7 @@ var common = {
         var info = ""
         var msg = {state: 1};
         for (var i in post) {
-            if (!post[i]) {
+            if (post[i] == null) {
                 info = "提交参数不能为空";
                 msg = {state: 0, info: info}
                 break;
@@ -102,13 +102,30 @@ var common = {
         return callback(msg);
     },
 
-    getGameSearch: function (obj = "", callback) {
+    getGameSearch: function (obj, callback) {
         var sql = "SELECT * FROM t_game LIMIT 0,30";
         if (obj) {
             sql = "SELECT * FROM t_game WHERE game_name LIKE '%" + obj + "%' LIMIT 0,30";
         }
         query(sql, [], function (result) {
-            return callback(result);
+            if (result) {
+                return callback(result);
+            } else {
+                return callback([]);
+            }
+        })
+    },
+    getActiveSearch: function (obj, callback) {
+        var sql = "SELECT * FROM t_activity LIMIT 0,30";
+        if (obj) {
+            sql = "SELECT * FROM t_activity WHERE name LIKE '%" + obj + "%' LIMIT 0,30";
+        }
+        query(sql, [], function (result) {
+            if (result) {
+                return callback(result);
+            } else {
+                return callback([]);
+            }
         })
     },
 }

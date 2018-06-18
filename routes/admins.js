@@ -196,7 +196,7 @@ var rmdirSync = (function () {
 
     return function (dir, cb) {
         cb = cb || function () {
-        };
+            };
         var dirs = [];
 
         try {
@@ -300,7 +300,7 @@ router.get('/game', function (req, res, next) {
 });
 router.get('/gameAdmin', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-
+    //console.log(req.connection.remoteAddress);
     // var tables = 't_game';
     var tables = ['t_game', 't_admin'];
     var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
@@ -352,7 +352,7 @@ router.get("/searchGameByMsg", function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        common.getGameSearch(data.name, function (result) {
+        common.getGameSearch(data.msg, function (result) {
             res.json(result);
         })
     } else {
@@ -388,7 +388,7 @@ router.get('/active', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_activity';
-    var where = " order by type ";
+    var where = " order by id desc ";
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
@@ -514,7 +514,7 @@ router.get('/gameMsg', function (req, res, next) {
 
 
 router.post('/login', function (req, res, next) {
-    // console.log(req.body.name,req.body.pwd);
+    console.log(req.body);
     // res.json({status:0});
     // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
@@ -914,7 +914,6 @@ router.post("/edit/game", function (req, res, next) {
     });
 
     form.parse(req, function (err, fields, files) {
-        console.log(fields.size.slice(0, fields.size.length - 2));
         var game = {
             name: fields.name,
             activation: fields.activation,
@@ -1035,22 +1034,6 @@ router.post("/addNews", function (req, res, next) {
         });
     })
 });
-router.get("/getNewsByPage", function (req, res, next) {
-    var p = req.query.p > 0 ? req.query.p : 1;
-    var tables = 't_news';
-    var where = " ORDER BY up DESC,add_time DESC ";
-    common.page(tables, p, where, "", "", function (result) {
-        res.json(result);
-    })
-    // admin.getNewsByPage(req.query.page, function (result) {
-    //     result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
-    // })
-});
-router.get('/getNewsById', function (req, res, next) {
-    admin.getNewsById(req.query.id, function (result) {
-        result.length ? res.json({state: 1, news: result[0]}) : res.json({state: 0})
-    })
-});
 router.get("/deleteNewsById", function (req, res, next) {
     if (req.query.id) {
         admin.getNewsById(req.query.id, function (result) {
@@ -1075,30 +1058,6 @@ router.get("/deleteNewsById", function (req, res, next) {
         })
     } else {
         res.json({state: 0});
-    }
-});
-router.post("/editNewsById", function (req, res, next) {
-    var data = req.body;
-    if (data.id && data.title && data.browse && data.agree && data.comment && data.add_time) {
-        admin.editNewsById(data.id, data.title, data.agree, data.browse, data.comment, data.add_time, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
-    } else {
-        res.json({state: 0})
-    }
-});
-router.get("/upNews", function (req, res, next) {
-    if (req.query.id) {
-        admin.upNews(req.query.id, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
-    }
-});
-router.get("/downNews", function (req, res, next) {
-    if (req.query.id) {
-        admin.downNews(req.query.id, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
     }
 });
 
@@ -1155,6 +1114,35 @@ router.get("/getRegUserByDate", function (req, res, next) {
         res.json({state: 1, co: result[0]})
     })
 });
+
+router.post("/setPassword", function (req, res, next) {
+    var data = req.body;
+    if (data.id && data.pwd && data.oldPwd) {
+        admin.hasAdminPwd(data, function (oldAdmin) {
+            if (oldAdmin.length) {
+                admin.setAdminPwd(data, function (result) {
+                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+                })
+            } else {
+                res.json({state: 0})
+            }
+        })
+    } else {
+        res.json({state: 0})
+    }
+})
+
+router.post("/addIps", function (req, res, next) {
+    var data = req.body;
+    var date = new Date();
+    data.add_time = date.Format('yyyy-MM-dd-HH-mm-SS')
+    if (data.id && data.ips) {
+
+    } else {
+        res.json({state: 0})
+    }
+
+})
 
 function getDate(index) {
     var date = new Date(); //当前日期

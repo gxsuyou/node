@@ -298,25 +298,6 @@ var admin = {
             return callback(result);
         })
     },
-    editNewsById: function (id, title, agree, browse, comment, add_time, callback) {
-        var sql = "update t_news set title=?,agree=?,browse=?,comment=?,add_time=? where id=?";
-        query(sql, [title, agree, browse, comment, add_time, id], function (result) {
-            return callback(result)
-        })
-    },
-    upNews: function (id, callback) {
-        var sql = "update t_news set up=1 where id=?";
-        query(sql, [id], function (result) {
-            return callback(result)
-        })
-    },
-    downNews: function (id, callback) {
-        var sql = "update t_news set up=0 where id=?";
-        query(sql, [id], function (result) {
-            return callback(result)
-        })
-    },
-
     //渠道
     getQudao: function (callback) {
         var sql = "select * from t_admin where jurisdiction=3";
@@ -361,6 +342,23 @@ var admin = {
         query(sql, [startTime, endTime], function (result) {
             return callback(result)
         })
+    },
+    hasAdminPwd: function (obj, callback) {
+        var pwd = md5.pwdMd5(obj.oldPwd);
+        var sql = "SELECT id,name,comment,login_ip FROM t_admin WHERE id = ? AND password = ?"
+        query(sql, [obj.id, pwd], function (result) {
+            return callback(result)
+        })
+    },
+    setAdminPwd: function (obj, callback) {
+        var pwd = md5.pwdMd5(obj.pwd);
+        var sql = "UPDATE t_admin SET password = ? WHERE id = ?"
+        query(sql, [pwd, obj.id], function (result) {
+            return callback(result)
+        })
+    },
+    addIps: function (obj, callback) {
+        var sql = "INSERT INTO t_admin_ipwhite (ip_,type,cost,stock,now_stock) values (?,?,?,?,?)";
     }
 };
 
