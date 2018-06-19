@@ -1072,6 +1072,21 @@ router.get("/getRegUserByDate", function (req, res, next) {
     })
 });
 
+router.get("/adminInfo", function (req, res, next) {
+    var data = req.query;
+    if (data.id) {
+        admin.hasAdminPwd(data, function (oldAdmin) {
+            if (oldAdmin.length) {
+                res.json(oldAdmin)
+            } else {
+                res.json({state: 0})
+            }
+        })
+    } else {
+        res.json({state: 0})
+    }
+});
+
 router.post("/setPassword", function (req, res, next) {
     var data = req.body;
     if (data.id && data.pwd && data.oldPwd) {

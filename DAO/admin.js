@@ -8,7 +8,7 @@ var md5 = require('../DAO/common')
 var admin = {
     adminLogin: function (username, password, callback) {
         var pwd = md5.pwdMd5(password);
-        var sql = "select id,name,comment from t_admin where name=? and password=?";
+        var sql = "select id,name,comment,nike_name from t_admin where name=? and password=?";
         // console.log(username, pwd);
         query(sql, [username, pwd], function (result) {
             console.log(66766 + result);
@@ -345,15 +345,15 @@ var admin = {
     },
     hasAdminPwd: function (obj, callback) {
         var pwd = md5.pwdMd5(obj.oldPwd);
-        var sql = "SELECT id,name,comment,login_ip FROM t_admin WHERE id = ? AND password = ?"
+        var sql = "SELECT id,name,comment,login_ip,nike_name FROM t_admin WHERE id = ? AND password = ?"
         query(sql, [obj.id, pwd], function (result) {
             return callback(result)
         })
     },
     setAdminPwd: function (obj, callback) {
         var pwd = md5.pwdMd5(obj.pwd);
-        var sql = "UPDATE t_admin SET password = ? WHERE id = ?"
-        query(sql, [pwd, obj.id], function (result) {
+        var sql = "UPDATE t_admin SET password = ?,nike_name = ? WHERE id = ?"
+        query(sql, [pwd, obj.nike_name, obj.id], function (result) {
             return callback(result)
         })
     },
