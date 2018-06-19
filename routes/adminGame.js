@@ -61,7 +61,8 @@ router.get('/addGameMsg', function (req, res, next) {
                     admin: data.admin,
                     type: data.type,
                     cls_ids: data.cls ? data.cls : cls,
-                    tag_ids: data.tag ? data.tag : tag
+                    tag_ids: 0
+                    //tag_ids: data.tag ? data.tag : tag
                 };
                 console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
@@ -126,14 +127,6 @@ router.post('/SetGameMsg', function (req, res, next) {
         // cls_ids: data.cls_ids,//分类id
         // tag_ids: fields.tag_ids//标签id
     };
-    // // res.json(game);
-    //return false;
-    console.log(data.up_admin);
-    //common.postMsgcheck(gameArr, function (ret_check) {
-    //    if (ret_check.state != 1) {
-    //        res.json({state: 0, info: ret_check.info})
-    //        return false;
-    //    }
     game.editGameMsg(gameArr, function (result) {
         result.affectedRows ? res.json({state: 1}) : res.json({state: 0});
         return false;
@@ -141,11 +134,6 @@ router.post('/SetGameMsg', function (req, res, next) {
     //})
 
 });
-// router.get('setcats', function (req, res, next) {
-//     game.gameTagSet("a", function (msg) {
-//         res.json(msg);
-//     })
-// })
 router.get('/updateDownloadAndroid', function (req, res, next) {
     if (req.query.id && req.query.url) {
         console.log(req.query);

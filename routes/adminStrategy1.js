@@ -48,6 +48,7 @@ router.get('/getStrategyByMsgPage', function (req, res) {
 
     var field = "t_strategy.*,t_user.nick_name,t_admin.comment AS admin_comment";
     common.page(tables, p, where, "left", field, function (result) {
+        //console.log(result.result)
         res.json(result);
     })
 
@@ -180,15 +181,15 @@ router.post("/img", function (req, res) {
             }
         });
     });
-    //console.log(req.files);
-    //console.log(data);
+    console.log(req.files);
+    console.log(data);
     res.json({errno: 0, data: data});
     // function rename(){
     //   return
     //
     // }
     return false;
-    //console.log(req.query.url);
+    console.log(req.query.url);
     //fs.rename(req.files[0].path, newName, function (err) {
     //    if (err) {
     //        res.json({
