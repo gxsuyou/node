@@ -64,7 +64,6 @@ router.get('/addGameMsg', function (req, res, next) {
                     tag_ids: 0
                     //tag_ids: data.tag ? data.tag : tag
                 };
-                console.log(gameMsg);
                 game.addGameMsg(gameMsg, function (result) {
                     console.log(result.insertId);
                     if (result.insertId) {
