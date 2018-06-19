@@ -60,7 +60,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     gameDetail: data.gameDetail || null,
                     admin: data.admin,
                     type: data.type,
-                    cls_ids: data.cls ? data.cls : cls,
+                    cls_ids: data.cls ? "," + data.cls + "," : cls,
                     tag_ids: 0
                     //tag_ids: data.tag ? data.tag : tag
                 };
@@ -189,16 +189,13 @@ router.get('/activeSearch', function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        //game.hasGame(data.name, function (game) {
         common.getGameSearch(data.name, function (result) {
-            // console.log(result);
             if (result.length > 0) {
                 res.json({state: 1, result: result});
             } else {
                 res.json({state: 0, result: []});
             }
         })
-        //})
     } else {
         common.getGameSearch(data, function (result) {
             res.json(result);
@@ -252,12 +249,11 @@ router.get('/addGameActive', function (req, res) {
             // sys: data.sys || ""
         };
 
-
+        console.log(active);
         game.hasGame(data.game_name, function (games) {
             if (games.length) {
                 active.game_id = games[0].id;
                 game.getHasActive(active.game_id, data.type, function (result) {
-                    //console.log(result);
                     if (result.affectedRows) {
                         game.addActive(active, function (addresult) {
                             addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
@@ -420,8 +416,10 @@ router.get('/getTagByGame', function (req, res) {
 router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
     //console.log(data);
+    var cls_ids = "," + data.cls_ids + ","
+    var tag_ids = "," + data.tag_ids + ","
     if (data.id) {
-        game.setTagAndCls(data.id, data.tag_ids, data.cls_ids, function (result) {
+        game.setTagAndCls(data.id, tag_ids, cls_ids, function (result) {
             //console.log(result.affectedRows);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })

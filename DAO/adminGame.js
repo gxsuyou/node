@@ -14,20 +14,26 @@ var game = {
         })
     },
     editGameMsg: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=?,up_admin=? where id =?";
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=?,up_time=?,up_admin=? where id =?";
         // console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.up_admin, obj.id], function (result) {
+        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.up_time, obj.up_admin, obj.id], function (result) {
             return callback(result)
         })
     },
 
     gameMsgInfo: function (obj, callback) {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
+        var ids = "";
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
                 var cls_sql = "SELECT id,cls_name,cls,pid FROM t_game_cls WHERE cls = ? ORDER BY pid ASC";
                 query(cls_sql, [result[0].type], function (cls_result) {
-                    var cls_sql2 = "SELECT * FROM t_game_cls WHERE id IN (" + result[0].cls_ids + ") ";
+                    ids = result[0].cls_ids;
+                    if (ids.substr(0, 1) == ",") {
+                        ids = ids.substr(1)
+                        ids = ids.substring(0, ids.length - 1)
+                    }
+                    var cls_sql2 = "SELECT * FROM t_game_cls WHERE id IN (" + ids + ") ";
                     query(cls_sql2, [], function (cls_list) {
                         for (var i = 0; i < cls_result.length; i++) {
                             if (i >= cls_result.length) continue;
@@ -48,11 +54,17 @@ var game = {
     },
     gameTag: function (obj, callback) {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
+        var ids = "";
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
                 var tag_sql = "SELECT * FROM t_tag ";
                 query(tag_sql, [], function (tag_result) {
-                    var sql = "SELECT id,name FROM t_tag where id IN ( " + result[0].tag_ids + " )";
+                    ids = result[0].tag_ids;
+                    if (ids.substr(0, 1) == ",") {
+                        ids = ids.substr(1)
+                        ids = ids.substring(0, ids.length - 1)
+                    }
+                    var sql = "SELECT id,name FROM t_tag where id IN ( " + ids + " )";
                     query(sql, [], function (tag_list) {
                         for (var i = 0; i < tag_result.length; i++) {
                             tag_result[i].checked = 0;
@@ -190,8 +202,8 @@ var game = {
     addActive: function (obj, callback) {
         if (obj.type == 5 || obj.type == 6) {
             obj.active = obj.active ? obj.active : 0;
-            sql = 'insert into t_activity (game_id,type,active) values (?,?,?)';
-            query(sql, [obj.game_id, obj.type, obj.active], function (result) {
+            sql = 'insert into t_activity (name,game_id,type,active) values (?,?,?,?)';
+            query(sql, [obj.name, obj.game_id, obj.type, obj.active], function (result) {
                 return callback(result)
             })
         } else {

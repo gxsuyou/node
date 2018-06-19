@@ -89,18 +89,12 @@ router.get('/addH5', function (req, res, next) {
 });
 router.get("/getH5", function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-
     var tables = "t_h5";
     var where = "order by id desc";
 
     common.page(tables, p, where, "", "", function (result) {
-        //console.log(result);
         res.json(result);
     })
-
-    // h5.getH5(1,function (result) {
-    //     res.json({state:1,h5:result})
-    // })
 });
 router.get("/deleteH5", function (req, res, next) {
     if (req.query.id) {
@@ -118,7 +112,6 @@ router.post("/editH5", function (req, res, next) {
     var data = req.body;
     if (data.id) {
         h5.updateH5(data.id, data.name, data.url, data.commend, data.sort, function (result) {
-            //console.log(result);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     }

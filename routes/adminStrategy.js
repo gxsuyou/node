@@ -50,15 +50,6 @@ router.get('/getStrategyByMsgPage', function (req, res) {
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
-
-    // var data = req.query;
-    // if(data.page && data.page>0){
-    //     strategy.getStrategyByMsgPage(data.msg,data.page,function (result) {
-    //         res.json({state:1,len:result.len,strategy:result})
-    //     })
-    // }else {
-    //     res.json({state:0})
-    // }
 });
 router.post('/addStrategy', function (req, res, next) {
     var data = req.body
@@ -69,19 +60,20 @@ router.post('/addStrategy', function (req, res, next) {
                 data.add_time = date.Format("yyyy-MM-dd-HH-mm-ss") || null
                 data.admin = result.admin;
                 strategy.addStratgy(data, function (add_result) {
-                    if (add_result.insertId) {
-                        data.StrategyId = add_result.insertId;
-                        data.sort_id = 0;
-                        strategy.addStrategyImg(data, function (img_result) {
-                            img_result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                        })
-                    }
+                    //if (add_result.insertId) {
+                    //    data.StrategyId = add_result.insertId;
+                    //    data.sort_id = 0;
+                    //    strategy.addStrategyImg(data, function (img_result) {
+                    //        img_result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                    //    })
+                    //}
+                    add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })
             }
         })
     }
 });
-router.post('/addStrategyImg', function (req, res, next) {
+router.get('/addStrategyImg', function (req, res, next) {
     var data = req.query;
     data.sort_id = 0;
     if (data.id && data.src) {

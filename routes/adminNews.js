@@ -63,18 +63,15 @@ router.get("/getNewsByPage", function (req, res, next) {
 
     var field = "t_news.id,t_news.title,t_news.agree,t_news.`comment`,t_news.browse,t_news.up,t_news.add_time,t_user.nick_name,t_admin.comment AS admin_comment"
     common.page(tables, p, where, "left", field, function (result) {
-        //console.log(result);
         res.json(result);
     })
-    // admin.getNewsByPage(req.query.page, function (result) {
-    //     result.length ? res.json({state: 1, news: result}) : res.json({state: 0})
-    // })
 });
 
 router.post("/addNews", function (req, res, next) {
     if (req.body.title && req.body.detail) {
         var date = new Date();
         var data = req.body;
+        var gameId = data.game_id > 0 ? data.game_id : 0;
         var newsdata = {
             title: decodeURI(data.title),
             detail: data.detail,
@@ -83,9 +80,10 @@ router.post("/addNews", function (req, res, next) {
             comment: 0,
             browse: 0,
             add_time: date.Format('yyyy-MM-dd-HH-mm-SS'),
-            game_id: data.game_id,
+            game_id: gameId,
             admin_id: data.admin
         };
+        console.log(newsdata);
         news.addNews(newsdata, function (result) {
             result.insertId ? res.json({state: 1}) : res.json({state: 0})
         })
@@ -190,10 +188,6 @@ router.get("/getHeadGame", function (req, res) {
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
-
-    // news.getHeadGame(function (result) {
-    //     res.json({state: 1, list: result})
-    // })
 });
 router.get("/getSlideGame", function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
@@ -205,9 +199,6 @@ router.get("/getSlideGame", function (req, res) {
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
-    // news.getSlideGame(function (result) {
-    //     res.json({state: 1, list: result})
-    // })
 });
 router.get("/deleteSlideGameById", function (req, res) {
     if (req.query.id) {
@@ -220,7 +211,6 @@ router.get("/deleteSlideGameById", function (req, res) {
 });
 router.get("/deleteHeadGameById", function (req, res) {
     if (req.query.id) {
-        //console.log(req.query.id);
         news.getHeadGameById(req.query.id, function (result) {
             //console.log(result);
             if (result.length) {

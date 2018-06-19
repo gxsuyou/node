@@ -300,8 +300,6 @@ router.get('/game', function (req, res, next) {
 });
 router.get('/gameAdmin', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-    //console.log(req.connection.remoteAddress);
-    // var tables = 't_game';
     var tables = ['t_game', 't_admin'];
     var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
 
@@ -310,9 +308,6 @@ router.get('/gameAdmin', function (req, res, next) {
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     });
-    // admin.getGameByStartAdmin(req.query.start,req.query.id,function (result) {
-    //     res.json({game:result[0],cls:result[1]});
-    // })
 });
 
 router.get('/gameName', function (req, res, next) {
@@ -360,11 +355,6 @@ router.get("/searchGameByMsg", function (req, res, next) {
             res.json(result);
         })
     }
-    // if (req.query.type && req.query.msg) {
-    //     admin.searchGameByMsg(req.query.type, req.query.msg, function (result) {
-    //         res.json({game: result})
-    //     })
-    // }
 });
 router.get("/getClsActive", function (req, res, next) {
     admin.getClsActive(function (result) {
@@ -394,112 +384,89 @@ router.get('/active', function (req, res, next) {
         res.json(result);
     })
 
-    // admin.getActive(function (result) {
-    //     res.json({active: result})
-    // })
 });
-router.post('/addActive', function (req, res, next) {
-    try {
-        var form = formidable.IncomingForm({
-            encoding: 'utf-8',//上传编码
-            uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
-            keepExtensions: true,//保留后缀
-            maxFieldsSize: 2000 * 1024//byte//最大可上传大小
-        });
-        form.parse(req, function (err, fields, files) {
-            // console.log(fields);
-            var active = {
-                name: fields.name,
-                gameName: fields.gameName,
-                title: fields.title,
-                sort: fields.sort,
-                active: fields.active,
-                type: fields.type,
-                sys: fields.sys
-            };
-            for (var key in files) {
-                var file = files[key];
-
-                var extName = '';
-                switch (file.type) {
-                    case 'image/jpeg':
-                        extName = 'jpeg';
-                        break;
-                    case 'image/jpg':
-                        extName = 'jpg';
-                        break;
-                    case 'image/png':
-                        extName = 'png';
-                        break;
-                    case 'image/x-png':
-                        extName = 'png';
-                        break;
-                    case 'application/octet-stream':
-                        extName = 'apk';
-                        break
-                }
-                var fileName = key + '.' + extName;
-                fs.exists(resource + 'active/' + fields.name, function (exists) {
-                    if (exists) {
-                        console.log("文件夹存在")
-                    }
-                    if (!exists) {
-                        console.log("文件夹不存在");
-                        try {
-                            fs.mkdirSync(resource + 'active/' + fields.name);
-                        } catch (e) {
-                            console.log(e);
-                        }
-                    }
-                    var newPath = resource + 'active/' + fields.name + '/' + fileName;
-                    try {
-                        fs.renameSync(file.path, newPath);  //重命名
-                    } catch (e) {
-
-                    }
-                    uploadQiniu(newPath, qiniuBucket.img, 'active/' + fields.name + '/' + fileName, function (respInfo, respBody) {
-                        if (respInfo.statusCode == 200) {
-                            active.active_img = respBody.key;
-                            // console.log(active);
-                            admin.addActive(active, function (result) {
-                                // console.log(result);
-                                if (result.insertId) {
-                                    res.json({state: 1})
-                                } else {
-                                    res.json({state: 0})
-                                }
-                            })
-                        } else {
-                            res.json({state: 0});
-                        }
-                    })
-                });
-            }
-        })
-    } catch (e) {
-        console.log(e);
-    }
-});
-router.get("/deleteActive", function (req, res, next) {
-    var name = req.query.name;
-    // console.log(name);
-    if (req.query.name && req.query.id) {
-        admin.deleteActive(req.query.id, function (result) {
-            if (result.affectedRows) {
-                try {
-                    deleteFileByPrefix(qiniuBucket.img, name)
-                } catch (e) {
-                    console.log(e);
-                }
-                res.json({state: 1})
-            } else {
-                res.json({state: 0});
-            }
-        })
-    } else {
-        res.json({state: 0});
-    }
-});
+//router.post('/addActive', function (req, res, next) {
+//    try {
+//        var form = formidable.IncomingForm({
+//            encoding: 'utf-8',//上传编码
+//            uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
+//            keepExtensions: true,//保留后缀
+//            maxFieldsSize: 2000 * 1024//byte//最大可上传大小
+//        });
+//        form.parse(req, function (err, fields, files) {
+//            // console.log(fields);
+//            var active = {
+//                name: fields.name,
+//                gameName: fields.gameName,
+//                title: fields.title,
+//                sort: fields.sort,
+//                active: fields.active,
+//                type: fields.type,
+//                sys: fields.sys
+//            };
+//            for (var key in files) {
+//                var file = files[key];
+//
+//                var extName = '';
+//                switch (file.type) {
+//                    case 'image/jpeg':
+//                        extName = 'jpeg';
+//                        break;
+//                    case 'image/jpg':
+//                        extName = 'jpg';
+//                        break;
+//                    case 'image/png':
+//                        extName = 'png';
+//                        break;
+//                    case 'image/x-png':
+//                        extName = 'png';
+//                        break;
+//                    case 'application/octet-stream':
+//                        extName = 'apk';
+//                        break
+//                }
+//                var fileName = key + '.' + extName;
+//                fs.exists(resource + 'active/' + fields.name, function (exists) {
+//                    if (exists) {
+//                        console.log("文件夹存在")
+//                    }
+//                    if (!exists) {
+//                        console.log("文件夹不存在");
+//                        try {
+//                            fs.mkdirSync(resource + 'active/' + fields.name);
+//                        } catch (e) {
+//                            console.log(e);
+//                        }
+//                    }
+//                    var newPath = resource + 'active/' + fields.name + '/' + fileName;
+//                    try {
+//                        fs.renameSync(file.path, newPath);  //重命名
+//                    } catch (e) {
+//
+//                    }
+//                    uploadQiniu(newPath, qiniuBucket.img, 'active/' + fields.name + '/' + fileName, function (respInfo, respBody) {
+//                        if (respInfo.statusCode == 200) {
+//                            active.active_img = respBody.key;
+//                            // console.log(active);
+//                            admin.addActive(active, function (result) {
+//                                // console.log(result);
+//                                if (result.insertId) {
+//                                    res.json({state: 1})
+//                                } else {
+//                                    res.json({state: 0})
+//                                }
+//                            })
+//                        } else {
+//                            res.json({state: 0});
+//                        }
+//                    })
+//                });
+//            }
+//        })
+//    } catch (e) {
+//        console.log(e);
+//    }
+//});
 router.get('/getAdmin', function (req, res, next) {
     admin.getAdmin(function (result) {
         res.json({admin: result})
@@ -514,20 +481,10 @@ router.get('/gameMsg', function (req, res, next) {
 
 
 router.post('/login', function (req, res, next) {
-    console.log(req.body);
-    // res.json({status:0});
-    // return false;
     admin.adminLogin(req.body.name, req.body.pwd, function (result) {
-        //  console.log(result);
         result.length > 0 ? res.json({state: 1, user: result}) : res.json({state: 0, user: {}});
     })
 
-});
-
-router.options("/login", function (req, res) {
-    console.log("options");
-    //res.json({statue:0});
-    return;
 });
 
 router.get('/add/user', function (req, res, next) {
@@ -751,188 +708,188 @@ router.get("/deleteGoodsType", function (req, res, next) {
     })
 });
 
-router.post('/add/game', function (req, res, next) {
-
-    var form = formidable.IncomingForm({
-        encoding: 'utf-8',//上传编码
-        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
-        keepExtensions: true,//保留后缀
-        maxFieldsSize: 2000 * 1024 * 1024//byte//最大可上传大小
-    });
-    form.on('progress', function (bytesReceived, bytesExpected) {//在控制台打印文件上传进度
-        var progressInfo = {
-            value: bytesReceived,
-            total: bytesExpected
-        };
-        // console.log('[progress]: ' + JSON.stringify(progressInfo));
-        // res.write(JSON.stringify(progressInfo));
-    })
-        .on('end', function () {
-            console.log('上传成功！');
-            // res.end('上传成功！');
-            res.json({state: 1});
-        })
-        .on('error', function (err) {
-            console.error('上传失败：', err.message);
-            res.json({state: 0});
-            next(err);
-        });
-    var date = new Date();
-    form.parse(req, function (err, fields, files) {
-        var cls = fields.cls.split(',');
-        var clsName = ["", "动作射击", "模拟养成", "棋牌天地", "策略塔防", "动作冒险", "角色扮演", "休闲益智", "体育休闲", "其他游戏", "网上购物", "影音图像", "系统工具", "商业办公", "通讯社交", "生活服务", "运动健康", "资讯阅读"];
-        var game = {
-            admin: fields.admin,
-            type: fields.optionsRadiosinline,
-            game_name: fields.game_name,
-            game_packagename: fields.keyword,
-            game_recommend: fields.game_one,
-            game_version: fields.game_version,
-            game_company: fields.game_cmp,
-            activation: fields.game_active,
-            sys: fields.type,
-            update_detail: fields.update_msg,
-            game_detail: fields.game_msg,
-            game_update_date: date.Format('yyyy-MM-dd'),
-            add_time: date.Format('yyyy-MM-dd'),
-            cls: clsName[(cls[0])]
-        };
-
-        admin.hasGame(fields.game_name, function (result) {
-            for (var k in result) {
-                if (result[k].sys == fields.type) {
-                    var dirlist = fs.readdirSync(form.uploadDir);
-                    dirlist.forEach(function (fileName) {
-                        try {
-                            fs.unlinkSync(form.uploadDir + fileName);
-                        } catch (e) {
-                            console.log(e);
-                        }
-                    });
-                    // res.json({state:4});
-                    return;
-                }
-            }
-            admin.addGame(game, function (result) {
-                if (result.insertId) {
-                    var gameId = result.insertId;
-                    for (var k = 0, l = cls.length; k < l; k++) {
-                        admin.addCls(gameId, cls[k], function (data) {
-                            // console.log(data.insertId);
-                        });
-                    }
-                    fs.exists(resource + "game/" + fields.game_name, function (exists) {
-                        if (exists) {
-                            console.log("文件夹存在")
-                        }
-                        if (!exists) {
-                            console.log("文件夹不存在");
-                            try {
-                                fs.mkdirSync(resource + "game/" + fields.game_name);
-                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img');
-                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img/icon');
-                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img/title');
-                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img/list');
-                            } catch (e) {
-                                console.log(e);
-                            }
-                        }
-
-                        for (var key in files) {
-                            var file = files[key];
-                            var extName = '';
-                            switch (file.type) {
-                                case 'image/jpeg':
-                                    extName = 'jpeg';
-                                    break;
-                                case 'image/jpg':
-                                    extName = 'jpg';
-                                    break;
-                                case 'image/png':
-                                    extName = 'png';
-                                    break;
-                                case 'image/x-png':
-                                    extName = 'png';
-                                    break;
-                            }
-                            if (file.type == 'application/octet-stream') {
-                                var fileName = fields.game_name + '.' + "apk";
-                            } else {
-                                var fileName = key + '.' + extName;
-                            }
-                            if (key == 'icon') {
-                                var newPath = path + fields.game_name + '/img/icon/' + fileName;
-                                fs.renameSync(file.path, newPath);  //重命名
-                                uploadQiniu(newPath, qiniuBucket.img, 'game/' + fields.game_name + '/img/icon/' + fileName, function (respInfo, respBody) {
-                                    if (respInfo.statusCode == 200) {
-                                        admin.updateGameIconById(gameId, respBody.key, function () {
-                                        })
-                                    } else {
-                                        console.log("err:" + respBody)
-                                    }
-                                });
-                            } else if (key == 'title_img') {
-                                var newPath = path + fields.game_name + '/img/title/' + fileName;
-                                fs.renameSync(file.path, newPath);  //重命名
-                                uploadQiniu(newPath, qiniuBucket.img, 'game/' + fields.game_name + '/img/title/' + fileName, function (respInfo, respBody) {
-                                    if (respInfo.statusCode == 200) {
-                                        admin.updateGameTitleImgById(gameId, respBody.key, function () {
-                                        })
-                                    } else {
-                                        console.log("err:" + respBody)
-                                    }
-                                });
-
-                            } else if (key.indexOf('game_list') != -1) {
-                                var newPath = path + fields.game_name + '/img/list/' + fileName;
-                                fs.renameSync(file.path, newPath);  //重命名
-                                uploadQiniu(newPath, qiniuBucket.img, 'game/' + fields.game_name + '/img/list/' + fileName, function (respInfo, respBody) {
-                                    if (respInfo.statusCode == 200) {
-                                        admin.addimg(gameId, respBody.key, function () {
-                                        })
-                                    } else {
-                                        console.log("err:" + respBody)
-                                    }
-                                });
-                            }
-                        }
-                    });
-                } else {
-                    res.json({state: 0})
-                }
-            })
-        });
-    })
-});
-
-router.post("/edit/game", function (req, res, next) {
-    var form = formidable.IncomingForm({
-        encoding: 'utf-8',//上传编码
-        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
-        keepExtensions: true,//保留后缀
-        maxFieldsSize: 2000 * 1024//byte//最大可上传大小
-    });
-
-    form.parse(req, function (err, fields, files) {
-        var game = {
-            name: fields.name,
-            activation: fields.activation,
-            company: fields.company,
-            version: fields.version,
-            download_num: fields.download_num,
-            sort: fields.sort,
-            sort2: fields.sort2,
-            size: fields.size.slice(0, fields.size.length - 2),
-            id: fields.id,
-            cls_ids: fields.cls_ids,
-            tag_ids: fields.tag_ids
-        };
-
-        admin.editGame(game, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-        })
-    })
-});
+//router.post('/add/game', function (req, res, next) {
+//
+//    var form = formidable.IncomingForm({
+//        encoding: 'utf-8',//上传编码
+//        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
+//        keepExtensions: true,//保留后缀
+//        maxFieldsSize: 2000 * 1024 * 1024//byte//最大可上传大小
+//    });
+//    form.on('progress', function (bytesReceived, bytesExpected) {//在控制台打印文件上传进度
+//        var progressInfo = {
+//            value: bytesReceived,
+//            total: bytesExpected
+//        };
+//        // console.log('[progress]: ' + JSON.stringify(progressInfo));
+//        // res.write(JSON.stringify(progressInfo));
+//    })
+//        .on('end', function () {
+//            console.log('上传成功！');
+//            // res.end('上传成功！');
+//            res.json({state: 1});
+//        })
+//        .on('error', function (err) {
+//            console.error('上传失败：', err.message);
+//            res.json({state: 0});
+//            next(err);
+//        });
+//    var date = new Date();
+//    form.parse(req, function (err, fields, files) {
+//        var cls = fields.cls.split(',');
+//        var clsName = ["", "动作射击", "模拟养成", "棋牌天地", "策略塔防", "动作冒险", "角色扮演", "休闲益智", "体育休闲", "其他游戏", "网上购物", "影音图像", "系统工具", "商业办公", "通讯社交", "生活服务", "运动健康", "资讯阅读"];
+//        var game = {
+//            admin: fields.admin,
+//            type: fields.optionsRadiosinline,
+//            game_name: fields.game_name,
+//            game_packagename: fields.keyword,
+//            game_recommend: fields.game_one,
+//            game_version: fields.game_version,
+//            game_company: fields.game_cmp,
+//            activation: fields.game_active,
+//            sys: fields.type,
+//            update_detail: fields.update_msg,
+//            game_detail: fields.game_msg,
+//            game_update_date: date.Format('yyyy-MM-dd'),
+//            add_time: date.Format('yyyy-MM-dd'),
+//            cls: clsName[(cls[0])]
+//        };
+//
+//        admin.hasGame(fields.game_name, function (result) {
+//            for (var k in result) {
+//                if (result[k].sys == fields.type) {
+//                    var dirlist = fs.readdirSync(form.uploadDir);
+//                    dirlist.forEach(function (fileName) {
+//                        try {
+//                            fs.unlinkSync(form.uploadDir + fileName);
+//                        } catch (e) {
+//                            console.log(e);
+//                        }
+//                    });
+//                    // res.json({state:4});
+//                    return;
+//                }
+//            }
+//            admin.addGame(game, function (result) {
+//                if (result.insertId) {
+//                    var gameId = result.insertId;
+//                    for (var k = 0, l = cls.length; k < l; k++) {
+//                        admin.addCls(gameId, cls[k], function (data) {
+//                            // console.log(data.insertId);
+//                        });
+//                    }
+//                    fs.exists(resource + "game/" + fields.game_name, function (exists) {
+//                        if (exists) {
+//                            console.log("文件夹存在")
+//                        }
+//                        if (!exists) {
+//                            console.log("文件夹不存在");
+//                            try {
+//                                fs.mkdirSync(resource + "game/" + fields.game_name);
+//                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img');
+//                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img/icon');
+//                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img/title');
+//                                fs.mkdirSync(resource + "game/" + fields.game_name + '/img/list');
+//                            } catch (e) {
+//                                console.log(e);
+//                            }
+//                        }
+//
+//                        for (var key in files) {
+//                            var file = files[key];
+//                            var extName = '';
+//                            switch (file.type) {
+//                                case 'image/jpeg':
+//                                    extName = 'jpeg';
+//                                    break;
+//                                case 'image/jpg':
+//                                    extName = 'jpg';
+//                                    break;
+//                                case 'image/png':
+//                                    extName = 'png';
+//                                    break;
+//                                case 'image/x-png':
+//                                    extName = 'png';
+//                                    break;
+//                            }
+//                            if (file.type == 'application/octet-stream') {
+//                                var fileName = fields.game_name + '.' + "apk";
+//                            } else {
+//                                var fileName = key + '.' + extName;
+//                            }
+//                            if (key == 'icon') {
+//                                var newPath = path + fields.game_name + '/img/icon/' + fileName;
+//                                fs.renameSync(file.path, newPath);  //重命名
+//                                uploadQiniu(newPath, qiniuBucket.img, 'game/' + fields.game_name + '/img/icon/' + fileName, function (respInfo, respBody) {
+//                                    if (respInfo.statusCode == 200) {
+//                                        admin.updateGameIconById(gameId, respBody.key, function () {
+//                                        })
+//                                    } else {
+//                                        console.log("err:" + respBody)
+//                                    }
+//                                });
+//                            } else if (key == 'title_img') {
+//                                var newPath = path + fields.game_name + '/img/title/' + fileName;
+//                                fs.renameSync(file.path, newPath);  //重命名
+//                                uploadQiniu(newPath, qiniuBucket.img, 'game/' + fields.game_name + '/img/title/' + fileName, function (respInfo, respBody) {
+//                                    if (respInfo.statusCode == 200) {
+//                                        admin.updateGameTitleImgById(gameId, respBody.key, function () {
+//                                        })
+//                                    } else {
+//                                        console.log("err:" + respBody)
+//                                    }
+//                                });
+//
+//                            } else if (key.indexOf('game_list') != -1) {
+//                                var newPath = path + fields.game_name + '/img/list/' + fileName;
+//                                fs.renameSync(file.path, newPath);  //重命名
+//                                uploadQiniu(newPath, qiniuBucket.img, 'game/' + fields.game_name + '/img/list/' + fileName, function (respInfo, respBody) {
+//                                    if (respInfo.statusCode == 200) {
+//                                        admin.addimg(gameId, respBody.key, function () {
+//                                        })
+//                                    } else {
+//                                        console.log("err:" + respBody)
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    });
+//                } else {
+//                    res.json({state: 0})
+//                }
+//            })
+//        });
+//    })
+//});
+//
+//router.post("/edit/game", function (req, res, next) {
+//    var form = formidable.IncomingForm({
+//        encoding: 'utf-8',//上传编码
+//        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
+//        keepExtensions: true,//保留后缀
+//        maxFieldsSize: 2000 * 1024//byte//最大可上传大小
+//    });
+//
+//    form.parse(req, function (err, fields, files) {
+//        var game = {
+//            name: fields.name,
+//            activation: fields.activation,
+//            company: fields.company,
+//            version: fields.version,
+//            download_num: fields.download_num,
+//            sort: fields.sort,
+//            sort2: fields.sort2,
+//            size: fields.size.slice(0, fields.size.length - 2),
+//            id: fields.id,
+//            cls_ids: fields.cls_ids,
+//            tag_ids: fields.tag_ids
+//        };
+//
+//        admin.editGame(game, function (result) {
+//            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+//        })
+//    })
+//});
 
 /**
  * 游戏名称模糊查询
@@ -952,114 +909,114 @@ router.get("/getGameSearch", function (req, res, next) {
 });
 
 //资讯
-router.post("/addNews", function (req, res, next) {
-    var form = formidable.IncomingForm({
-        encoding: 'utf-8',//上传编码
-        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
-        keepExtensions: true,//保留后缀
-        maxFieldsSize: 2000 * 1024//byte//最大可上传大小
-    });
-    var date = new Date();
-    form.parse(req, function (err, fields, files) {
-        var news = {
-            title: fields.title,
-            detail: fields.detail,
-            like: 0,
-            comment: 0,
-            browse: 0,
-            add_time: date.Format('yyyy-MM-dd-HH-mm-SS'),
-            game_id: fields.game_id
-        };
-
-        fs.exists(resource + 'news/' + fields.title, function (exists) {
-            if (exists) {
-                console.log("文件夹存在");
-                addNews();
-            }
-            if (!exists) {
-
-                console.log("文件夹不存在");
-                try {
-                    fs.mkdirSync(resource + 'news/' + fields.title);
-                    fs.mkdirSync(resource + 'news/' + fields.title + '/title');
-                    addNews();
-                } catch (e) {
-                    res.json({state: 0});
-                    console.log(e);
-                    return
-                }
-
-            }
-
-            function addNews() {
-                for (var key in files) {
-                    var file = files[key];
-                    var extName = '';
-                    switch (file.type) {
-                        case 'image/jpeg':
-                            extName = 'jpeg';
-                            break;
-                        case 'image/jpg':
-                            extName = 'jpg';
-                            break;
-                        case 'image/png':
-                            extName = 'png';
-                            break;
-                        case 'image/x-png':
-                            extName = 'png';
-                            break;
-                    }
-                    var fileName = key + '.' + extName;
-                    if (key == 'title_img') {
-                        var newPath = resource + 'news/' + fields.title + '/title/' + fileName;
-                        fs.renameSync(file.path, newPath); //重命名
-                        uploadQiniu(newPath, qiniuBucket.img, 'news/' + fields.title + '/title/' + fileName, function (respInfo, respBody) {
-                            if (respInfo.statusCode == 200) {
-                                news.img = respBody.key;
-                                admin.addNews(news, function (result) {
-                                    if (result.insertId) {
-                                        res.json({state: 1});
-                                    } else {
-                                        res.json({state: 0});
-                                        console.log('文章插入数据库失败！');
-                                    }
-                                })
-                            } else {
-                                res.json({state: 0});
-                            }
-                        })
-                    }
-                }
-            }
-        });
-    })
-});
-router.get("/deleteNewsById", function (req, res, next) {
-    if (req.query.id) {
-        admin.getNewsById(req.query.id, function (result) {
-            if (result.length) {
-                try {
-                    fs.exists(resource + 'news/' + result[0].title, function (exists) {
-                        if (exists) {
-                            rmdirSync(resource + "news/" + result[0].title, function (e) {
-                            });
-                        }
-                    });
-                    deleteFileByPrefix(qiniuBucket.img, "news/" + result[0].title)
-                } catch (e) {
-                    console.log(e);
-                }
-                admin.deleteNewsById(req.query.id, function (result) {
-                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0});
-            }
-        })
-    } else {
-        res.json({state: 0});
-    }
-});
+//router.post("/addNews", function (req, res, next) {
+//    var form = formidable.IncomingForm({
+//        encoding: 'utf-8',//上传编码
+//        uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
+//        keepExtensions: true,//保留后缀
+//        maxFieldsSize: 2000 * 1024//byte//最大可上传大小
+//    });
+//    var date = new Date();
+//    form.parse(req, function (err, fields, files) {
+//        var news = {
+//            title: fields.title,
+//            detail: fields.detail,
+//            like: 0,
+//            comment: 0,
+//            browse: 0,
+//            add_time: date.Format('yyyy-MM-dd-HH-mm-SS'),
+//            game_id: fields.game_id
+//        };
+//
+//        fs.exists(resource + 'news/' + fields.title, function (exists) {
+//            if (exists) {
+//                console.log("文件夹存在");
+//                addNews();
+//            }
+//            if (!exists) {
+//
+//                console.log("文件夹不存在");
+//                try {
+//                    fs.mkdirSync(resource + 'news/' + fields.title);
+//                    fs.mkdirSync(resource + 'news/' + fields.title + '/title');
+//                    addNews();
+//                } catch (e) {
+//                    res.json({state: 0});
+//                    console.log(e);
+//                    return
+//                }
+//
+//            }
+//
+//            function addNews() {
+//                for (var key in files) {
+//                    var file = files[key];
+//                    var extName = '';
+//                    switch (file.type) {
+//                        case 'image/jpeg':
+//                            extName = 'jpeg';
+//                            break;
+//                        case 'image/jpg':
+//                            extName = 'jpg';
+//                            break;
+//                        case 'image/png':
+//                            extName = 'png';
+//                            break;
+//                        case 'image/x-png':
+//                            extName = 'png';
+//                            break;
+//                    }
+//                    var fileName = key + '.' + extName;
+//                    if (key == 'title_img') {
+//                        var newPath = resource + 'news/' + fields.title + '/title/' + fileName;
+//                        fs.renameSync(file.path, newPath); //重命名
+//                        uploadQiniu(newPath, qiniuBucket.img, 'news/' + fields.title + '/title/' + fileName, function (respInfo, respBody) {
+//                            if (respInfo.statusCode == 200) {
+//                                news.img = respBody.key;
+//                                admin.addNews(news, function (result) {
+//                                    if (result.insertId) {
+//                                        res.json({state: 1});
+//                                    } else {
+//                                        res.json({state: 0});
+//                                        console.log('文章插入数据库失败！');
+//                                    }
+//                                })
+//                            } else {
+//                                res.json({state: 0});
+//                            }
+//                        })
+//                    }
+//                }
+//            }
+//        });
+//    })
+//});
+//router.get("/deleteNewsById", function (req, res, next) {
+//    if (req.query.id) {
+//        admin.getNewsById(req.query.id, function (result) {
+//            if (result.length) {
+//                try {
+//                    fs.exists(resource + 'news/' + result[0].title, function (exists) {
+//                        if (exists) {
+//                            rmdirSync(resource + "news/" + result[0].title, function (e) {
+//                            });
+//                        }
+//                    });
+//                    deleteFileByPrefix(qiniuBucket.img, "news/" + result[0].title)
+//                } catch (e) {
+//                    console.log(e);
+//                }
+//                admin.deleteNewsById(req.query.id, function (result) {
+//                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+//                })
+//            } else {
+//                res.json({state: 0});
+//            }
+//        })
+//    } else {
+//        res.json({state: 0});
+//    }
+//});
 
 //渠道
 router.get("/getQudao", function (req, res, next) {
