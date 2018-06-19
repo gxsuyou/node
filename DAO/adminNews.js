@@ -7,7 +7,7 @@ var news = {
         })
     },
     addNews: function (obj, callback) {
-        var sql = "INSERT INTO t_news (title,img,add_time,detail_addr,game_id,add_admin) VALUES (?,?,?,?,?,?)";
+        var sql = "INSERT INTO t_news (title,img,add_time,detail,game_id,add_admin) VALUES (?,?,?,?,?,?)";
         query(sql, [obj.title, obj.img, obj.add_time, obj.detail, obj.game_id, obj.admin_id], function (result) {
             return callback(result);
         })
