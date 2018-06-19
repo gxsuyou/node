@@ -13,9 +13,9 @@ router.get('/edit',function (req,res,next) {
     });
 });
 router.get("/carousel",function (req,res,next) {
-   game.getCarousel(function (result) {
-       result.length? res.json({state:1,carousel:result}):res.json({state:0})
-   })
+    game.getCarousel(function (result) {
+        result.length? res.json({state:1,carousel:result}):res.json({state:0})
+    })
 });
 router.get("/active",function (req,res,next) {
     game.getActive(function (result) {
@@ -41,9 +41,9 @@ router.get("/hotGame",function (req,res,next) {
     })
 });
 router.get("/clsIconActive",function (req,res,next) {
-   game.getClsIconActive(function (result) {
-       result.length?res.json({state:1,game:result}):res.json({state:0})
-   })
+    game.getClsIconActive(function (result) {
+        result.length?res.json({state:1,game:result}):res.json({state:0})
+    })
 });
 router.get("/getGameCommentByIdPage",function (req,res,next) {
     if(req.query.gameId){
@@ -64,15 +64,15 @@ router.get("/getGameCommentCountById",function (req,res,next) {
     }
 });
 router.get("/getGameCommentCountByScore",function (req,res,next) {
-   if(req.query.gameId && req.query.score){
-       game.getGameCommentCountByScore(req.query.gameId,req.query.score,function (result) {
-           if(result){
-               res.json({state:1,count:result[0].count})
-           }else {
-               res.json({state:0})
-           }
-       })
-   }
+    if(req.query.gameId && req.query.score){
+        game.getGameCommentCountByScore(req.query.gameId,req.query.score,function (result) {
+            if(result){
+                res.json({state:1,count:result[0].count})
+            }else {
+                res.json({state:0})
+            }
+        })
+    }
 });
 router.get('/game/comment',function (req,res,next) {
     var data=req.query;
@@ -95,23 +95,23 @@ router.get('/game/comment',function (req,res,next) {
     })
 });
 router.get("/searchGameByMsg",function (req,res,next) {
-   if(req.query.msg){
-       var data= req.query;
-       game.getGameByLikeMsg(data.sys,data.msg,data.sort,data.page,function (result) {
-           result.length?res.json({state:1,game:result}):res.json({state:0})
-       })
-   }
+    if(req.query.msg){
+        var data= req.query;
+        game.getGameByLikeMsg(data.sys,data.msg,data.sort,data.page,function (result) {
+            result.length?res.json({state:1,game:result}):res.json({state:0})
+        })
+    }
 });
 router.get("/likeGameComment",function (req,res,next) {
     console.log(req.query);
     // game.like(req.query.)
 });
 router.get("/addDownloadNum",function (req,res,next) {
-   if(req.query.id){
-       game.addDownloadNum(req.query.id,function (result) {
-           result.affectedRows?res.json({state:1}):res.json({state:0})
-       })
-   }
+    if(req.query.id){
+        game.addDownloadNum(req.query.id,function (result) {
+            result.affectedRows?res.json({state:1}):res.json({state:0})
+        })
+    }
 });
 
 

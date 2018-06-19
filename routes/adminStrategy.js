@@ -7,7 +7,7 @@ var fs = require("fs");
 router.get('/getStrategyByMsg', function (req, res) {
     Date.prototype.Format = function (formatStr) {
         var str = formatStr;
-        var Week = ['ÈÕ', 'Ò»', '¶þ', 'Èý', 'ËÄ', 'Îå', 'Áù'];
+        var Week = ['æ—¥', 'ä¸€', 'äºŒ', 'ä¸‰', 'å››', 'äº”', 'å…­'];
         str = str.replace(/yyyy|YYYY/, this.getFullYear());
         str = str.replace(/yy|YY/, (this.getYear() % 100) > 9 ? (this.getYear() % 100).toString() : '0' + (this.getYear() % 100));
         str = str.replace(/MM/, this.getMonth() > 9 ? (this.getMonth() + 1).toString() : '0' + (this.getMonth() + 1));

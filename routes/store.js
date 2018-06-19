@@ -18,11 +18,11 @@ router.get("/goodType",function (req,res,next) {
     }
 });
 router.get("/goodTypeDetail",function (req,res,next) {
-   if(req.query.goodId && req.query.typeId){
-       store.getGoodTypeByGoodIdTypeId(req.query.goodId,req.query.typeId,function (result) {
-           result.length?res.json({state:1,type:result[0]}):res.json({state:0})
-       })
-   }
+    if(req.query.goodId && req.query.typeId){
+        store.getGoodTypeByGoodIdTypeId(req.query.goodId,req.query.typeId,function (result) {
+            result.length?res.json({state:1,type:result[0]}):res.json({state:0})
+        })
+    }
 });
 
 
@@ -44,11 +44,11 @@ router.get("/goodsListByPage",function (req,res,next) {
     }
 });
 router.get("/goodsImgById",function (req,res,next) {
-   if(req.query.id){
+    if(req.query.id){
         store.getGoodsImgById(req.query.id,function (result) {
             result.length?res.json({state:1,goodsImg:result}):res.json({state:0});
         })
-   }
+    }
 });
 
 module.exports = router;

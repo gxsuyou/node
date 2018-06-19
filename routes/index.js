@@ -10,8 +10,8 @@ router.get('/', function(req, res, next) {
     //     res.json(result)
     // });
 
-  //res.header('Content-Type', 'text/html');
-  // res.render('index', { title: 'Express' });
+    //res.header('Content-Type', 'text/html');
+    // res.render('index', { title: 'Express' });
 });
 
 module.exports = router;
