@@ -51,8 +51,9 @@ app.use(function getIp(req, res, next) {
         var err = new Error('Not Found');
         err.status = 404;
         next(err);
+    } else {
+        next();
     }
-    next();
 });
 app.use(function (req, res, next) {
     if (req.url.indexOf("www/upload") !== -1) {
