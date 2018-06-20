@@ -9,6 +9,8 @@ var timeout = require('connect-timeout');
 var crypto = require('crypto');
 var md5 = crypto.createHash('md5');
 var multer = require('multer');
+var ipslist = require('./config/ipwhite');
+
 var index = require('./routes/index');
 var users = require('./routes/users');
 var game = require('./routes/game');
@@ -32,19 +34,22 @@ app.use('*', function (req, res, next) {
 
     next();
 });
-//app.use(function getIp(req, res, next) {
-//    var ip = req.headers['x-forwarded-for'] ||
-//        req.ip ||
-//        req.connection.remoteAddress ||
-//        req.socket.remoteAddress ||
-//        req.connection.socket.remoteAddress || '';
-//    if (ip.split(',').length > 0) {
-//        ip = ip.split(',')[0];
-//    }
-//    console.log(ip);
-//    //return ip;
-//    next();
-//});
+app.use(function getIp(req, res, next) {
+    var ips = ipslist.lists;
+    var ip = req.headers['x-forwarded-for'] ||
+        req.ip ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress || '';
+    if (ip.split(',').length > 0) {
+        ip = ip.split(',')[0];
+    }
+    if (ips.toString().indexOf(ip) < 0) {
+        res.status("当前地址无权访问登录")
+        res.end()
+    }
+    next();
+});
 app.use(function (req, res, next) {
     if (req.url.indexOf("www/upload") !== -1) {
         fs.readFile("./" + req.url, function (err, data) {

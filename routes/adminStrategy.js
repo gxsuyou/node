@@ -73,17 +73,17 @@ router.post('/addStrategy', function (req, res, next) {
         })
     }
 });
-router.get('/addStrategyImg', function (req, res, next) {
-    var data = req.query;
-    data.sort_id = 0;
-    if (data.id && data.src) {
-        strategy.addStrategyImg(data, function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0})
-        })
-    } else {
-        res.json({state: 0})
-    }
-});
+//router.get('/addStrategyImg', function (req, res, next) {
+//    var data = req.query;
+//    data.sort_id = 0;
+//    if (data.id && data.src) {
+//        strategy.addStrategyImg(data, function (result) {
+//            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+//        })
+//    } else {
+//        res.json({state: 0})
+//    }
+//});
 
 router.get("/setStrategy", function () {
     var data = req.query
@@ -98,17 +98,17 @@ router.get("/setStrategy", function () {
     }
 });
 
-router.get('/setStrategyImg', function (req, res, next) {
-    var data = req.query;
-    data.sort_id = 0;
-    if (data.id && data.src) {
-        strategy.addStrategyImg(data, function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0})
-        })
-    } else {
-        res.json({state: 0})
-    }
-});
+//router.get('/setStrategyImg', function (req, res, next) {
+//    var data = req.query;
+//    data.sort_id = 0;
+//    if (data.id && data.src) {
+//        strategy.addStrategyImg(data, function (result) {
+//            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+//        })
+//    } else {
+//        res.json({state: 0})
+//    }
+//});
 router.get('/getStrategyCount', function (req, res) {
     strategy.getStrategyCount(function (result) {
         res.json({state: 1, len: result[0].len})
