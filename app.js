@@ -44,12 +44,14 @@ app.use(function getIp(req, res, next) {
     if (ip.split(',').length > 0) {
         ip = ip.split(',')[0];
     }
-    console.log(ip);
-    //if (ips.toString().indexOf(ip) < 0) {
-    //    var err = new Error('Not Found');
-    //    err.status = 404;
-    //    next(err);
-    //}
+    if (ip.search("::ffff:") > -1) {
+        ip = ip.split("::ffff:").join("");
+    }
+    if (ips.toString().indexOf(ip) < 0) {
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
+    }
     next();
 });
 app.use(function (req, res, next) {
