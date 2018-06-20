@@ -65,8 +65,8 @@ var strategy = {
 
     },
     addStratgy: function (obj, callback) {
-        var sql = "INSERT INTO t_strategy (title,detail,game_name,add_time,admin,top_img_src) VALUES (?,?,?,?,?,?)"
-        query(sql, [obj.title, obj.detail, obj.game_name, obj.add_time, obj.admin, obj.img_src], function (result) {
+        var sql = "INSERT INTO t_strategy (user_id,title,detail,game_name,add_time,admin,top_img_src) VALUES (?,?,?,?,?,?,?)"
+        query(sql, [obj.admin, obj.title, obj.detail, obj.game_name, obj.add_time, 1, obj.img_src], function (result) {
             return callback(result);
             //if (result.insertId) {
             //    var sql = "INSERT INTO t_strategy_img (src,strategy_id) VALUES (?,?)";
