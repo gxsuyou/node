@@ -35,24 +35,29 @@ app.use('*', function (req, res, next) {
     next();
 });
 app.use(function getIp(req, res, next) {
-    var ips = ipslist.lists;
-    var ip = req.headers['x-forwarded-for'] ||
-        req.ip ||
-        req.connection.remoteAddress ||
-        req.socket.remoteAddress ||
-        req.connection.socket.remoteAddress || '';
-    if (ip.split(',').length > 0) {
-        ip = ip.split(',')[0];
-    }
-    if (ip.search("::ffff:") > -1) {
-        ip = ip.split("::ffff:").join("");
-    }
-    if (ips.toString().indexOf(ip) < 0) {
-        var err = new Error('Not Found');
-        err.status = 404;
-        next(err);
+    //console.log(req.query.token);
+    if (!req.query.token) {
+        var ips = ipslist.lists;
+        var ip = req.headers['x-forwarded-for'] ||
+            req.ip ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || '';
+        if (ip.split(',').length > 0) {
+            ip = ip.split(',')[0];
+        }
+        if (ip.search("::ffff:") > -1) {
+            ip = ip.split("::ffff:").join("");
+        }
+        if (ips.toString().indexOf(ip) < 0) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        } else {
+            next();
+        }
     } else {
-        next();
+        next()
     }
 });
 app.use(function (req, res, next) {

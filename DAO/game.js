@@ -3,7 +3,7 @@ var game ={
     getDetailById:function (gameId,callback) {
         // console.log(gameId);
         query("call pro_getGameDetailById(?)",[gameId],callback);
-       
+
     },
     editGameById:function (gameId,text,callback) {
         var sql="UPDATE t_game SET game_detail=? where id=?";

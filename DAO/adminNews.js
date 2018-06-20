@@ -15,12 +15,12 @@ var news = {
     upNews: function (obj, callback) {
         var news_sql = "SELECT * FROM t_news WHERE id = ?"
         query(news_sql, [obj.id], function (news_result) {
-            if (news_result[0].up == 0 && news_result[0].up != obj.up) {//÷√∂•
+            if (news_result[0].up == 0 && news_result[0].up != obj.up) {//ÁΩÆÈ°∂
                 var sql = "update t_news set up=1 where id=?";
                 query(sql, [obj.id], function (result) {
                     return callback(result)
                 })
-            } else if (news_result[0].up == 1 && news_result[0].up != obj.up) {//»°œ˚÷√∂•
+            } else if (news_result[0].up == 1 && news_result[0].up != obj.up) {//ÂèñÊ∂àÁΩÆÈ°∂
                 var sql = "update t_news set up=0 where id=?";
                 query(sql, [obj.id], function (result) {
                     return callback(result)
