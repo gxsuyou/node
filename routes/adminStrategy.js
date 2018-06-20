@@ -150,15 +150,6 @@ router.get('/deleteStrategy', function (req, res) {
 // })
 
 router.post("/img", function (req, res) {
-//  console.log(req.files);
-    // var str ="";
-    // req.on("data",function(){
-    //   str+=data;
-    // });
-    // req.on('end',function(){
-    //   console.log(str);
-    // })
-    // return false;
     const data = [];
     req.files.forEach(function (item) {
         var newName = "www/upload/" + req.query.title + "_" + item.originalname;
@@ -168,40 +159,10 @@ router.post("/img", function (req, res) {
 
             } else {
 
-
             }
         });
     });
-    //console.log(req.files);
-    //console.log(data);
     res.json({errno: 0, data: data});
-    // function rename(){
-    //   return
-    //
-    // }
     return false;
-    //console.log(req.query.url);
-    //fs.rename(req.files[0].path, newName, function (err) {
-    //    if (err) {
-    //        res.json({
-    //            errno: 1,
-    //            data: []
-    //        });
-    //    }
-    //    else {
-    //        res.json({
-    //            errno: 0,
-    //            data: [
-    //                req.query.url + newName
-    //            ]
-    //        });
-    //    }
-    //})
-
-    // res.json({
-    //   errno:0,
-    //   data:[
-    //     "https://github-atom-io-herokuapp-com.global.ssl.fastly.net/assets/index-octonaut-4e00f2f8624e8075ff8aa84b51e3a446.svg"
-    //   ]});
 })
 module.exports = router;
