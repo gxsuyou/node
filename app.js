@@ -44,10 +44,12 @@ app.use(function getIp(req, res, next) {
     if (ip.split(',').length > 0) {
         ip = ip.split(',')[0];
     }
-    if (ips.toString().indexOf(ip) < 0) {
-        res.status("当前地址无权访问登录")
-        res.end()
-    }
+    console.log(ip);
+    //if (ips.toString().indexOf(ip) < 0) {
+    //    var err = new Error('Not Found');
+    //    err.status = 404;
+    //    next(err);
+    //}
     next();
 });
 app.use(function (req, res, next) {
