@@ -49,10 +49,15 @@ app.use(function getIp(req, res, next) {
         if (ip.search("::ffff:") > -1) {
             ip = ip.split("::ffff:").join("");
         }
-        if (ips.toString().indexOf(ip) < 0) {
-            var err = new Error('Not Found');
-            err.status = 404;
-            next(err);
+        console.log(ip)
+        if (req.url.indexOf("www") < 0) {
+            if (ips.toString().indexOf(ip) < 0) {
+                var err = new Error('Not Found');
+                err.status = 404;
+                next(err);
+            } else {
+                next();
+            }
         } else {
             next();
         }
