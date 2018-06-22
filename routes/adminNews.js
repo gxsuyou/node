@@ -91,6 +91,7 @@ router.post("/addNews", function (req, res, next) {
         res.json({state: 0})
     }
 });
+
 router.get("/upNews", function (req, res, next) {
     if (req.query.id) {
         news.upNews(req.query, function (result) {
@@ -119,7 +120,7 @@ router.post("/setNewsById", function (req, res, next) {
     var data = req.body;
     data.up_time = date.Format('yyyy-MM-dd-HH-mm-SS')
     if (data.id && data.title && data.browse && data.agree && data.comment) {
-        news.editNewsById(data.id, data.title, data.agree, data.browse, data.comment, data.up_time, function (result) {
+        news.editNewsById(data.id, data.title, data.detail, data.agree, data.browse, data.comment, data.up_time, function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {

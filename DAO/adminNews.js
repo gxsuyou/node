@@ -30,9 +30,9 @@ var news = {
 
 
     },
-    editNewsById: function (id, title, agree, browse, comment, up_time, callback) {
-        var sql = "update t_news set title=?,agree=?,browse=?,comment=?,up_time=? where id=?";
-        query(sql, [title, agree, browse, comment, up_time, id], function (result) {
+    editNewsById: function (id, title, detail, agree, browse, comment, up_time, callback) {
+        var sql = "update t_news set title=?,detail=?,agree=?,browse=?,comment=?,up_time=? where id=?";
+        query(sql, [title, detail, agree, browse, comment, up_time, id], function (result) {
             return callback(result)
         })
     },
