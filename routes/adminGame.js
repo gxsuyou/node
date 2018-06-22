@@ -61,19 +61,18 @@ router.get('/addGameMsg', function (req, res, next) {
                     admin: data.admin,
                     type: data.type,
                     cls_ids: data.cls ? "," + data.cls + "," : cls,
-                    tag_ids: 0
+                    tag_ids: ",0,",
+                    strategy_head: data.strategy_head || 0//攻略游戏头部
                     //tag_ids: data.tag ? data.tag : tag
                 };
                 game.addGameMsg(gameMsg, function (result) {
-                    console.log(result.insertId);
                     if (result.insertId) {
-                        var cls = data.cls.split(',');
-                        console.log(data.cls);
-                        for (var i = 0; i < cls.length; i++) {
-                            game.addCls(result.insertId, cls[i], function () {
-
-                            })
-                        }
+                        //var cls = data.cls.split(',');
+                        //for (var i = 0; i < cls.length; i++) {
+                        //    game.addCls(result.insertId, cls[i], function () {
+                        //
+                        //    })
+                        //}
                         res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片和安装包"})
                     } else {
                         res.json({state: 0, info: "添加失败"})
@@ -122,7 +121,8 @@ router.post('/SetGameMsg', function (req, res, next) {
         size: data.size || null,//大小
         id: data.id || null,//id
         up_time: date.Format("yyyy-MM-dd HH:mm") || null,//修改
-        up_admin: data.up_admin || null//修改者管理员
+        up_admin: data.up_admin || null,//修改者管理员
+        strategy_head: data.strategy_head || 0//攻略游戏头部
         // cls_ids: data.cls_ids,//分类id
         // tag_ids: fields.tag_ids//标签id
     };
