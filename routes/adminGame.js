@@ -121,7 +121,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         sort2: data.sort2 || null,//热搜排列
         size: data.size || null,//大小
         id: data.id || null,//id
-        up_time: date.Format("yyyy-MM-dd HH:mm") || null,//修改时间
+        up_time: date.Format("yyyy-MM-dd HH:mm") || null,//修改
         up_admin: data.up_admin || null//修改者管理员
         // cls_ids: data.cls_ids,//分类id
         // tag_ids: fields.tag_ids//标签id

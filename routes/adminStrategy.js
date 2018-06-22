@@ -58,7 +58,7 @@ router.post('/addStrategy', function (req, res, next) {
         strategy.hasUserAndGame(data, function (result) {
             if (result.game_id && result.admin) {
                 data.add_time = date.Format("yyyy-MM-dd-HH-mm-ss") || null
-                data.admin = 1;
+                data.adminstatus = 1;
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })
