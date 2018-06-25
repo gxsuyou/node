@@ -67,12 +67,12 @@ router.get('/addGameMsg', function (req, res, next) {
                 };
                 game.addGameMsg(gameMsg, function (result) {
                     if (result.insertId) {
-                        //var cls = data.cls.split(',');
-                        //for (var i = 0; i < cls.length; i++) {
-                        //    game.addCls(result.insertId, cls[i], function () {
-                        //
-                        //    })
-                        //}
+                        var cls = data.cls.split(',');
+                        for (var i = 0; i < cls.length; i++) {
+                            game.addGameCls(result.insertId, cls[i], function () {
+
+                            })
+                        }
                         res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片和安装包"})
                     } else {
                         res.json({state: 0, info: "添加失败"})
@@ -86,7 +86,6 @@ router.get('/addGameMsg', function (req, res, next) {
         res.json({state: 0, info: "数据错误"})
     }
 });
-
 
 router.get('/gameAdminDetail', function (req, res, next) {
     var id = req.query.id;
@@ -103,7 +102,6 @@ router.get('/gameAdminDetail', function (req, res, next) {
         })
     })
 })
-
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
@@ -232,8 +230,6 @@ router.get('/hasGame', function (req, res, next) {
         }
     })
 });
-
-
 router.get('/addGameActive', function (req, res) {
     var data = req.query;
     if (data.game_name && data.type) {
@@ -418,9 +414,29 @@ router.get('/setClsAndTag', function (req, res) {
     var cls_ids = "," + data.cls_ids + ","
     var tag_ids = "," + data.tag_ids + ","
     if (data.id) {
-        game.setTagAndCls(data.id, tag_ids, cls_ids, function (result) {
-            //console.log(result.affectedRows);
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        game.deleteTagAndCls(data.id, function (del_result) {
+            game.setTagAndCls(data.id, tag_ids, cls_ids, function (result) {
+                //console.log(result.affectedRows);
+                var cls = data.cls_ids.split(',');
+                for (var ci = 0; ci < cls.length; ci++) {
+                    if (ci >= data.cls_ids.length) {
+                        break;
+                    }
+                    game.addGameCls(data.id, cls[ci], function () {
+
+                    })
+                }
+                var tag = data.tag_ids.split(',');
+                for (var ti = 0; ti < tag.length; ti++) {
+                    if (ti >= data.tag_ids.length) {
+                        break;
+                    }
+                    game.addGameTag(data.id, tag[ti], function () {
+
+                    })
+                }
+                res.json({state: 1});
+            })
         })
     } else {
         res.json({state: 0})

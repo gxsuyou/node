@@ -131,8 +131,14 @@ var game = {
             return callback(result)
         })
     },
-    addCls: function (gameid, clsid, callback) {
+    addGameCls: function (gameid, clsid, callback) {
         var sql = "INSERT INTO t_game_cls_relation(game_id,cls_id) values (?,?)";
+        query(sql, [gameid, clsid], function (result) {
+            return callback(result);
+        })
+    },
+    addGameTag: function (gameid, clsid, callback) {
+        var sql = "INSERT INTO t_tag_relation(game_id,tag_id) values (?,?)";
         query(sql, [gameid, clsid], function (result) {
             return callback(result);
         })
@@ -289,6 +295,16 @@ var game = {
             //     return callback(result)
             // })
             return callback(result);
+        })
+    },
+    deleteTagAndCls: function (gameId, callback) {
+        var tag_sql = 'DELETE FROM t_tag_relation WHERE game_id =?';
+        query(tag_sql, [gameId], function (tag_result) {
+            console.log(tag_result.affectedRows)
+            var cls_sql = 'DELETE FROM t_game_cls_relation WHERE game_id =?';
+            query(cls_sql, [gameId], function (cls_result) {
+                return callback({tag: tag_result.affectedRows, cls: cls_result.affectedRows});
+            })
         })
     },
     getGameName: function (sys, msg, callback) {
