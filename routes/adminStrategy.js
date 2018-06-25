@@ -59,6 +59,7 @@ router.post('/addStrategy', function (req, res, next) {
             if (result.game_id && result.admin) {
                 data.add_time = date.Format("yyyy-MM-dd-HH-mm-ss") || null
                 data.adminstatus = 1;
+                data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })

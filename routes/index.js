@@ -4,8 +4,8 @@ var index = require("../DAO/index");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    console.log(1);
-    res.json({s: result})
+    console.log(req.originalUrl+"+++++");
+    res.json({s: 1})
 
     // index.carousel(1,function (result) {
     //     res.json(result)
