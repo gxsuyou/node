@@ -60,6 +60,7 @@ router.post('/addStrategy', function (req, res, next) {
                 data.add_time = date.Format("yyyy-MM-dd-HH-mm-ss") || null
                 data.adminstatus = 1;
                 data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
+
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })
@@ -94,14 +95,16 @@ router.post('/addStrategyGetApp', function (req, res, next) {
 //    }
 //});
 
-router.get("/setStrategy", function () {
-    var data = req.query
-    if (data.game_name && data.title) {
+router.post("/setStrategy", function (req, res, next) {
+    var data = req.body;
+    if (data.id && data.title) {
         strategy.hasUserAndGame(data, function (result) {
             if (result.length) {
                 strategy.setStratgy(data, function (add_result) {
-                    add_result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                    add_result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
                 })
+            } else {
+                res.json({state: 0})
             }
         })
     }
@@ -160,7 +163,6 @@ router.get('/deleteStrategy', function (req, res) {
 
 router.post("/img", function (req, res) {
     const data = [];
-    //console.log(req.files)
     req.files.forEach(function (item) {
         var newName = "www/upload/" + req.query.title + "_" + item.originalname;
         data.push(req.query.url + newName);
@@ -172,7 +174,6 @@ router.post("/img", function (req, res) {
             }
         });
     });
-    //console.log(data)
     res.json({errno: 0, data: data});
     return false;
 });

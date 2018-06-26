@@ -6,6 +6,7 @@ var qs = require('querystring');
 var path='F:/node/public/';
 var crypto=require('crypto');
 var md5=crypto.createHash("md5");
+var common = require('../DAO/common');
 
 
 function isReverse(text){
@@ -41,7 +42,15 @@ Date.prototype.Format = function(formatStr)
 };
 
 router.get('/list',function (req,res,next) {
-    user.userList(function (result) {
+    //user.userList(function (result) {
+    //    res.json(result);
+    //})
+    var p = req.query.p > 0 ? req.query.p : 1;
+
+    var tables = 't_user';
+    var where = " order by id desc ";
+
+    common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })
 });
