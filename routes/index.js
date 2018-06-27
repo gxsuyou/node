@@ -4,8 +4,9 @@ var index = require("../DAO/index");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    console.log(req.originalUrl+"+++++");
-    res.json({s: 1})
+    var test = 1;
+    //console.log(text.html());
+    res.json({s: test})
 
     // index.carousel(1,function (result) {
     //     res.json(result)
@@ -14,5 +15,6 @@ router.get('/', function (req, res, next) {
     //res.header('Content-Type', 'text/html');
     // res.render('index', { title: 'Express' });
 });
+
 
 module.exports = router;
