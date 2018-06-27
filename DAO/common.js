@@ -103,9 +103,9 @@ var common = {
     },
 
     getGameSearch: function (obj, callback) {
-        var sql = "SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id LIMIT 0,30";
+        var sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id LIMIT 0,30';
         if (obj) {
-            sql = "SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  WHERE a.game_name LIKE '%" + obj + "%' LIMIT 0,30";
+            sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  WHERE a.game_name LIKE "%' + obj + '%" LIMIT 0,30';
         }
         query(sql, [], function (result) {
             if (result) {
@@ -116,9 +116,9 @@ var common = {
         })
     },
     getActiveSearch: function (obj, callback) {
-        var sql = "SELECT * FROM t_activity LIMIT 0,30";
+        var sql = 'SELECT * FROM t_activity LIMIT 0,30';
         if (obj) {
-            sql = "SELECT * FROM t_activity WHERE name LIKE '%" + obj + "%' LIMIT 0,30";
+            sql = 'SELECT * FROM t_activity WHERE name LIKE "%' + obj + '%" LIMIT 0,30';
         }
         query(sql, [], function (result) {
             if (result) {
