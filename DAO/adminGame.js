@@ -28,8 +28,10 @@ var game = {
         var ids = "";
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
-                var cls_sql = "SELECT id,cls_name,cls,pid FROM t_game_cls WHERE cls = ? ORDER BY pid ASC";
-                query(cls_sql, [result[0].type], function (cls_result) {
+                var cls_type = result[0].type == "online" || result[0].type == "alone" ? 1 : 2
+                
+                var cls_sql = "SELECT id,cls_name,cls,pid FROM t_game_cls WHERE type = ? ORDER BY pid ASC";
+                query(cls_sql, [cls_type], function (cls_result) {
                     ids = result[0].cls_ids;
                     if (ids.substr(0, 1) == ",") {
                         ids = ids.substr(1)
