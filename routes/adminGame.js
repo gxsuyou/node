@@ -101,7 +101,7 @@ router.get('/gameAdminDetail', function (req, res, next) {
             res.json(arr);
         })
     })
-})
+});
 
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
@@ -113,7 +113,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         company: data.company || null,//公司
         version: data.version || null,//版本
         download_num: data.download_num || null,//下载数
-        gameRecommend: data.gameRecommend || null,
+        game_recommend: data.game_recommend || null,
         sort: data.sort || null,//首页排列
         sort2: data.sort2 || null,//热搜排列
         size: data.size || null,//大小

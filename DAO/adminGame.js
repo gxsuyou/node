@@ -7,7 +7,6 @@ var game = {
             "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         // var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [];
-        console.log(arr);
         for (var x in obj) {
             arr.push(obj[x])
         }
@@ -16,9 +15,9 @@ var game = {
         })
     },
     editGameMsg: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,game_recommend=?,sort=?,game_size=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
         // console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
+        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
             return callback(result)
         })
     },
@@ -28,13 +27,13 @@ var game = {
         var ids = "";
         query(game_sql, [obj], function (result) {
             if (result.length > 0) {
-                var cls_type = result[0].type == "online" || result[0].type == "alone" ? 1 : 2
-                
+                var cls_type = result[0].type == "online" || result[0].type == "alone" ? 1 : 2;
+
                 var cls_sql = "SELECT id,cls_name,cls,pid FROM t_game_cls WHERE type = ? ORDER BY pid ASC";
                 query(cls_sql, [cls_type], function (cls_result) {
                     ids = result[0].cls_ids;
                     if (ids.substr(0, 1) == ",") {
-                        ids = ids.substr(1)
+                        ids = ids.substr(1);
                         ids = ids.substring(0, ids.length - 1)
                     }
                     var cls_sql2 = "SELECT * FROM t_game_cls WHERE id IN (" + ids + ") ";
@@ -302,7 +301,6 @@ var game = {
     deleteTagAndCls: function (gameId, callback) {
         var tag_sql = 'DELETE FROM t_tag_relation WHERE game_id =?';
         query(tag_sql, [gameId], function (tag_result) {
-            console.log(tag_result.affectedRows)
             var cls_sql = 'DELETE FROM t_game_cls_relation WHERE game_id =?';
             query(cls_sql, [gameId], function (cls_result) {
                 return callback({tag: tag_result.affectedRows, cls: cls_result.affectedRows});
