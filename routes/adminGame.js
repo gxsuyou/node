@@ -39,7 +39,7 @@ router.get('/addGameMsg', function (req, res, next) {
     var cls = '0';
     var tag = '0';
 
-    if (data.gameName) {
+    if (data.gameName && data.cls) {
         game.hasGame(data.gameName, function (result) {
             // console.log(result.length);
             // res.json({state:0,info:"dd"});
@@ -112,6 +112,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         activation: data.activation || null,//是否上架
         company: data.company || null,//公司
         version: data.version || null,//版本
+        gameDownloadIos: data.gameDownloadIos || null,
         download_num: data.download_num || null,//下载数
         game_recommend: data.game_recommend || null,
         sort: data.sort || null,//首页排列
