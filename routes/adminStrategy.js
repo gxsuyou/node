@@ -95,6 +95,16 @@ router.post('/addStrategyGetApp', function (req, res, next) {
 //    }
 //});
 
+router.get("/setStrategy", function (req, res, next) {
+    var data = req.body;
+    if (data.id) {
+        strategy.getStratgyMsg(data, function (result) {
+            result.length > 0 ? res.json({state: 1, result: result[0]}) : res.json({state: 0})
+        })
+    } else {
+        res.json({state: 0})
+    }
+});
 router.post("/setStrategy", function (req, res, next) {
     var data = req.body;
     if (data.id && data.title) {

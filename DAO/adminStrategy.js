@@ -88,6 +88,12 @@ var strategy = {
             //}
         })
     },
+    getStratgyMsg: function (obj, callback) {
+        var sql = 'select * from t_strategy where id=?'
+        query(sql, [obj.id], function (result) {
+            return callback(result);
+        })
+    },
     setStratgy: function (obj, callback) {
         var sql = "UPDATE t_strategy SET title=?,detail=? WHERE id=?"
         query(sql, [obj.title, obj.detail, obj.id], function (result) {
