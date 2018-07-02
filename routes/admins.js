@@ -1107,7 +1107,7 @@ router.post("/setPassword", function (req, res, next) {
 router.post("/addIps", function (req, res, next) {
     var data = req.body;
     var date = new Date();
-    data.add_time = date.Format('yyyy-MM-dd-HH-mm-SS')
+    data.add_time = date.Format('yyyy-MM-dd HH:mm:SS')
     if (data.id && data.ips) {
 
     } else {

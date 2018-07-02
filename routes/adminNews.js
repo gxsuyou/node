@@ -79,7 +79,7 @@ router.post("/addNews", function (req, res, next) {
             like: 0,
             comment: 0,
             browse: 0,
-            add_time: date.Format('yyyy-MM-dd-HH-mm-SS'),
+            add_time: date.Format('yyyy-MM-dd HH:mm:SS'),
             game_id: gameId,
             admin_id: data.admin
         };
@@ -118,7 +118,7 @@ router.get("/getNewsByMsg", function (req, res, next) {
 router.post("/setNewsById", function (req, res, next) {
     var date = new Date();
     var data = req.body;
-    data.up_time = date.Format('yyyy-MM-dd-HH-mm-SS')
+    data.up_time = date.Format('yyyy-MM-dd HH:mm:SS')
     if (data.id && data.title && data.browse && data.agree && data.comment) {
         news.editNewsById(data.id, data.title, data.detail, data.agree, data.browse, data.comment, data.up_time, function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})

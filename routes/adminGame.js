@@ -108,20 +108,20 @@ router.post('/SetGameMsg', function (req, res, next) {
     var date = new Date();
 
     var gameArr = {
-        name: data.name || null,//游戏名称
-        activation: data.activation || null,//是否上架
-        company: data.company || null,//公司
-        version: data.version || null,//版本
+        name: data.name || null,
+        activation: data.activation || null,
+        company: data.company || null,
+        version: data.version || null,
         gameDownloadIos: data.gameDownloadIos || null,
-        download_num: data.download_num || null,//下载数
+        download_num: data.download_num || null,
         game_recommend: data.game_recommend || null,
-        sort: data.sort || null,//首页排列
-        sort2: data.sort2 || null,//热搜排列
-        size: data.size || null,//大小
+        sort: data.sort || null,
+        sort2: data.sort2 || null,
+        size: data.size || null,
         id: data.id || null,//id
-        up_time: date.Format("yyyy-MM-dd HH:mm") || null,//修改
-        up_admin: data.up_admin || null,//修改者管理员
-        strategy_head: data.strategy_head || 0//攻略游戏头部
+        up_time: date.Format("yyyy-MM-dd HH:mm") || null,
+        up_admin: data.up_admin || null,
+        strategy_head: data.strategy_head || 0
         // cls_ids: data.cls_ids,//分类id
         // tag_ids: fields.tag_ids//标签id
     };
