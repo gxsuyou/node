@@ -98,15 +98,15 @@ router.post('/addStrategyGetApp', function (req, res, next) {
 router.post("/setStrategy", function (req, res, next) {
     var data = req.body;
     if (data.id && data.title) {
-        strategy.hasUserAndGame(data, function (result) {
-            if (result.length) {
-                strategy.setStratgy(data, function (add_result) {
-                    add_result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0})
-            }
+        //strategy.hasUserAndGame(data, function (result) {
+        //    if (result.length) {
+        strategy.setStratgy(data, function (add_result) {
+            add_result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
+        //} else {
+        //    res.json({state: 0})
+        //}
+        //})
     }
 });
 
