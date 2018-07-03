@@ -126,9 +126,9 @@ var game = {
     //     })
     // },
 
-    hasGame: function (gameName, callback) {
-        var sql = "select id from t_game where game_name=?";
-        query(sql, [gameName], function (result) {
+    hasGame: function (obj, callback) {
+        var sql = "select id from t_game where game_name=? AND sys=? ";
+        query(sql, [obj.gameName, obj.sys], function (result) {
             return callback(result)
         })
     },

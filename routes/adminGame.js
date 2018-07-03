@@ -40,7 +40,7 @@ router.get('/addGameMsg', function (req, res, next) {
     var tag = '0';
 
     if (data.gameName && data.cls) {
-        game.hasGame(data.gameName, function (result) {
+        game.hasGame(data, function (result) {
             // console.log(result.length);
             // res.json({state:0,info:"dd"});
             // return false;
