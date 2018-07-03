@@ -250,17 +250,17 @@ router.get('/addGameActive', function (req, res) {
             if (games.length) {
                 active.game_id = games[0].id;
                 game.getHasActive(active.game_id, data.type, function (result) {
-                    if (result.affectedRows) {
+                    //if (result.affectedRows) {
+                    //    game.addActive(active, function (addresult) {
+                    //        addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
+                    //    })
+                    //} else if (result.length < 1) {
                         game.addActive(active, function (addresult) {
                             addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
                         })
-                    } else if (result.length < 1) {
-                        game.addActive(active, function (addresult) {
-                            addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
-                        })
-                    } else {
-                        res.json({state: 0, info: "添加失败"})
-                    }
+                    //} else {
+                    //    res.json({state: 0, info: "添加失败"})
+                    //}
                 })
             } else {
                 res.json({state: 0, info: "游戏不存在"})
