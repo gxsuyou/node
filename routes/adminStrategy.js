@@ -60,7 +60,6 @@ router.post('/addStrategy', function (req, res, next) {
                 data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
                 data.adminstatus = 1;
                 data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
-
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })
@@ -96,10 +95,10 @@ router.post('/addStrategyGetApp', function (req, res, next) {
 //});
 
 router.get("/setStrategy", function (req, res, next) {
-    var data = req.body;
+    var data = req.query;
     if (data.id) {
         strategy.getStratgyMsg(data, function (result) {
-            result.length > 0 ? res.json({state: 1, result: result[0]}) : res.json({state: 0})
+            result.length ? res.json({state: 1, result: result[0]}) : res.json({state: 0})
         })
     } else {
         res.json({state: 0})
