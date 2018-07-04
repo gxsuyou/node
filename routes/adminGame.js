@@ -73,6 +73,16 @@ router.get('/addGameMsg', function (req, res, next) {
 
                             })
                         }
+                        if (data.sys == 1) {
+                            game.hasAndroid(gameMsg, function (android_res) {
+                                if (android_res.state == 1) {
+                                    android_res.id = result.insertId;
+                                    game.addGameMsgIos(android_res, function () {
+
+                                    });
+                                }
+                            })
+                        }
                         res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片和安装包"})
                     } else {
                         res.json({state: 0, info: "添加失败"})
@@ -103,6 +113,22 @@ router.get('/gameAdminDetail', function (req, res, next) {
     })
 });
 
+router.get('/gameAdminDetail', function (req, res, next) {
+    var id = req.query.id;
+    if (!id) {
+        res.json({state: 0});
+    }
+    game.gameMsgInfo(id, function (result) {
+        game.gameTag(id, function (data) {
+            var arr = {
+                "cls": result,
+                "tag": data
+            }
+            res.json(arr);
+        })
+    })
+});
+
 router.post('/SetGameMsg', function (req, res, next) {
     var data = req.body;
     var date = new Date();
@@ -115,6 +141,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         gameDownloadIos: data.gameDownloadIos || null,
         download_num: data.download_num || null,
         game_recommend: data.game_recommend || null,
+        game_detail: data.game_detail || null,
         sort: data.sort || null,
         sort2: data.sort2 || null,
         size: data.size || null,
@@ -233,6 +260,7 @@ router.get('/hasGame', function (req, res, next) {
 });
 router.get('/addGameActive', function (req, res) {
     var data = req.query;
+    data.sys = data.sys ? data.sys : 2;
     if (data.game_name && data.type) {
         var active = {
             name: data.name || "",
@@ -242,25 +270,23 @@ router.get('/addGameActive', function (req, res) {
             active: data.active || "",
             // game_id: data.game_id || "",
             type: data.type || "",
-            // sys: data.sys || ""
+            sys: data.sys || 2
         };
-
-        console.log(active);
-        game.hasGame(data.game_name, function (games) {
+        game.hasGame(data, function (games) {
             if (games.length) {
                 active.game_id = games[0].id;
                 game.getHasActive(active.game_id, data.type, function (result) {
-                    //if (result.affectedRows) {
-                    //    game.addActive(active, function (addresult) {
-                    //        addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
-                    //    })
-                    //} else if (result.length < 1) {
+                    if (result.affectedRows) {
                         game.addActive(active, function (addresult) {
                             addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
                         })
-                    //} else {
-                    //    res.json({state: 0, info: "添加失败"})
-                    //}
+                    } else if (result.length < 1) {
+                        game.addActive(active, function (addresult) {
+                            addresult.insertId ? res.json({state: 1}) : res.json({state: 0})
+                        })
+                    } else {
+                        res.json({state: 0, info: "添加失败"})
+                    }
                 })
             } else {
                 res.json({state: 0, info: "游戏不存在"})

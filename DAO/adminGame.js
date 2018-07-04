@@ -14,10 +14,33 @@ var game = {
             return callback(result)
         })
     },
+    addGameMsgIos: function (obj, callback) {
+        // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        var sql = "UPDATE t_game SET game_title_img=?, icon=? WHERE id=?"
+        query(sql, [obj.game_title_img, obj.icon, obj.id], function (result) {
+            return callback(result)
+        })
+    },
+    hasAndroid: function (obj, callback) {
+        // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        var arr = {};
+        var sql = "SELECT * FROM t_game WHERE game_name=? AND sys=2"
+        query(sql, [obj.gameName], function (result) {
+            if (result.length) {
+                arr = {
+                    state: 1,
+                    game_title_img: result[0].game_title_img,
+                    icon: result[0].icon
+                };
+                return callback(arr)
+            } else {
+                return callback({state: 0})
+            }
+        })
+    },
     editGameMsg: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_ios=?,game_download_num=?,game_recommend=?,sort=?,game_size=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
-        // console.log([obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id]);
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_ios=?,game_download_num=?,game_recommend=?,sort=?,game_size=?,game_detail=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
+        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.game_detail, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
             return callback(result)
         })
     },
@@ -128,7 +151,7 @@ var game = {
 
     hasGame: function (obj, callback) {
         var sql = "select id from t_game where game_name=? AND sys=? ";
-        query(sql, [obj.gameName, obj.sys], function (result) {
+        query(sql, [obj.game_name, obj.sys], function (result) {
             return callback(result)
         })
     },
