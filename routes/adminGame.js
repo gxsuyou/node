@@ -272,10 +272,11 @@ router.get('/addGameActive', function (req, res) {
             type: data.type || "",
             sys: data.sys || 2
         };
+        console.log(data);
         game.hasGame(data, function (games) {
             if (games.length) {
                 active.game_id = games[0].id;
-                game.getHasActive(active.game_id, data.type, function (result) {
+                game.getHasActive(active.game_id, data.type, active.sys, function (result) {
                     if (result.affectedRows) {
                         game.addActive(active, function (addresult) {
                             addresult.insertId ? res.json({state: 1}) : res.json({state: 0})

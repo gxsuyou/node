@@ -211,12 +211,12 @@ var game = {
             return callback(result)
         })
     },
-    getHasActive: function (gameId, type, callback) {//验证是否存在并删除
-        var sql = 'select * from t_activity where game_id=? and type=?';
-        query(sql, [gameId, type], function (result) {
+    getHasActive: function (gameId, type, sys, callback) {//验证是否存在并删除
+        var sql = 'select * from t_activity where game_id=? and type=? and sys=?';
+        query(sql, [gameId, type, sys], function (result) {
             if (result.length) {
-                var del_sql = "delete from t_activity where game_id=? and type=?"
-                query(del_sql, [gameId, type], function (del_result) {
+                var del_sql = "delete from t_activity where id=?"
+                query(del_sql, [result[0].id], function (del_result) {
                     return callback(del_result)
                 })
             } else {
@@ -234,13 +234,13 @@ var game = {
     addActive: function (obj, callback) {
         if (obj.type == 5 || obj.type == 6) {
             obj.active = obj.active ? obj.active : 0;
-            sql = 'insert into t_activity (name,game_id,type,active) values (?,?,?,?)';
-            query(sql, [obj.name, obj.game_id, obj.type, obj.active], function (result) {
+            sql = 'insert into t_activity (name,game_id,type,active,sys) values (?,?,?,?,?)';
+            query(sql, [obj.name, obj.game_id, obj.type, obj.active, obj.sys], function (result) {
                 return callback(result)
             })
         } else {
-            var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type) values (?,?,?,?,?,?,?)';
-            query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type], function (result) {
+            var sql = 'insert into t_activity (name,title,sort,active_img,active,game_id,type,sys) values (?,?,?,?,?,?,?,?)';
+            query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type, obj.sys], function (result) {
                 return callback(result)
             })
         }
