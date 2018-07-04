@@ -18,21 +18,34 @@ var game = {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var sql = "UPDATE t_game SET game_title_img=?, icon=? WHERE id=?"
         query(sql, [obj.game_title_img, obj.icon, obj.id], function (result) {
+
+            for (var i in obj.img) {
+                var img_sql = "INSERT INTO t_game_img (game_id,img_src) VALUES (?,?)"
+                query(img_sql, [obj.id, obj.img[i].img_src], function (result) {
+
+                })
+            }
             return callback(result)
         })
     },
     hasAndroid: function (obj, callback) {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = {};
+        var img = [];
         var sql = "SELECT * FROM t_game WHERE game_name=? AND sys=2"
         query(sql, [obj.gameName], function (result) {
             if (result.length) {
-                arr = {
-                    state: 1,
-                    game_title_img: result[0].game_title_img,
-                    icon: result[0].icon
-                };
-                return callback(arr)
+                var img_sql = "SELECT * FROM t_game_img WHERE game_id=?";
+                query(img_sql, [result[0].id], function (img_result) {
+                    img = img_result.length ? img_result : [];
+                    arr = {
+                        state: 1,
+                        game_title_img: result[0].game_title_img,
+                        icon: result[0].icon,
+                        img: img
+                    };
+                    return callback(arr)
+                })
             } else {
                 return callback({state: 0})
             }
