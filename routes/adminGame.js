@@ -58,6 +58,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     addTime: date.Format("yyyy-MM-dd") || null,
                     updateDetail: data.addTime || null,
                     gameDetail: data.gameDetail || null,
+                    grade: "8.0",
                     admin: data.admin,
                     type: data.type,
                     cls_ids: data.cls ? "," + data.cls + "," : cls,
@@ -272,7 +273,6 @@ router.get('/addGameActive', function (req, res) {
             type: data.type || "",
             sys: data.sys || 2
         };
-        console.log(data);
         game.hasGame(data, function (games) {
             if (games.length) {
                 active.game_id = games[0].id;
@@ -354,6 +354,7 @@ router.get('/getSubject', function (req, res) {
 });
 router.get('/addSubjectGame', function (req, res) {
     var data = req.query;
+    console.log(data);
     if (data.game_name && data.subjectId) {
         game.hasGame(data.game_name, function (games) {
             if (!games.length) res.json({state: 0});

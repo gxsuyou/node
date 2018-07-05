@@ -3,8 +3,8 @@ var game = {
     addGameMsg: function (obj, callback) {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var sql = "insert into t_game " +
-            "(game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids,tag_ids,strategy_head) " +
-            "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "(game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,grade,admin,type,cls_ids,tag_ids,strategy_head) " +
+            "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         // var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [];
         for (var x in obj) {
