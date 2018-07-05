@@ -163,7 +163,7 @@ var game = {
     // },
 
     hasGame: function (obj, callback) {
-        var sql = "select id from t_game where game_name=? AND sys=? ";
+        var sql = "select * from t_game where game_name=? AND sys=? ";
         query(sql, [obj.game_name, obj.sys], function (result) {
             return callback(result)
         })
@@ -260,9 +260,8 @@ var game = {
 
     },
     setActive: function (obj, callback) {
-        var sql = "UPDATE t_activity SET name = ?, title = ?, sort = ?, active_img = ?, active = ? WHERE id = ?";
-        console.log(obj);
-        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.id], function (result) {
+        var sql = "UPDATE t_activity SET name = ?, title = ?, active_img = ?, active = ? WHERE id = ?";
+        query(sql, [obj.name, obj.title, obj.active_img, obj.active, obj.id], function (result) {
             return callback(result)
         })
 

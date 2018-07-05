@@ -304,25 +304,15 @@ router.get('/setGameActive', function (req, res) {
             id: data.id,
             name: data.name || "",
             title: data.title || "",
-            sort: data.sort || "",
+            //sort: sort,
             active_img: data.active_img || "",
             active: data.active || "",
             game_id: data.game_id || "",
             type: data.type || "",
-            // sys: data.sys || ""
         };
-        game.getHasActive(data.game_id, data.type, function (result) {
-            if (result.length) {
-                game.setActive(active, function (result) {
-                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                game.addActive(active, function (result) {
-                    console.log('1:::' + result);
-                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                })
-            }
-        });
+        game.setActive(active, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        })
     } else {
         res.json({state: 0})
     }
@@ -354,11 +344,12 @@ router.get('/getSubject', function (req, res) {
 });
 router.get('/addSubjectGame', function (req, res) {
     var data = req.query;
-    console.log(data);
     if (data.game_name && data.subjectId) {
-        game.hasGame(data.game_name, function (games) {
-            if (!games.length) res.json({state: 0});
-
+        game.hasGame(data, function (games) {
+            if (!games.length) {
+                res.json({state: 0});
+                return false;
+            }
             var gameid = games[0].id;
             game.hasSubjectGame(gameid, data.subjectId, function (result) {
                 if (!result.length) {
