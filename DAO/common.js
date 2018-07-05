@@ -104,10 +104,11 @@ var common = {
 
     getGameSearch: function (obj, callback) {
         var sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id LIMIT 0,30';
-        if (obj) {
-            sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  WHERE a.game_name LIKE "%' + obj + '%" LIMIT 0,30';
+        if (obj.name) {
+            sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
+                'WHERE a.game_name LIKE "%' + obj.name + '%" AND a.sys=? LIMIT 0,30';
         }
-        query(sql, [], function (result) {
+        query(sql, [obj.sys], function (result) {
             if (result) {
                 return callback(result);
             } else {

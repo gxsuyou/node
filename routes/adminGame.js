@@ -212,10 +212,10 @@ router.get('/deleteGameImg', function (req, res) {
 });
 
 router.get('/activeSearch', function (req, res, next) {
-    var data = "";
+    var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
     if (req.query) {
-        data = req.query;
-        common.getGameSearch(data.name, function (result) {
+        common.getGameSearch(data, function (result) {
             if (result.length > 0) {
                 res.json({state: 1, result: result});
             } else {

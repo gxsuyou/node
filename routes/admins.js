@@ -344,10 +344,10 @@ router.get("/gameByType", function (req, res, next) {
 
 });
 router.get("/searchGameByMsg", function (req, res, next) {
-    var data = "";
+    var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
     if (req.query) {
-        data = req.query;
-        common.getGameSearch(data.msg, function (result) {
+        common.getGameSearch(data, function (result) {
             res.json(result);
         })
     } else {
@@ -712,10 +712,10 @@ router.get("/deleteGoodsType", function (req, res, next) {
  * 游戏名称模糊查询
  */
 router.get("/getGameSearch", function (req, res, next) {
-    var data = "";
+    var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
     if (req.query) {
-        data = req.query;
-        common.getGameSearch(data.name, function (result) {
+        common.getGameSearch(data, function (result) {
             res.json(result);
         })
     } else {
