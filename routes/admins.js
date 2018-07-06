@@ -263,20 +263,20 @@ router.get('/deleteGame', function (req, res, next) {
                 var name = game[0].game_name;
                 admin.delectGameByID(req.query.id, function (result) {
                     if (result.affectedRows) {
-                        try {
-                            fs.exists(path + req.query.name, function (exists) {
-                                if (exists) {
-                                    rmdirSync(path + req.query.name, function (e) {
-                                    });
-                                }
-                            })
-                            // rmdirSync(path+req.query.name,function(e){
-                            // });
-                            //deleteFileByPrefix(qiniuBucket.img, "game/" + name);
-                            //deleteFileByPrefix(qiniuBucket.apk, "game/" + name)
-                        } catch (e) {
-                            console.log(e);
-                        }
+                        //try {
+                        //    fs.exists(path + req.query.name, function (exists) {
+                        //        if (exists) {
+                        //            rmdirSync(path + req.query.name, function (e) {
+                        //            });
+                        //        }
+                        //    })
+                        //    // rmdirSync(path+req.query.name,function(e){
+                        //    // });
+                        //    //deleteFileByPrefix(qiniuBucket.img, "game/" + name);
+                        //    //deleteFileByPrefix(qiniuBucket.apk, "game/" + name)
+                        //} catch (e) {
+                        //    console.log(e);
+                        //}
                         res.json({state: 1})
                     } else {
                         res.json({state: 0});

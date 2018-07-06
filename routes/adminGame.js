@@ -53,7 +53,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     gameCompany: data.gameCompany || null,
                     sys: data.sys || null,
                     addTime: date.Format("yyyy-MM-dd") || null,
-                    updateDetail: data.addTime || null,
+                    //updateDetail: data.addTime || null,
                     gameDetail: data.gameDetail || null,
                     grade: "8.0",
                     admin: data.admin,
