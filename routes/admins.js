@@ -272,8 +272,8 @@ router.get('/deleteGame', function (req, res, next) {
                             })
                             // rmdirSync(path+req.query.name,function(e){
                             // });
-                            deleteFileByPrefix(qiniuBucket.img, "game/" + name);
-                            deleteFileByPrefix(qiniuBucket.apk, "game/" + name)
+                            //deleteFileByPrefix(qiniuBucket.img, "game/" + name);
+                            //deleteFileByPrefix(qiniuBucket.apk, "game/" + name)
                         } catch (e) {
                             console.log(e);
                         }
