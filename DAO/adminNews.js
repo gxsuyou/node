@@ -54,9 +54,9 @@ var news = {
             return callback(result);
         })
     },
-    addHeadGame: function (game_id, img, callback) {
-        var sql = "insert into t_news_headgame (game_id,img) values (?,?)";
-        query(sql, [game_id, img], function (result) {
+    addHeadGame: function (game_id, img, sys, callback) {
+        var sql = "insert into t_news_headgame (game_id,img,sys) values (?,?,?)";
+        query(sql, [game_id, img, sys], function (result) {
             return callback(result)
         })
     },

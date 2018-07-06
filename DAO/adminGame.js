@@ -68,7 +68,7 @@ var game = {
         query(game_sql, [obj], function (result) {
             var gameImg_sql = "SELECT * FROM t_game_img WHERE game_id = ?"
             query(gameImg_sql, [result[0].id], function (img_result) {
-                result[0].imgList = img_result;
+                result[0].imgList = img_result.length ? img_result : [];
                 return callback(result);
             });
 
@@ -375,6 +375,12 @@ var game = {
         var sql = 'delete from t_activity where id = ?';
         query(sql, [id], function (result) {
             return callback(result)
+        })
+    },
+    hasTag: function (name, callbakc) {
+        var sql = 'SELECT * FROM t_tag WHERE `name`=?';
+        query(sql, [name], function (result) {
+            return callbakc(result)
         })
     },
     addTag: function (name, callbakc) {

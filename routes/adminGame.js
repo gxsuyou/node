@@ -487,8 +487,14 @@ router.get('/deleteActiveById', function (req, res) {
 router.get('/addTag', function (req, res) {
     var data = req.query;
     if (data.name) {
-        game.addTag(decodeURI(data.name), function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0})
+        game.hasTag(decodeURI(data.name), function (tag_result) {
+            if (tag_result.length) {
+                res.json({state: 0})
+                return false
+            }
+            game.addTag(decodeURI(data.name), function (result) {
+                result.insertId ? res.json({state: 1}) : res.json({state: 0})
+            })
         })
     } else {
         res.json({state: 0})

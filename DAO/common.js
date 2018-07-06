@@ -103,13 +103,13 @@ var common = {
     },
 
     getGameSearch: function (obj, callback) {
-        var sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id LIMIT 0,30';
+        var sysSql = obj.sys > 0 ? " AND a.sys=" + obj.sys : "";
+        var sql = 'SELECT a.*,b.comment FROM t_game AS a ' +
+            'LEFT JOIN t_admin AS b ON a.admin = b.id WHERE a.id > 0 ' + sysSql + ' LIMIT 0,30';
         if (obj.name) {
-            var sysSql = obj.sys > 0 ? " AND a.sys=" + obj.sys : "";
             sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
                 'WHERE a.game_name LIKE "%' + obj.name + '%" ' + sysSql + ' LIMIT 0,30';
         } else if (obj.msg) {
-            var sysSql = obj.sys > 0 ? " AND a.sys=" + obj.sys : "";
             sql = 'SELECT a.*,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
                 'WHERE a.game_name LIKE "%' + obj.msg + '%" ' + sysSql + ' LIMIT 0,30';
         }

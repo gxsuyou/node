@@ -159,7 +159,7 @@ router.get("/addHeadGame", function (req, res, next) {
     if (req.query.game_id && req.query.img) {
         var data = req.query;
         news.getHeadGameByGameId(data.game_id, function (result) {
-            !result.length ? news.addHeadGame(data.game_id, data.img, function (result) {
+            !result.length ? news.addHeadGame(data.game_id, data.img, data.sys, function (result) {
                 result.insertId ? res.json({state: 1}) : res.json({state: 0})
             }) : res.json({state: 2})
         })
@@ -185,7 +185,7 @@ router.get("/getHeadGame", function (req, res) {
     var tables = ["t_news_headGame", "t_game"];
     var where = " t_news_headGame.`game_id`=t_game.`id` order by t_news_headGame.id desc ";
 
-    var field = "t_game.game_name,t_news_headGame.id";
+    var field = "t_game.game_name,t_game.sys,t_news_headGame.id";
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
