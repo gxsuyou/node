@@ -41,9 +41,6 @@ router.get('/addGameMsg', function (req, res, next) {
 
     if (data.gameName && data.cls) {
         game.hasGame(data, function (result) {
-            // console.log(result.length);
-            // res.json({state:0,info:"dd"});
-            // return false;
             if (!result.length) {
                 var gameMsg = {
                     gameName: data.gameName,
@@ -114,19 +111,13 @@ router.get('/gameAdminDetail', function (req, res, next) {
     })
 });
 
-router.get('/gameAdminDetail', function (req, res, next) {
+router.get('/GameMsgDetail', function (req, res, next) {
     var id = req.query.id;
     if (!id) {
         res.json({state: 0});
     }
-    game.gameMsgInfo(id, function (result) {
-        game.gameTag(id, function (data) {
-            var arr = {
-                "cls": result,
-                "tag": data
-            }
-            res.json(arr);
-        })
+    game.gameMsgDetail(id, function (result) {
+        res.json(result);
     })
 });
 

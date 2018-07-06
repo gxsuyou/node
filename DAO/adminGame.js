@@ -58,6 +58,18 @@ var game = {
         })
     },
 
+    gameMsgDetail: function (obj, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id = ? ";
+        query(game_sql, [obj], function (result) {
+            var gameImg_sql = "SELECT * FROM t_game_img WHERE game_id = ?"
+            query(gameImg_sql, [result[0].id], function (img_result) {
+                result[0].imgList = img_result;
+                return callback(result);
+            });
+
+        })
+    },
+
     gameMsgInfo: function (obj, callback) {
         var game_sql = "SELECT * FROM t_game WHERE id = ? "
         var ids = "";
@@ -164,7 +176,7 @@ var game = {
 
     hasGame: function (obj, callback) {
         var sql = "select * from t_game where game_name=? AND sys=? ";
-        query(sql, [obj.game_name, obj.sys], function (result) {
+        query(sql, [obj.gameName, obj.sys], function (result) {
             return callback(result)
         })
     },
