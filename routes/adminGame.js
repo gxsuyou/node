@@ -38,7 +38,7 @@ router.get('/addGameMsg', function (req, res, next) {
     var date = new Date();
     var cls = '0';
     var tag = '0';
-
+    data.sys = data.sys > 0 ? data.sys : 2;
     if (data.gameName && data.cls) {
         game.hasGame(data, function (result) {
             if (!result.length) {
@@ -242,7 +242,8 @@ router.get('/getActiveSearch', function (req, res, next) {
 
 router.get('/hasGame', function (req, res, next) {
     var data = req.query;
-    game.hasGame(data.name, function (games) {
+    data.sys = data.sys > 0 ? data.sys : 2;
+    game.hasGame(data, function (games) {
         if (games.length) {
             res.json({state: 1});
         } else {
@@ -252,7 +253,7 @@ router.get('/hasGame', function (req, res, next) {
 });
 router.get('/addGameActive', function (req, res) {
     var data = req.query;
-    data.sys = data.sys ? data.sys : 2;
+    data.sys = data.sys > 0 ? data.sys : 2;
     if (data.game_name && data.type) {
         var active = {
             name: data.name || "",
@@ -262,7 +263,7 @@ router.get('/addGameActive', function (req, res) {
             active: data.active || "",
             // game_id: data.game_id || "",
             type: data.type || "",
-            sys: data.sys || 2
+            sys: data.sys
         };
         game.hasGame(data, function (games) {
             if (games.length) {
@@ -335,6 +336,7 @@ router.get('/getSubject', function (req, res) {
 });
 router.get('/addSubjectGame', function (req, res) {
     var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
     if (data.game_name && data.subjectId) {
         game.hasGame(data, function (games) {
             if (!games.length) {
