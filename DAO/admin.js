@@ -17,23 +17,21 @@ var admin = {
         })
 
     },
-    addGame: function (obj, callback) {
-        var sql = "INSERT INTO t_game (game_name,game_packagename,game_recommend,game_download_num,game_version,game_update_date,game_company,game_install_num,activation,sys,add_time,update_detail,game_detail,type,admin,cls,grade) values (?,?,?,0,?,?,?,0,?,?,?,?,?,?,?,?,7.8)";
-        query(sql, [obj.game_name, obj.game_packagename, obj.game_recommend, obj.game_version, obj.game_update_date, obj.game_company, obj.activation, obj.sys, obj.add_time, obj.update_detail, obj.game_detail, obj.type, obj.admin, obj.cls], function (result) {
-            return callback(result);
-        })
-    },
-    editGame: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_num=?,sort=?,game_size=?,sort2=? where id =?";
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.download_num, obj.sort, obj.size, obj.sort2, obj.id], function (result) {
+    deleteGameImg: function (gameId, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id=?";
+        query(game_sql, [gameId], function (result) {
+            var set_sql = "UPDATE t_game SET game_title_img=null,icon=null WHERE id=?"
+            query(set_sql, [gameId], function (result) {
+
+            })
+
+            var sql = 'DELETE FROM  t_game_img WHERE game_id = ?';
+            query(sql, [gameId], function (result) {
+
+            })
             return callback(result)
         })
-    },
-    updateGameIconById: function (id, icon, callback) {
-        var sql = "update t_game set icon=? where id =?";
-        query(sql, [icon, id], function (result) {
-            return callback(result)
-        })
+
     },
     updateGameSizeById: function (id, size, callback) {
         var sql = "update t_game set game_size=? where id =?";
@@ -63,12 +61,6 @@ var admin = {
         var sql = "INSERT INTO t_game_img(game_id,img_src) values (?,?)";
         query(sql, [gameid, src], function (result) {
             return callback(result)
-        })
-    },
-    addCls: function (gameid, clsid, callback) {
-        var sql = "INSERT INTO t_game_cls_relation(game_id,cls_id) values (?,?)";
-        query(sql, [gameid, clsid], function (result) {
-            return callback(result);
         })
     },
     getGameByStart: function (start, callback) {

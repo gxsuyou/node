@@ -50,6 +50,7 @@ function uploadQiniu(path, scope, key, callback) {
     }
 }
 
+
 function getUpToken(scope, key) {
     var options = {
         scope: scope + ":" + key,
@@ -196,7 +197,7 @@ var rmdirSync = (function () {
 
     return function (dir, cb) {
         cb = cb || function () {
-            };
+        };
         var dirs = [];
 
         try {
@@ -245,10 +246,47 @@ var qiniuBucket = {
     // img:"oneyouxitestimg",
     // apk: "oneyouxitestapk"
 };
+router.get('/deleteGameImg', function (req, res) {
+    var data = req.query;
+    if (data.id) {
+        deleteFileByPrefix(qiniuBucket.img, "game/gameId" + data.id);
+
+        admin.deleteGameImg(data.id, function (result) {
+            var dirsToRefresh = [
+                'http://img.oneyouxi.com.cn/game/',
+                // 'http://if-pbl.qiniudn.com/images/'
+            ];
+            // 刷新目录，刷新目录需要联系七牛技术支持开通权限
+            // 单次请求链接不可以超过10个，如果超过，请分批发送请求
+            // qiniu.cdn.refreshDirs(dirsToRefresh, function (err, respBody, respInfo) {
+            //     if (err) {
+            //         throw err;
+            //     }
+            //     console.log(respInfo.statusCode);
+            //     if (respInfo.statusCode == 200) {
+            //         var jsonBody = JSON.parse(respBody);
+            //         console.log(jsonBody.code);
+            //         // console.log(jsonBody.error);
+            //         // console.log(jsonBody.requestId);
+            //         // console.log(jsonBody.invalidUrls);
+            //         // console.log(jsonBody.invalidDirs);
+            //         // console.log(jsonBody.urlQuotaDay);
+            //         // console.log(jsonBody.urlSurplusDay);
+            //         // console.log(jsonBody.dirQuotaDay);
+            //         // console.log(jsonBody.dirSurplusDay);
+            //     }
+            // });
+            res.json({state: 1})
+        })
+    } else {
+        res.json({state: 0})
+    }
+});
 router.get('/getUptokenByMsg', function (req, res, next) {
     if (req.query.scope && req.query.key) {
         var token = getUpToken(req.query.scope, req.query.key);//获取token
         res.json({state: 1, upToken: token})
+        return false;
     } else {
         res.json({state: 0})
     }
@@ -260,23 +298,23 @@ router.get('/deleteGame', function (req, res, next) {
     if (id) {
         admin.getGameMsgById(id, function (game) {
             if (game.length) {
-                var name = game[0].game_name;
+                // var name = game[0].game_name;
                 admin.delectGameByID(req.query.id, function (result) {
                     if (result.affectedRows) {
-                        //try {
-                        //    fs.exists(path + req.query.name, function (exists) {
-                        //        if (exists) {
-                        //            rmdirSync(path + req.query.name, function (e) {
-                        //            });
-                        //        }
-                        //    })
-                        //    // rmdirSync(path+req.query.name,function(e){
-                        //    // });
-                        //    //deleteFileByPrefix(qiniuBucket.img, "game/" + name);
-                        //    //deleteFileByPrefix(qiniuBucket.apk, "game/" + name)
-                        //} catch (e) {
-                        //    console.log(e);
-                        //}
+                        // try {
+                        //     fs.exists(path + req.query.name, function (exists) {
+                        //         if (exists) {
+                        //             rmdirSync(path + req.query.name, function (e) {
+                        //             });
+                        //         }
+                        //     })
+                        //     rmdirSync(path + req.query.name, function (e) {
+                        //     });
+                        //     deleteFileByPrefix(qiniuBucket.img, "game/" + name);
+                        //     deleteFileByPrefix(qiniuBucket.apk, "game/" + name)
+                        // } catch (e) {
+                        //     console.log(e);
+                        // }
                         res.json({state: 1})
                     } else {
                         res.json({state: 0});

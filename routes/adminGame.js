@@ -191,17 +191,6 @@ router.get('/updateGameTitleImg', function (req, res) {
         res.json({state: 0})
     }
 });
-router.get('/deleteGameImg', function (req, res) {
-    var data = req.query;
-    if (data.id) {
-        game.deleteGameImg(data.id, function (result) {
-            res.json({state: 1})
-        })
-    } else {
-        res.json({state: 0})
-    }
-});
-
 router.get('/activeSearch', function (req, res, next) {
     var data = req.query;
     data.sys = data.sys > 0 ? data.sys : 2;

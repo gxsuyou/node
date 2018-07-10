@@ -228,12 +228,6 @@ var game = {
             return callback(result)
         })
     },
-    deleteGameImg: function (gameId, callback) {
-        var sql = 'delete FROM  t_game_img where game_id = ?';
-        query(sql, [gameId], function (result) {
-            return callback(result)
-        })
-    },
     searchActive: function (msg, callback) {
         //TODO 未完成
         var sql = "SELECT * FROM t_activity  WHERE name like '%" + msg + "%' LIMIT 0,30";
