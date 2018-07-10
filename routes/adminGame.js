@@ -49,10 +49,12 @@ router.get('/addGameMsg', function (req, res, next) {
                     gameDownloadIos: data.gameDownloadIos || null,
                     gameRecommend: data.gameRecommend || null,
                     gameVersion: data.gameVersion || null,
-                    gameUpdateDate: data.gameUpdateDate || null,
+                    // gameUpdateDate: data.gameUpdateDate || null,
+                    gameUpdateDate: parseInt(date.getTime() / 1000),
                     gameCompany: data.gameCompany || null,
                     sys: data.sys || null,
-                    addTime: date.Format("yyyy-MM-dd") || null,
+                    // addTime: date.Format("yyyy-MM-dd") || null,
+                    addTime: parseInt(date.getTime() / 1000),
                     //updateDetail: data.addTime || null,
                     gameDetail: data.gameDetail || null,
                     grade: "8.0",
@@ -138,7 +140,8 @@ router.post('/SetGameMsg', function (req, res, next) {
         sort2: data.sort2 || null,
         size: data.size || null,
         id: data.id || null,//id
-        up_time: date.Format("yyyy-MM-dd HH:mm") || null,
+        // up_time: date.Format("yyyy-MM-dd HH:mm") || null,
+        up_time: parseInt(date.getTime() / 1000),
         up_admin: data.up_admin || null,
         strategy_head: data.strategy_head || 0
         // cls_ids: data.cls_ids,//分类id

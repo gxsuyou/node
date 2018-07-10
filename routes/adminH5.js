@@ -53,7 +53,6 @@ router.get('/addH5', function (req, res, next) {
             icon: req.query.icon,
             title_img: req.query.title_img,
         };
-        console.log(data);
         h5.addH5(data, function (result) {
             if (result.insertId) {
                 //for (var key in files) {

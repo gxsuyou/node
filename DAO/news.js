@@ -8,7 +8,8 @@ var news = {
         // query(sql,[(page-1)*20],function (result) {
         //     return callback(result)
         // })
-        var sql="SELECT a.id,a.title,a.img,a.add_time,a.agree,a.game_id,a.comment,b.game_name,b.icon FROM t_news AS a\n" +
+        var sql="SELECT a.id,a.title,a.img,a.add_time,a.agree,a.game_id,a.comment,b.game_name,b.icon " +
+            "FROM t_news AS a\n" +
             "LEFT JOIN t_game AS b ON a.`game_id`=b.`id` order by a.up desc,a.add_time desc limit ?,10";
         query(sql,[(page-1)*10],function (result) {
             return callback(result)

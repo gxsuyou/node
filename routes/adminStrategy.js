@@ -54,10 +54,12 @@ router.get('/getStrategyByMsgPage', function (req, res) {
 router.post('/addStrategy', function (req, res, next) {
     var data = req.body
     var date = new Date();
-    if (data.game_name && data.title) {
+    if (data.title) {
         strategy.hasUserAndGame(data, function (result) {
-            if (result.game_id && result.admin) {
-                data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
+            if (result.admin) {
+                data.game_name = data.game_name || null
+                // data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
+                data.add_time = parseInt(date.getTime() / 1000),
                 data.adminstatus = 1;
                 data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
                 strategy.addStratgy(data, function (add_result) {
@@ -70,10 +72,11 @@ router.post('/addStrategy', function (req, res, next) {
 router.post('/addStrategyGetApp', function (req, res, next) {
     var data = req.body
     var date = new Date();
-    if (data.game_name && data.title) {
+    if (data.title) {
         //strategy.hasUserAndGame(data, function (result) {
         //    if (result.game_id && result.admin) {
-        data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
+        // data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
+        data.add_time = parseInt(date.getTime() / 1000),
         data.admin = 0;
         strategy.addStratgyApp(data, function (add_result) {
             add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})

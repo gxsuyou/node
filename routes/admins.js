@@ -341,9 +341,12 @@ router.get('/gameAdmin', function (req, res, next) {
     var tables = ['t_game', 't_admin'];
     var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
 
-    var field = "t_game.*,t_admin.comment";
+    var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
 
     common.page(tables, p, where, "left", field, function (result) {
+        for (var i in result.result) {
+
+        }
         res.json(result);
     });
 });
