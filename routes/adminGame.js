@@ -416,8 +416,8 @@ router.get('/getTagByGame', function (req, res) {
 router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
     //console.log(data);
-    var cls_ids = "," + data.cls_ids + ","
-    var tag_ids = "," + data.tag_ids + ","
+    var cls_ids = data.cls_ids ? "," + data.cls_ids + "," : ",0,"
+    var tag_ids = data.tag_ids ? "," + data.tag_ids + "," : ",0,"
     if (data.id) {
         game.deleteTagAndCls(data.id, function (del_result) {
             game.setTagAndCls(data.id, tag_ids, cls_ids, function (result) {
