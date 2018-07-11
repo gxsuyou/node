@@ -57,7 +57,8 @@ var game = {
         })
     },
     editGameMsg: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_ios=?,game_download_num=?,game_recommend=?,sort=?,game_size=?,game_detail=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_ios=?," +
+            "game_download_num=?,game_recommend=?,sort=?,game_size=?,game_detail=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
         query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.game_detail, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
             return callback(result)
         })

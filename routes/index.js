@@ -6,6 +6,7 @@ var index = require("../DAO/index");
 router.get('/', function (req, res, next) {
     var test = 1;
     var date = new Date();
+
     // index.carousel(1,function (result) {
     res.json({s: 1})
     // });
