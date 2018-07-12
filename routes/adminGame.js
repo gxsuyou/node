@@ -180,9 +180,6 @@ router.get('/updateGameIcon', function (req, res) {
     if (data.id && data.url) {
         game.updateGameIcon(data.id, data.url, function (result) {
             game.getHasIosOrAndroid(data.id, function (game_result) {
-                if () {
-
-                }
             })
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
