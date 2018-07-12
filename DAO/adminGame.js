@@ -198,17 +198,13 @@ var game = {
             return callback(result);
         })
     },
-    updateDownloadAndroid: function (gameId, url, size, callback) {
-        var sql = 'update t_game set game_download_andriod = ? where id =?';
-        query(sql, [url, gameId], function (result) {
-            if (result.affectedRows) {
-                var sql = 'update t_game set game_size = ? where id=?';
-                query(sql, [size, gameId], function (result) {
-                    return callback(result)
-                })
-            } else {
-                return callback(result)
-            }
+    updateDownloadApp: function (gameId, url, size, sys, callback) {
+        var sql = 'update t_game set game_download_andriod = ?,game_size = ? where id =?';
+        if (sys == 1) {
+            sql = 'update t_game set game_download_ios2 = ?,game_size = ? where id =?';
+        }
+        query(sql, [url, size, gameId], function (result) {
+            return callback(result)
         })
     },
     addGameImg: function (gameId, url, callback) {
@@ -393,6 +389,28 @@ var game = {
     upTag: function (tagId, active, callback) {
         var sql = 'update t_tag set active=? where id=?';
         query(sql, [active, tagId], function (result) {
+            return callback(result)
+        })
+    },
+
+    getHasIosOrAndroid: function (obj, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id=?";
+        query(game_sql, [obj.id], function (game_result) {
+            var game_sql2 = "SELECT * FROM t_game WHERE game_name=? AND sys <> ?";
+            query(game_sql2, [game_result[0].id, game_result[0].sys], function (result) {
+                if (game_result.length) {
+                    return callback({state: 1, game: result})
+                } else {
+                    return callback({state: 0})
+                }
+
+            })
+        })
+    },
+
+    getSynchroImg: function (obj, callback) {
+        var sql = 'update t_game set ' + obj.field + '=? where id=?';
+        query(sql, [obj.url, obj.id], function (result) {
             return callback(result)
         })
     }

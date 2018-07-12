@@ -154,10 +154,11 @@ router.post('/SetGameMsg', function (req, res, next) {
     //})
 
 });
-router.get('/updateDownloadAndroid', function (req, res, next) {
-    if (req.query.id && req.query.url) {
-        console.log(req.query);
-        game.updateDownloadAndroid(req.query.id, req.query.url, req.query.size, function (result) {
+router.get('/updateDownloadApp', function (req, res, next) {
+    var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
+    if (data.id && data.url) {
+        game.updateDownloadApp(data.id, data.url, data.size, data.sys, function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {
@@ -178,6 +179,11 @@ router.get('/updateGameIcon', function (req, res) {
     var data = req.query;
     if (data.id && data.url) {
         game.updateGameIcon(data.id, data.url, function (result) {
+            game.getHasIosOrAndroid(data.id, function (game_result) {
+                if () {
+
+                }
+            })
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {

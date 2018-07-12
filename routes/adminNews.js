@@ -73,7 +73,7 @@ router.post("/addNews", function (req, res, next) {
         var data = req.body;
         var gameId = data.game_id > 0 ? data.game_id : 0;
         var newsdata = {
-            title: decodeURI(data.title),
+            title: decodeURI(data.title) || "",
             detail: data.detail,
             img: data.img,
             like: 0,
@@ -84,7 +84,6 @@ router.post("/addNews", function (req, res, next) {
             game_id: gameId,
             admin_id: data.admin
         };
-        console.log(newsdata);
         news.addNews(newsdata, function (result) {
             result.insertId ? res.json({state: 1}) : res.json({state: 0})
         })
