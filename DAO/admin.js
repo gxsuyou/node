@@ -17,16 +17,16 @@ var admin = {
         })
 
     },
-    deleteGameImg: function (gameId, callback) {
-        var game_sql = "SELECT * FROM t_game WHERE id=?";
-        query(game_sql, [gameId], function (result) {
-            var set_sql = "UPDATE t_game SET game_title_img=null,icon=null WHERE id=?"
-            query(set_sql, [gameId], function (result) {
+    deleteGameImg: function (game_name, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE game_name=?";
+        query(game_sql, [game_name], function (result) {
+            var set_sql = "UPDATE t_game SET game_title_img=null,icon=null WHERE game_name=?"
+            query(set_sql, [game_name], function (result) {
 
             })
 
-            var sql = 'DELETE FROM  t_game_img WHERE game_id = ?';
-            query(sql, [gameId], function (result) {
+            var sql = 'DELETE FROM  t_game_img WHERE game_name = ?';
+            query(sql, [game_name], function (result) {
 
             })
             return callback(result)
@@ -351,7 +351,13 @@ var admin = {
     },
     addIps: function (obj, callback) {
         var sql = "INSERT INTO t_admin_ipwhite (ip_,type,cost,stock,now_stock) values (?,?,?,?,?)";
-    }
+    },
+    getHasIosOrAndroid: function (obj, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id=?";
+        query(game_sql, [obj], function (game_result) {
+            return callback(game_result)
+        })
+    },
 };
 
 

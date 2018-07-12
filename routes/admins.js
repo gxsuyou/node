@@ -250,32 +250,21 @@ router.get('/deleteGameImg', function (req, res) {
     var data = req.query;
     if (data.id) {
         deleteFileByPrefix(qiniuBucket.img, "game/gameId" + data.id);
+        admin.getHasIosOrAndroid(data.id, function (result1) {
+            admin.deleteGameImg(result1[0].game_name, function (result2) {
+                res.json({state: 1});
+            })
+        })
+    } else {
+        res.json({state: 0})
+    }
+});
+router.get('/deleteGameApp', function (req, res) {
+    var data = req.query;
+    if (data.id) {
+        deleteFileByPrefix(qiniuBucket.apk, "game/gameId" + data.id)
 
         admin.deleteGameImg(data.id, function (result) {
-            var dirsToRefresh = [
-                'http://img.oneyouxi.com.cn/game/',
-                // 'http://if-pbl.qiniudn.com/images/'
-            ];
-            // 刷新目录，刷新目录需要联系七牛技术支持开通权限
-            // 单次请求链接不可以超过10个，如果超过，请分批发送请求
-            // qiniu.cdn.refreshDirs(dirsToRefresh, function (err, respBody, respInfo) {
-            //     if (err) {
-            //         throw err;
-            //     }
-            //     console.log(respInfo.statusCode);
-            //     if (respInfo.statusCode == 200) {
-            //         var jsonBody = JSON.parse(respBody);
-            //         console.log(jsonBody.code);
-            //         // console.log(jsonBody.error);
-            //         // console.log(jsonBody.requestId);
-            //         // console.log(jsonBody.invalidUrls);
-            //         // console.log(jsonBody.invalidDirs);
-            //         // console.log(jsonBody.urlQuotaDay);
-            //         // console.log(jsonBody.urlSurplusDay);
-            //         // console.log(jsonBody.dirQuotaDay);
-            //         // console.log(jsonBody.dirSurplusDay);
-            //     }
-            // });
             res.json({state: 1})
         })
     } else {
@@ -425,88 +414,6 @@ router.get('/active', function (req, res, next) {
     })
 
 });
-//router.post('/addActive', function (req, res, next) {
-//    try {
-//        var form = formidable.IncomingForm({
-//            encoding: 'utf-8',//上传编码
-//            uploadDir: resource + 'upload/',//上传目录，指的是服务器的路径，如果不存在将会报错。
-//            keepExtensions: true,//保留后缀
-//            maxFieldsSize: 2000 * 1024//byte//最大可上传大小
-//        });
-//        form.parse(req, function (err, fields, files) {
-//            // console.log(fields);
-//            var active = {
-//                name: fields.name,
-//                gameName: fields.gameName,
-//                title: fields.title,
-//                sort: fields.sort,
-//                active: fields.active,
-//                type: fields.type,
-//                sys: fields.sys
-//            };
-//            for (var key in files) {
-//                var file = files[key];
-//
-//                var extName = '';
-//                switch (file.type) {
-//                    case 'image/jpeg':
-//                        extName = 'jpeg';
-//                        break;
-//                    case 'image/jpg':
-//                        extName = 'jpg';
-//                        break;
-//                    case 'image/png':
-//                        extName = 'png';
-//                        break;
-//                    case 'image/x-png':
-//                        extName = 'png';
-//                        break;
-//                    case 'application/octet-stream':
-//                        extName = 'apk';
-//                        break
-//                }
-//                var fileName = key + '.' + extName;
-//                fs.exists(resource + 'active/' + fields.name, function (exists) {
-//                    if (exists) {
-//                        console.log("文件夹存在")
-//                    }
-//                    if (!exists) {
-//                        console.log("文件夹不存在");
-//                        try {
-//                            fs.mkdirSync(resource + 'active/' + fields.name);
-//                        } catch (e) {
-//                            console.log(e);
-//                        }
-//                    }
-//                    var newPath = resource + 'active/' + fields.name + '/' + fileName;
-//                    try {
-//                        fs.renameSync(file.path, newPath);  //重命名
-//                    } catch (e) {
-//
-//                    }
-//                    uploadQiniu(newPath, qiniuBucket.img, 'active/' + fields.name + '/' + fileName, function (respInfo, respBody) {
-//                        if (respInfo.statusCode == 200) {
-//                            active.active_img = respBody.key;
-//                            // console.log(active);
-//                            admin.addActive(active, function (result) {
-//                                // console.log(result);
-//                                if (result.insertId) {
-//                                    res.json({state: 1})
-//                                } else {
-//                                    res.json({state: 0})
-//                                }
-//                            })
-//                        } else {
-//                            res.json({state: 0});
-//                        }
-//                    })
-//                });
-//            }
-//        })
-//    } catch (e) {
-//        console.log(e);
-//    }
-//});
 router.get('/getAdmin', function (req, res, next) {
     admin.getAdmin(function (result) {
         res.json({admin: result})

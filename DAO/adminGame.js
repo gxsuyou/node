@@ -8,7 +8,7 @@ var game = {
             "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         // var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [
-            obj.gameName, obj.gameUrlScheme, obj.gameNagamePackagenameme, obj.gameDownloadIos, obj.gameRecommend,
+            obj.gameName, obj.gameUrlScheme, obj.gamePackagename, obj.gameDownloadIos, obj.gameRecommend,
             obj.gameVersion, obj.gameUpdateDate, obj.gameCompany, obj.sys, obj.addTime, obj.updateDetail, obj.admin,
             obj.type, obj.cls_ids, obj.strategy_head,
         ];
@@ -57,9 +57,9 @@ var game = {
         })
     },
     editGameMsg: function (obj, callback) {
-        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_version=?,game_download_ios=?," +
+        var sql = "update t_game set game_name=?,activation=?,game_company=?,game_packagename=?,game_version=?,game_download_ios=?," +
             "game_download_num=?,game_recommend=?,sort=?,game_size=?,game_detail=?,sort2=?,up_time=?,up_admin=?,strategy_head=? where id =?";
-        query(sql, [obj.name, obj.activation, obj.company, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.game_detail, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
+        query(sql, [obj.name, obj.activation, obj.company, obj.gamePackagename, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.game_detail, obj.sort2, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
             return callback(result)
         })
     },
@@ -207,21 +207,21 @@ var game = {
             return callback(result)
         })
     },
-    addGameImg: function (gameId, url, callback) {
-        var sql = "INSERT INTO t_game_img(game_id,img_src) values (?,?)";
-        query(sql, [gameId, url], function (result) {
+    addGameImg: function (gameId, url, game_name, callback) {
+        var sql = "INSERT INTO t_game_img(game_id,img_src,game_name) values (?,?,?)";
+        query(sql, [gameId, url, game_name], function (result) {
             return callback(result)
         })
     },
-    updateGameIcon: function (gameId, url, callback) {
-        var sql = 'update t_game set icon = ? where id =?';
-        query(sql, [url, gameId], function (result) {
+    updateGameIcon: function (gameName, url, callback) {
+        var sql = 'update t_game set icon = ? where game_name =?';
+        query(sql, [url, gameName], function (result) {
             return callback(result)
         })
     },
-    updateGameTitleImg: function (gameId, url, callback) {
-        var sql = 'update t_game set game_title_img = ? where id =?';
-        query(sql, [url, gameId], function (result) {
+    updateGameTitleImg: function (gameName, url, callback) {
+        var sql = 'update t_game set game_title_img = ? where game_name =?';
+        query(sql, [url, gameName], function (result) {
             return callback(result)
         })
     },
@@ -394,26 +394,12 @@ var game = {
     },
 
     getHasIosOrAndroid: function (obj, callback) {
-        var game_sql = "SELECT * FROM t_game WHERE id=?";
-        query(game_sql, [obj.id], function (game_result) {
-            var game_sql2 = "SELECT * FROM t_game WHERE game_name=? AND sys <> ?";
-            query(game_sql2, [game_result[0].id, game_result[0].sys], function (result) {
-                if (game_result.length) {
-                    return callback({state: 1, game: result})
-                } else {
-                    return callback({state: 0})
-                }
+        var game_sql = "SELECT * FROM t_game WHERE game_name=?";
 
-            })
+        query(game_sql, [obj], function (game_result) {
+            return callback(game_result)
         })
     },
-
-    getSynchroImg: function (obj, callback) {
-        var sql = 'update t_game set ' + obj.field + '=? where id=?';
-        query(sql, [obj.url, obj.id], function (result) {
-            return callback(result)
-        })
-    }
 };
 
 module.exports = game;
