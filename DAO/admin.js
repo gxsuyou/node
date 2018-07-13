@@ -33,6 +33,16 @@ var admin = {
         })
 
     },
+    deleteGameApp: function (id, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id=?";
+        query(game_sql, [id], function (result) {
+            var set_sql = "UPDATE t_game SET game_download_ios2=null,game_download_andriod=null WHERE id=?"
+            query(set_sql, [id], function (result) {
+                return callback(result)
+            })
+        })
+
+    },
     updateGameSizeById: function (id, size, callback) {
         var sql = "update t_game set game_size=? where id =?";
         query(sql, [size, id], function (result) {

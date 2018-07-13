@@ -242,10 +242,14 @@ Date.prototype.Format = function (formatStr) {
 
 var qiniuBucket = {
     img: "oneyouxiimg",
-    apk: "oneyouxiapk"
-    // img:"oneyouxitestimg",
-    // apk: "oneyouxitestapk"
+    apk: "oneyouxiapk",
+    ipa: "oneyouxiipa"
+// img:"oneyouxitestimg",
+// apk: "oneyouxitestapk"
 };
+/**
+ * 删除图片
+ */
 router.get('/deleteGameImg', function (req, res) {
     var data = req.query;
     if (data.id) {
@@ -259,12 +263,24 @@ router.get('/deleteGameImg', function (req, res) {
         res.json({state: 0})
     }
 });
+/**
+ * apk、ipa包删除
+ */
 router.get('/deleteGameApp', function (req, res) {
     var data = req.query;
-    if (data.id) {
-        deleteFileByPrefix(qiniuBucket.apk, "game/gameId" + data.id)
+    data.sys = data.sys > 0 ? data.sys : 2;
+    if (data.key) {
+        if (data.sys == 1) {
+            var qiniu = qiniuBucket.ipa
+        } else {
+            var qiniu = qiniuBucket.apk
+        }
+        var id = parseInt(data.key.substr(11));
+        deleteFileByPrefix(qiniu, "game/gameId" + id)
 
-        admin.deleteGameImg(data.id, function (result) {
+
+        //
+        admin.deleteGameApp(id, function (result) {
             res.json({state: 1})
         })
     } else {
