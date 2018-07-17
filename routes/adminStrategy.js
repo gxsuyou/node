@@ -42,9 +42,11 @@ router.get('/getStrategyByMsgPage', function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var msg = req.query.msg;
     var tables = ["t_strategy", "t_user"];
-    var where = "t_strategy.user_id = t_user.id " +
+    var where = {
+        where: "t_strategy.user_id = t_user.id " +
         "LEFT JOIN t_admin ON t_strategy.user_id = t_admin.id AND t_strategy.admin = 1 " +
-        "WHERE title LIKE '%" + msg + "%' ORDER BY t_strategy.id DESC";
+        "WHERE title LIKE '%" + msg + "%' ORDER BY t_strategy.id DESC"
+    };
 
     var field = "t_strategy.*,t_user.nick_name,t_admin.comment AS admin_comment";
     common.page(tables, p, where, "left", field, function (result) {
@@ -60,7 +62,7 @@ router.post('/addStrategy', function (req, res, next) {
                 data.game_name = data.game_name || null
                 // data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
                 data.add_time = parseInt(date.getTime() / 1000),
-                data.adminstatus = 1;
+                    data.adminstatus = 1;
                 data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
@@ -77,7 +79,7 @@ router.post('/addStrategyGetApp', function (req, res, next) {
         //    if (result.game_id && result.admin) {
         // data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
         data.add_time = parseInt(date.getTime() / 1000),
-        data.admin = 0;
+            data.admin = 0;
         strategy.addStratgyApp(data, function (add_result) {
             add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
         })

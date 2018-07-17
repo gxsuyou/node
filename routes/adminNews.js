@@ -57,9 +57,10 @@ var qiniuBucket = {
 router.get("/getNewsByPage", function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var tables = ['t_news', 't_user'];
-    var where = "t_news.add_user = t_user.id " +
+    var where = {
+        where:"t_news.add_user = t_user.id " +
         "LEFT JOIN t_admin ON t_news.add_admin = t_admin.id " +
-        "ORDER BY t_news.id DESC ";
+        "ORDER BY t_news.id DESC "};
 
     var field = "t_news.id,t_news.title,t_news.agree,t_news.`comment`,t_news.browse,t_news.up,t_news.add_time,t_user.nick_name,t_admin.comment AS admin_comment"
     common.page(tables, p, where, "left", field, function (result) {
@@ -184,7 +185,7 @@ router.get("/getHeadGame", function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = ["t_news_headGame", "t_game"];
-    var where = " t_news_headGame.`game_id`=t_game.`id` order by t_news_headGame.id desc ";
+    var where = {where:" t_news_headGame.`game_id`=t_game.`id` order by t_news_headGame.id desc "};
 
     var field = "t_game.game_name,t_game.sys,t_news_headGame.id";
     common.page(tables, p, where, "left", field, function (result) {
@@ -195,7 +196,7 @@ router.get("/getSlideGame", function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = ["t_news_slideGame", "t_game"];
-    var where = "t_news_slideGame.`game_id`=t_game.`id` order by t_news_slideGame.id desc";
+    var where = {where:"t_news_slideGame.`game_id`=t_game.`id` order by t_news_slideGame.id desc"};
 
     var field = "t_game.game_name,t_news_slideGame.id";
     common.page(tables, p, where, "left", field, function (result) {

@@ -48,7 +48,7 @@ router.get('/list',function (req,res,next) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_user';
-    var where = " order by id desc ";
+    var where = {where:" order by id desc "};
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);

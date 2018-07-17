@@ -343,15 +343,16 @@ router.get('/game', function (req, res, next) {
 });
 router.get('/gameAdmin', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
+    // var sys = req.query.sys > 0 ? " AND t_game.sys = " + req.query.sys : " AND t_game.sys = " + req.query.sys;
+    var sys = req.query.sys > 0 ? req.query.sys : 2;
     var tables = ['t_game', 't_admin'];
-    var where = "t_game.admin = t_admin.id order by t_game.id desc,t_game.add_time desc";
-
+    var where = {
+        where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + " order by t_game.id desc,t_game.add_time desc",
+        sys: sys
+    };
     var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
 
     common.page(tables, p, where, "left", field, function (result) {
-        for (var i in result.result) {
-
-        }
         res.json(result);
     });
 });
@@ -421,9 +422,12 @@ router.get('/setClsActive', function (req, res, next) {
 });
 router.get('/active', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-
+    var sys = req.query.sys > 0 ? req.query.sys : 2;
     var tables = 't_activity';
-    var where = " order by id desc ";
+    var where = {
+        where: " WHERE sys=" + sys + " order by id desc ",
+        sys: sys
+    };
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
@@ -785,6 +789,44 @@ router.post("/addIps", function (req, res, next) {
     }
 
 })
+
+router.get("/getFeedBack", function (req, res, next) {
+    var p = req.query.p > 0 ? req.query.p : 1;
+    var tables = [
+        't_feedback',
+        't_user',
+        // 't_feedback_img'
+    ];
+    var where = {
+        // left_on: "t_feedback.id = t_feedback_img.feedback_id ",
+        where: "t_feedback.user_id = t_user.id ORDER BY t_feedback.id DESC",
+    };
+
+    var field = "t_feedback.*,t_user.nick_name";
+
+    common.page(tables, p, where, "left", field, function (result) {
+        res.json(result);
+    });
+})
+
+router.get("/getFeedBackDetail", function (req, res, next) {
+    var data = req.query;
+    if (data.id) {
+        admin.getFeedBackDetail(data.id, function (result) {
+            res.json(result);
+        })
+    }
+});
+router.get("/delFeedBack", function (req, res, next) {
+    var data = req.query;
+    if (data.id) {
+        deleteFileByPrefix(qiniu, "feedback/feedbackId" + data.id + "/")
+
+        admin.delFeedBack(data.id, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        })
+    }
+});
 
 function getDate(index) {
     var date = new Date(); //当前日期

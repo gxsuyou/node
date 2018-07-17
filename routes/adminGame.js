@@ -36,7 +36,7 @@ router.get('/gameAdmin', function (req, res, next) {
 router.get('/addGameMsg', function (req, res, next) {
     var data = req.query;
     var date = new Date();
-    var cls = '0';
+    var cls = ',0,';
     var tag = '0';
     data.sys = data.sys > 0 ? data.sys : 2;
     if (data.gameName && data.cls) {
@@ -60,7 +60,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     grade: "8.0",
                     admin: data.admin,
                     type: data.type,
-                    cls_ids: data.cls ? "," + data.cls + "," : cls,
+                    cls_ids: data.cls.length ? "," + data.cls + "," : cls,
                     tag_ids: ",0,",
                     strategy_head: data.strategy_head || 0//攻略游戏头部
                     //tag_ids: data.tag ? data.tag : tag
@@ -332,7 +332,7 @@ router.get('/addSubject', function (req, res) {
 router.get('/getSubject', function (req, res) {
     var p = 1;
     var tables = 't_subject';
-    var where = " order by id desc ";
+    var where = {where:" order by id desc "};
     if (req.query.p > 0) {
         p = req.query.p;
     }
@@ -400,7 +400,7 @@ router.get('/getTag', function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_tag';
-    var where = " order by id desc ";
+    var where = {where:" order by id desc "};
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);

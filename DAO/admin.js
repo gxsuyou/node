@@ -368,6 +368,32 @@ var admin = {
             return callback(game_result)
         })
     },
+    getFeedBackChecked: function (obj, callback) {
+        var sql = "UPDATE t_feedback SET status = ?,check_admin = ? WHERE id = ?"
+        query(sql, [obj.status, obj.check_admin, obj.id], function (game_result) {
+            return callback(game_result)
+        })
+    },
+    getFeedBackDetail: function (obj, callback) {
+        var sql = "SELECT t_feedback.*,t_user.nick_name " +
+            "FROM t_feedback " +
+            "LEFT JOIN t_user ON t_user.id = t_feedback.user_id WHERE t_feedback.id = ?"
+        query(sql, [obj], function (result) {
+            var sql2 = "SELECT * FROM t_feedback_img WHERE feedback_id = ?"
+            query(sql2, [obj], function (result_img) {
+                return callback({result: result[0], img: result_img})
+            })
+        })
+    },
+    delFeedBack: function (obj, callback) {
+        var img_del = "DELETE FROM t_feedback_img WHERE feedback_id = ?"
+        query(img_del, [obj], function (results) {
+            var sql = "DELETE FROM t_feedback WHERE id = ?"
+            query(sql, [obj], function (result) {
+                return callback(result)
+            })
+        })
+    }
 };
 
 

@@ -18,21 +18,22 @@ var page = {
         var sqlTypes = sqlType;
         var fields = field ? field : "*";
         var LEFT = "";
-        var sql = "SELECT COUNT(*) AS count FROM `" + tables + "`";
+        var sysWhere = where.sys > 0 ? " WHERE sys = " + where.sys : ""
+        var sql = "SELECT COUNT(*) AS count FROM `" + tables + "`" + sysWhere;
         if (sqlTypes == "left") {//关联查询
-            sql = "SELECT COUNT(*) AS count FROM `" + tables[0] + "`";
+            sql = "SELECT COUNT(*) AS count FROM `" + tables[0] + "`" + sysWhere;
         }
         query(sql, [], function (result) {
-
             if (result[0].count > 0) {
-                var sql_1 = "SELECT " + fields + " FROM " + tables + " " + where + " limit ?,?";
+                var sql_1 = "SELECT " + fields + " FROM " + tables + " " + where.where + " limit ?,?";
                 if (sqlTypes == "left") {
+                    var LEFT = "";
                     if (tables[2]) {
-                        var LEFT = "LEFT JOIN  " + tables[2] + "\n";
+                        LEFT = "LEFT JOIN  " + tables[2] + " ON " + where.left_on + " \n ";
                     }
-                    sql_1 = "SELECT " + fields + " FROM " + tables[0] + " \n" +
-                        "LEFT JOIN  " + tables[1] + "\n" +
-                        "ON " + where + " limit ?,?";
+                    sql_1 = "SELECT " + fields + " FROM " + tables[0] + " \n " + LEFT +
+                        "LEFT JOIN  " + tables[1] + "\n " +
+                        "ON " + where.where + " limit ?,?";
                 }
                 query(sql_1, [(pages - 1) * page, page], function (lists) {
                     var arr = {
