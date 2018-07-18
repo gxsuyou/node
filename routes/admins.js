@@ -820,7 +820,7 @@ router.get("/getFeedBackDetail", function (req, res, next) {
 router.get("/delFeedBack", function (req, res, next) {
     var data = req.query;
     if (data.id) {
-        deleteFileByPrefix(qiniu, "feedback/feedbackId" + data.id + "/")
+        deleteFileByPrefix(qiniuBucket.img, "feedback/feedbackId" + data.id + "/")
 
         admin.delFeedBack(data.id, function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
