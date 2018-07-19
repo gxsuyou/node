@@ -1,7 +1,7 @@
 var query = require('../config/config');
 var news = {
     getNews: function (obj, callback) {
-        var sql = "SELECT * FROM t_news WHERE id = ?";
+        var sql = "SELECT *,FROM_UNIXTIME(add_time,'%Y-%m-%d %H:%i') as add_time FROM t_news WHERE id = ?";
         query(sql, [obj], function (result) {
             return callback(result);
         })
