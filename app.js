@@ -66,7 +66,7 @@ app.use(function getIp(req, res, next) {
     }
 });
 app.use(function (req, res, next) {
-    if (req.url.indexOf("www/upload") !== -1) {
+    if (req.url.indexOf("www/") !== -1) {
         fs.readFile("./" + req.url, function (err, data) {
             if (err) {
             } else {
@@ -74,32 +74,17 @@ app.use(function (req, res, next) {
                 res.end();
             }
         });
-
     } else {
         next();
     }
-
 });
-//http://192.168.0.104:8878/upload/Stragey_IMG_15042018_091317_0.png
 
-
-// view engine setup
-// app.set('views', path.join(__dirname, '/views'));
-// app.set('view engine', 'html');
-// app.engine('.html', require('ejs').__express);
-// app.set('view engine', 'html');
-// app.engine('.html',require('html').__express);
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 var objMulter = multer({dest: "./www/upload/"});
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(objMulter.any());
-//app.use(static('./upload'));
-// app.use(express.bodyParser());
 
 app.use('/', index);
 app.use("/game", game);
