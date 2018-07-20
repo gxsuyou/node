@@ -98,7 +98,7 @@ app.use('/adminH5', adminH5);
 app.use('/adminNews', adminNews);
 app.use('/adminGame', adminGame);
 app.use("/adminStrategy", adminStrategy);
-
+app.use(favicon(__dirname + "/public/ico/favicon.ico"))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -121,6 +121,7 @@ app.use(function (err, req, res, next) {
 app.use(timeout('5s'));
 //....一些中间件
 app.use(haltOnTimedout);
+
 function haltOnTimedout(req, res, next) {
     if (!req.timedout) next()
 }
