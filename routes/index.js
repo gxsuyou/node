@@ -6,8 +6,8 @@ var index = require("../DAO/index");
 router.get('/', function (req, res, next) {
     var test = 1;
     var date = new Date();
-
-    res.json({s: 1})
+    var data = "game/gameId745.ipa";
+    res.json({s: parseInt(data.substr(11))})
 
     //res.header('Content-Type', 'text/html');
     // res.render('index', { title: 'Express' });

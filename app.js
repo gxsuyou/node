@@ -66,7 +66,7 @@ app.use(function getIp(req, res, next) {
     }
 });
 app.use(function (req, res, next) {
-    if (req.url.indexOf("www/upload") !== -1) {
+    if (req.url.indexOf("www") !== -1) {
         fs.readFile("./" + req.url, function (err, data) {
             if (err) {
             } else {

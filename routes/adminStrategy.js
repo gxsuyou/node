@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var strategy = require('../DAO/adminStrategy');
 var common = require('../DAO/common');
+
+var gm = require('gm');
+var imageMagick = gm.subClass({imageMagick: true});
 var path = require("path");
 var fs = require("fs");
 Date.prototype.Format = function (formatStr) {
@@ -61,12 +64,14 @@ router.post('/addStrategy', function (req, res, next) {
             if (result.admin) {
                 data.game_name = data.game_name || null
                 // data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
-                data.add_time = parseInt(date.getTime() / 1000),
-                    data.adminstatus = 1;
+                data.add_time = parseInt(date.getTime() / 1000);
+                data.adminstatus = 1;
                 data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })
+            } else {
+                res.json({state: 0})
             }
         })
     }
@@ -78,8 +83,8 @@ router.post('/addStrategyGetApp', function (req, res, next) {
         //strategy.hasUserAndGame(data, function (result) {
         //    if (result.game_id && result.admin) {
         // data.add_time = date.Format("yyyy-MM-dd HH:mm:ss") || null
-        data.add_time = parseInt(date.getTime() / 1000),
-            data.admin = 0;
+        data.add_time = parseInt(date.getTime() / 1000);
+        data.admin = 0;
         strategy.addStratgyApp(data, function (add_result) {
             add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
         })
@@ -180,16 +185,18 @@ router.post("/img", function (req, res) {
     req.files.forEach(function (item) {
         var newName = "www/upload/" + req.query.title + "_" + item.originalname;
         data.push(req.query.url + newName);
+
         fs.rename(item.path, newName, function (err) {
             if (err) {
 
             } else {
 
             }
-        });
+        })
     });
     res.json({errno: 0, data: data});
     return false;
 });
+
 
 module.exports = router;
