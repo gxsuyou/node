@@ -3,8 +3,8 @@ var router = express.Router();
 var strategy = require('../DAO/adminStrategy');
 var common = require('../DAO/common');
 
-var gm = require('gm');
-var imageMagick = gm.subClass({imageMagick: true});
+// var gm = require('gm');
+// var imageMagick = gm.subClass({imageMagick: true});
 var path = require("path");
 var fs = require("fs");
 Date.prototype.Format = function (formatStr) {
