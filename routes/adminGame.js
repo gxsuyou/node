@@ -160,9 +160,11 @@ router.get('/updateDownloadApp', function (req, res, next) {
     data.sys = data.sys > 0 ? data.sys : 2;
     if (data.id && data.url) {
         game.updateDownloadApp(data.id, data.url, data.size, data.sys, function (result) {
-            game.getPListAdd(data.id, function (pResult) {
-                
-            })
+            if (data.sys == 1) {
+                game.getPListAdd(data.id, function (pResult) {
+
+                })
+            }
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {

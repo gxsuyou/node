@@ -202,7 +202,7 @@ var game = {
     },
     getPListAdd: function (obj, callback) {
         var sql = "select * from t_game where id=?";
-        query(sql, [obj.id], function (result) {
+        query(sql, [obj], function (result) {
             var name = "gameId" + result[0].id
             var url = "http://ipa.oneyouxi.com.cn/" + result[0].url
             var packagename = result[0].game_packagename
@@ -232,6 +232,13 @@ var game = {
                     console.log("The file was saved!");
                 });
             });
+
+            var iosUrl = "itms-services://?action=download-manifest&url=https://admin.oneyouxi.com.cn/www/download/gameId" + name + ".plist";
+            var add_sql = 'update t_game set game_download_ios2 = ? where id =?';
+            query(add_sql, [iosUrl, obj], function (result) {
+                return callback(result)
+            })
+
             return callback(result)
         })
     },
