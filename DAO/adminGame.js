@@ -204,7 +204,7 @@ var game = {
         var sql = "select * from t_game where id=?";
         query(sql, [obj], function (result) {
             var name = "gameId" + result[0].id
-            var url = "http://ipa.oneyouxi.com.cn/" + result[0].url
+            var url = "http://ipa.oneyouxi.com.cn/" + result[0].game_download_ios2
             var packagename = result[0].game_packagename
             var version = result[0].game_version;
 
