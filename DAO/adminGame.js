@@ -233,7 +233,7 @@ var game = {
                 });
             });
 
-            var iosUrl = "itms-services://?action=download-manifest&url=https://admin.oneyouxi.com.cn/www/download/gameId" + name + ".plist";
+            var iosUrl = "itms-services://?action=download-manifest&url=https://admin.oneyouxi.com.cn/www/download/" + name + ".plist";
             var add_sql = 'update t_game set game_download_ios2 = ? where id =?';
             query(add_sql, [iosUrl, obj], function (result) {
                 return callback(result)
