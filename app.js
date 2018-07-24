@@ -50,7 +50,9 @@ app.use(function getIp(req, res, next) {
             ip = ip.split("::ffff:").join("");
         }
         console.log(ip)
-        if (req.url.indexOf("www") < 0) {
+        if (req.url.indexOf("www") > -1 || req.url.indexOf("/img?") > -1) {
+            next();
+        } else {
             if (ips.toString().indexOf(ip) < 0) {
                 var err = new Error('Not Found');
                 err.status = 404;
@@ -58,8 +60,6 @@ app.use(function getIp(req, res, next) {
             } else {
                 next();
             }
-        } else {
-            next();
         }
     } else {
         next()
