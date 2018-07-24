@@ -1,4 +1,6 @@
 var query = require('../config/config');
+var fs = require('fs');
+var path = require('path');
 var game = {
     addGameMsg: function (obj, callback) {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -196,6 +198,41 @@ var game = {
         var sql = "INSERT INTO t_tag_relation(game_id,tag_id) values (?,?)";
         query(sql, [gameid, clsid], function (result) {
             return callback(result);
+        })
+    },
+    getPListAdd: function (obj, callback) {
+        var sql = "select * from t_game where id=?";
+        query(sql, [obj.id], function (result) {
+            var name = "gameId" + result[0].id
+            var url = "http://ipa.oneyouxi.com.cn/" + result[0].url
+            var packagename = result[0].game_packagename
+            var version = result[0].game_version;
+
+            var dataPlist = '<?xml version="1.0" encoding="UTF-8"?>';
+            dataPlist += '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
+            dataPlist += '<plist version="1.0"><dict><key>items</key>'
+            dataPlist += '<array><dict><key>assets</key>'
+            dataPlist += '<array><dict><key>kind</key><string>software-package</string><key>url</key>'
+            dataPlist += '<string><![CDATA[' + url + ']]></string></dict></array>'
+            dataPlist += '<key>metadata</key>'
+            dataPlist += '<dict><key>bundle-identifier</key><string>oneyouxi</string><key>bundle-version</key>'
+            dataPlist += '<string><![CDATA[' + version + ']]></string><key>kind</key><string>software</string><key>title</key>'
+            dataPlist += '<string><![CDATA[' + packagename + ']]></string></dict></dict></array></dict></plist>'
+
+            fs.readFile(path.join(__dirname, '../www/download/' + name + '.plist'), 'utf8', function (err, data) {
+                if (data) {
+                    fs.unlink(path.join(__dirname, '../www/download/' + name + '.plist'), function (err) {
+
+                    });
+                }
+                fs.writeFile(path.join(__dirname, '../www/download/' + name + '.plist'), dataPlist, function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log("The file was saved!");
+                });
+            });
+            return callback(result)
         })
     },
     updateDownloadApp: function (gameId, url, size, sys, callback) {

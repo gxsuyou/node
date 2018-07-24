@@ -4,6 +4,8 @@ var formidable = require('formidable');
 var common = require('../DAO/common');
 var PATH = require("../path");
 var resource = PATH.resource;
+var path = require("path");
+var fs = require("fs");
 Date.prototype.Format = function (formatStr) {
     var str = formatStr;
     var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -158,6 +160,9 @@ router.get('/updateDownloadApp', function (req, res, next) {
     data.sys = data.sys > 0 ? data.sys : 2;
     if (data.id && data.url) {
         game.updateDownloadApp(data.id, data.url, data.size, data.sys, function (result) {
+            game.getPListAdd(data.id, function (pResult) {
+                
+            })
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {
@@ -332,7 +337,7 @@ router.get('/addSubject', function (req, res) {
 router.get('/getSubject', function (req, res) {
     var p = 1;
     var tables = 't_subject';
-    var where = {where:" order by id desc "};
+    var where = {where: " order by id desc "};
     if (req.query.p > 0) {
         p = req.query.p;
     }
@@ -400,7 +405,7 @@ router.get('/getTag', function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_tag';
-    var where = {where:" order by id desc "};
+    var where = {where: " order by id desc "};
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
