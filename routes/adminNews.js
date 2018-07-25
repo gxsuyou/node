@@ -215,7 +215,7 @@ router.get("/getSlideGame", function (req, res) {
     var tables = ["t_news_slideGame", "t_game"];
     var where = {where: "t_news_slideGame.`game_id`=t_game.`id` order by t_news_slideGame.id desc"};
 
-    var field = "t_game.game_name,t_news_slideGame.id";
+    var field = "t_game.game_name,t_game.sys,t_news_slideGame.id";
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
