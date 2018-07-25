@@ -154,12 +154,14 @@ router.get("/deleteNewsById", function (req, res, next) {
                 var imgReg = /<img.*?(?:>|\/>)/gi;
                 var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
                 var arr = str.match(imgReg);
-                for (var i = 0; i < arr.length; i++) {
-                    var src = arr[i].match(srcReg);
-                    //获取图片地址，src[1]
-                    var imgUrl = src[1].substr(src[1].indexOf("www"))//获取图片地址，并从www开始截取后面的字符
-                    if (fs.existsSync(path.join(__dirname, '../' + imgUrl))) {//查看文件是否存在，是返回true，否返回fales
-                        fs.unlinkSync(path.join(__dirname, '../' + imgUrl));//执行删除文件
+                if (arr) {
+                    for (var i = 0; i < arr.length; i++) {
+                        var src = arr[i].match(srcReg);
+                        //获取图片地址，src[1]
+                        var imgUrl = src[1].substr(src[1].indexOf("www"))//获取图片地址，并从www开始截取后面的字符
+                        if (fs.existsSync(path.join(__dirname, '../' + imgUrl))) {//查看文件是否存在，是返回true，否返回fales
+                            fs.unlinkSync(path.join(__dirname, '../' + imgUrl));//执行删除文件
+                        }
                     }
                 }
 
