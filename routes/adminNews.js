@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
+var path = require("path");
+var fs = require("fs");
 var news = require('../DAO/adminNews');
 var common = require('../DAO/common');
 Date.prototype.Format = function (formatStr) {
@@ -144,10 +145,24 @@ router.post("/setNewsFu", function () {
 router.get("/deleteNewsById", function (req, res, next) {
     //用于删除已有资讯
     if (req.query.id) {
-        news.getNewsById(req.query.id, function (result) {
-            if (result.length) {
-                deleteByBucketKey(qiniuBucket.base64, result[0].detail_addr);
-                deleteByBucketKey(qiniuBucket.img, result[0].title);
+        news.getNewsById(req.query.id, function (n_result) {
+            if (n_result.length) {
+                // deleteByBucketKey(qiniuBucket.base64, result[0].detail_addr);
+                deleteByBucketKey(qiniuBucket.img, "News/newsName=" + n_result[0].title);
+                /**删除图片文件*/
+                var str = n_result[0].detail;
+                var imgReg = /<img.*?(?:>|\/>)/gi;
+                var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+                var arr = str.match(imgReg);
+                for (var i = 0; i < arr.length; i++) {
+                    var src = arr[i].match(srcReg);
+                    //获取图片地址，src[1]
+                    var imgUrl = src[1].substr(src[1].indexOf("www"))//获取图片地址，并从www开始截取后面的字符
+                    if (fs.existsSync(path.join(__dirname, '../' + imgUrl))) {//查看文件是否存在，是返回true，否返回fales
+                        fs.unlinkSync(path.join(__dirname, '../' + imgUrl));//执行删除文件
+                    }
+                }
+
                 news.deleteNewsById(req.query.id, function (result) {
                     result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
                 })
