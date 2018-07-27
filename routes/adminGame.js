@@ -30,7 +30,6 @@ router.get('/game', function (req, res, next) {
     })
 });
 router.get('/gameAdmin', function (req, res, next) {
-    // console.log(req.query.id);
     admin.getGameByStartAdmin(req.query.start, req.query.id, function (result) {
         res.json({game: result[0], cls: result[1]});
     })
@@ -152,8 +151,6 @@ router.post('/SetGameMsg', function (req, res, next) {
         result.affectedRows ? res.json({state: 1}) : res.json({state: 0});
         return false;
     })
-    //})
-
 });
 router.get('/updateDownloadApp', function (req, res, next) {
     var data = req.query;
@@ -327,7 +324,6 @@ router.get('/setGameActive', function (req, res) {
 });
 router.get('/addSubject', function (req, res) {
     var data = req.query;
-    console.log(data);
     if (data.title && data.img) {
         game.addSubject(data.img, data.title, data.detail, data.active, data.sys, function (result) {
             result.insertId ? res.json({state: 1}) : res.json({state: 0})

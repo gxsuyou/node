@@ -201,7 +201,7 @@ router.get('/deleteStrategy', function (req, res) {
 router.post("/img", function (req, res) {
     const data = [];
     req.files.forEach(function (item) {
-        var newName = "www/upload/" + req.query.title + "_" + item.originalname;
+        var newName = "www/upload/" + req.query.title + "_" + Math.floor(Math.random() * 10000) + "_" + item.originalname;
         data.push(req.query.url + newName);
 
         fs.rename(item.path, newName, function (err) {

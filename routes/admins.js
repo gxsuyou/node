@@ -276,10 +276,8 @@ router.get('/deleteGameApp', function (req, res) {
             var qiniu = qiniuBucket.apk
         }
         var id = parseInt(data.key.substr(11));
-        deleteFileByPrefix(qiniu, "game/gameId" + id)
+        deleteFileByPrefix(qiniu, "game/gameId" + id);
 
-
-        //
         admin.deleteGameApp(id, function (result) {
             res.json({state: 1})
         })
