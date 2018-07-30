@@ -270,10 +270,9 @@ router.get('/deleteGameApp', function (req, res) {
     var data = req.query;
     data.sys = data.sys > 0 ? data.sys : 2;
     if (data.key) {
+        var qiniu = qiniuBucket.apk
         if (data.sys == 1) {
-            var qiniu = qiniuBucket.ipa
-        } else {
-            var qiniu = qiniuBucket.apk
+            qiniu = qiniuBucket.ipa
         }
         var id = parseInt(data.key.substr(11));
         deleteFileByPrefix(qiniu, "game/gameId" + id);
@@ -301,7 +300,6 @@ router.get('/deleteGame', function (req, res, next) {
     if (id) {
         admin.getGameMsgById(id, function (game) {
             if (game.length) {
-                // var name = game[0].game_name;
                 admin.delectGameByID(req.query.id, function (result) {
                     if (result.affectedRows) {
                         // try {
@@ -338,21 +336,6 @@ router.get('/game', function (req, res, next) {
     admin.getGameByStart(req.query.start, function (result) {
         res.json({game: result[0], cls: result[1]});
     })
-});
-router.get('/gameAdmin', function (req, res, next) {
-    var p = req.query.p > 0 ? req.query.p : 1;
-    // var sys = req.query.sys > 0 ? " AND t_game.sys = " + req.query.sys : " AND t_game.sys = " + req.query.sys;
-    var sys = req.query.sys > 0 ? req.query.sys : 2;
-    var tables = ['t_game', 't_admin'];
-    var where = {
-        where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + " order by t_game.id desc,t_game.add_time desc",
-        sys: sys
-    };
-    var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
-
-    common.page(tables, p, where, "left", field, function (result) {
-        res.json(result);
-    });
 });
 
 router.get('/gameName', function (req, res, next) {
@@ -402,7 +385,6 @@ router.get("/getClsActive", function (req, res, next) {
 router.get('/setClsActive', function (req, res, next) {
     var type = req.query.type,
         sys = req.query.sys;
-    // console.log(type, sys);
     if (JSON.parse(req.query.arr).length = 4) {
         admin.setClsActive(type, sys, JSON.parse(req.query.arr), function (result) {
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
@@ -447,7 +429,6 @@ router.post('/login', function (req, res, next) {
 });
 
 router.get('/add/user', function (req, res, next) {
-    // console.log(req.query.type);
     admin.addUser(req.query.name, req.query.password, req.query.type, req.query.comment, function (result) {
         result.affectedRows ? res.json({state: 1}) : res.json({state: 0});
     })
@@ -518,7 +499,6 @@ router.post('/add/good', function (req, res, next) {
                     var newPath = resource + 'goods/' + fields.name + '/img/list/' + fileName;
                     fs.renameSync(file.path, newPath);  //重命名
                     uploadQiniu(newPath, qiniuBucket.img, 'goods/' + fields.name + '/img/list/' + fileName, function (respInfo, respBody) {
-                        // console.log(respInfo, respBody);
                     });
                     good_img.push('goods/' + fields.name + '/img/list/' + fileName)
                 }
@@ -768,18 +748,6 @@ router.post("/setPassword", function (req, res, next) {
     } else {
         res.json({state: 0})
     }
-})
-
-router.post("/addIps", function (req, res, next) {
-    var data = req.body;
-    var date = new Date();
-    data.add_time = date.Format('yyyy-MM-dd HH:mm:SS')
-    if (data.id && data.ips) {
-
-    } else {
-        res.json({state: 0})
-    }
-
 })
 
 router.get("/getFeedBack", function (req, res, next) {

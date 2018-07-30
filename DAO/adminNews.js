@@ -66,22 +66,6 @@ var news = {
             return callback(result)
         })
     },
-    getHeadGame: function (callback) {
-        var sql = "SELECT t_game.game_name,t_news_headGame.id FROM t_news_headGame \n" +
-            "LEFT JOIN t_game\n" +
-            "ON t_news_headGame.`game_id`=t_game.`id`";
-        query(sql, [], function (result) {
-            return callback(result)
-        })
-    },
-    getSlideGame: function (callback) {
-        var sql = "SELECT t_game.game_name,t_news_slideGame.id FROM t_news_slideGame \n" +
-            "LEFT JOIN t_game\n" +
-            "ON t_news_slideGame.`game_id`=t_game.`id`";
-        query(sql, [], function (result) {
-            return callback(result)
-        })
-    },
     getHeadGameByGameId: function (id, callbcak) {
         var sql = "select * from t_news_headgame where game_id=?";
         query(sql, [id], function (result) {
@@ -96,12 +80,6 @@ var news = {
     },
     getHeadGameById: function (id, callbcak) {
         var sql = "select * from t_news_headgame where id=?";
-        query(sql, [id], function (result) {
-            return callbcak(result)
-        })
-    },
-    getSlideGameById: function (id, callbcak) {
-        var sql = "select * from t_news_slidegame where id=?";
         query(sql, [id], function (result) {
             return callbcak(result)
         })

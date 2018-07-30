@@ -35,14 +35,13 @@ router.get('/gameAdmin', function (req, res, next) {
     // var sys = req.query.sys > 0 ? " AND t_game.sys = " + req.query.sys : " AND t_game.sys = " + req.query.sys;
     var sys = req.query.sys > 0 ? req.query.sys : 2;
     var sort = " t_game.id desc,t_game.add_time desc ";
-    if (gameSortType == "downNum") {
-        sort = " t_game.game_download_num desc";
-    } else if (gameSortType == "sort") {
+    if (gameSortType == "sort") {
         sort = " t_game.sort desc";
     } else if (gameSortType == "sort2") {
         sort = " t_game.sort2 desc";
+    } else if (gameSortType == "downNum") {
+        sort = " t_game.game_download_num desc";
     }
-
     var tables = ['t_game', 't_admin'];
     var where = {
         where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + " order by " + sort,
@@ -248,16 +247,13 @@ router.get('/getActiveSearch', function (req, res, next) {
     var data = "";
     if (req.query) {
         data = req.query;
-        //game.hasGame(data.name, function (game) {
         common.getActiveSearch(data.name, function (result) {
-            // console.log(result);
             if (result.length > 0) {
                 res.json({state: 1, result: result});
             } else {
                 res.json({state: 0, result: []});
             }
         })
-        //})
     } else {
         common.getActiveSearch(data, function (result) {
             res.json(result);
@@ -354,9 +350,6 @@ router.get('/getSubject', function (req, res) {
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })
-    // game.getSubject(function (result) {
-    //     res.json({state:1,subject:result})
-    // })
 });
 router.get('/addSubjectGame', function (req, res) {
     var data = req.query;
@@ -386,7 +379,6 @@ router.get('/deleteSubjectGame', function (req, res) {
     var data = req.query;
     if (data.id) {
         game.deleteSubjectGame(data.id, function (result) {
-            //console.log(result);
             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {
@@ -420,17 +412,10 @@ router.get('/getTag', function (req, res) {
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })
-    // game.getTag(function (result) {
-    //     res.json({state:1,tag:result})
-    // })
 });
 router.get('/getTagByGame', function (req, res) {
     var data = req.query;
     if (data.gameId) {
-        // game.getTagByGame(data.gameId, function (result) {
-        //     res.json({state: 1, tag: result})
-        // })
-
         game.gameMsgInfo(data.gameId, function (result) {
             game.gameTag(data.gameId, function (data) {
                 var arr = {
@@ -447,7 +432,6 @@ router.get('/getTagByGame', function (req, res) {
 });
 router.get('/setClsAndTag', function (req, res) {
     var data = req.query;
-    //console.log(data);
     var cls_ids = data.cls_ids ? "," + data.cls_ids + "," : ",0,"
     var tag_ids = data.tag_ids ? "," + data.tag_ids + "," : ",0,"
     if (data.id) {

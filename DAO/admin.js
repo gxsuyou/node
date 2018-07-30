@@ -197,7 +197,8 @@ var admin = {
                     console.log("addactive fales");
                     return false;
                 }
-                var sql = "insert into t_activity (name,title,sort,active_img,active,game_id,type,sys) values (?,?,?,?,?,?,?,?)";
+                var sql = "insert into t_activity (name,title,sort,active_img,active,game_id,type,sys) " +
+                    "values (?,?,?,?,?,?,?,?)";
                 query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.game_id, obj.type, obj.sys], function (result) {
                     return callback(result)
                 })
@@ -281,7 +282,8 @@ var admin = {
         })
     },
     getNewsByPage: function (page, callback) {
-        var sql = "SELECT id,title,add_user,comment,browse,agree,add_time,game_id,up FROM `t_news` ORDER BY up DESC,add_time DESC limit ?,2000";
+        var sql = "SELECT id,title,add_user,comment,browse,agree,add_time,game_id,up " +
+            "FROM `t_news` ORDER BY up DESC,add_time DESC limit ?,2000";
         query(sql, [(page - 1) * 20, page * 20], function (result) {
             return callback(result);
         })
@@ -357,18 +359,9 @@ var admin = {
             return callback(result)
         })
     },
-    addIps: function (obj, callback) {
-        var sql = "INSERT INTO t_admin_ipwhite (ip_,type,cost,stock,now_stock) values (?,?,?,?,?)";
-    },
     getHasIosOrAndroid: function (obj, callback) {
         var game_sql = "SELECT * FROM t_game WHERE id=?";
         query(game_sql, [obj], function (game_result) {
-            return callback(game_result)
-        })
-    },
-    getFeedBackChecked: function (obj, callback) {
-        var sql = "UPDATE t_feedback SET status = ?,check_admin = ? WHERE id = ?"
-        query(sql, [obj.status, obj.check_admin, obj.id], function (game_result) {
             return callback(game_result)
         })
     },

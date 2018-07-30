@@ -104,13 +104,16 @@ var common = {
 
     getGameSearch: function (obj, callback) {
         var sysSql = obj.sys > 0 ? " AND a.sys=" + obj.sys : "";
-        var sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment FROM t_game AS a ' +
+        var sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment ' +
+            'FROM t_game AS a ' +
             'LEFT JOIN t_admin AS b ON a.admin = b.id WHERE a.id > 0 ' + sysSql + ' LIMIT 0,30';
         if (obj.name) {
-            sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
+            sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment ' +
+                'FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
                 'WHERE a.game_name LIKE "%' + obj.name + '%" ' + sysSql + ' LIMIT 0,30';
         } else if (obj.msg) {
-            sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
+            sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment ' +
+                'FROM t_game AS a LEFT JOIN t_admin AS b ON a.admin = b.id  ' +
                 'WHERE a.game_name LIKE "%' + obj.msg + '%" ' + sysSql + ' LIMIT 0,30';
         }
         query(sql, [], function (result) {
