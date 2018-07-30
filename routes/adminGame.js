@@ -24,10 +24,35 @@ Date.prototype.Format = function (formatStr) {
     str = str.replace(/s|S/g, this.getSeconds());
     return str;
 };
-router.get('/game', function (req, res, next) {
-    admin.getGameByStart(req.query.start, function (result) {
-        res.json({game: result[0], cls: result[1]});
-    })
+// router.get('/game', function (req, res, next) {
+//     admin.getGameByStart(req.query.start, function (result) {
+//         res.json({game: result[0], cls: result[1]});
+//     })
+// });
+router.get('/gameAdmin', function (req, res, next) {
+    var p = req.query.p > 0 ? req.query.p : 1;
+    var gameSortType = req.query.sortType ? req.query.sortType : "";
+    // var sys = req.query.sys > 0 ? " AND t_game.sys = " + req.query.sys : " AND t_game.sys = " + req.query.sys;
+    var sys = req.query.sys > 0 ? req.query.sys : 2;
+    var sort = " t_game.id desc,t_game.add_time desc ";
+    if (gameSortType == "downNum") {
+        sort = " t_game.game_download_num desc";
+    } else if (gameSortType == "sort") {
+        sort = " t_game.sort desc";
+    } else if (gameSortType == "sort2") {
+        sort = " t_game.sort2 desc";
+    }
+
+    var tables = ['t_game', 't_admin'];
+    var where = {
+        where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + " order by " + sort,
+        sys: sys
+    };
+    var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
+
+    common.page(tables, p, where, "left", field, function (result) {
+        res.json(result);
+    });
 });
 router.get('/gameAdmin', function (req, res, next) {
     admin.getGameByStartAdmin(req.query.start, req.query.id, function (result) {
