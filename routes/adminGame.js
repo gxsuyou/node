@@ -91,7 +91,6 @@ router.get('/addGameMsg', function (req, res, next) {
                     strategy_head: data.strategy_head || 0//攻略游戏头部
                     //tag_ids: data.tag ? data.tag : tag
                 };
-                console.log()
                 game.addGameMsg(gameMsg, function (result) {
                     if (result.insertId) {
                         var cls = data.cls.split(',');
@@ -198,12 +197,11 @@ router.get('/addGameImg', function (req, res, next) {
     var data = req.query;
     if (data.id && data.url) {
         game.getHasIosOrAndroid(data.id, function (game_result) {
-            for (var i in game_result) {
+            if (game_result) {
                 game.addGameImg(game_result[i].id, data.url, data.game_name, function (result) {
-
+                    res.json({state: 1})
                 })
             }
-            res.json({state: 1})
         })
     } else {
         res.json({state: 0})

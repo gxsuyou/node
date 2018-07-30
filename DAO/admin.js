@@ -11,8 +11,6 @@ var admin = {
         var sql = "select id,name,comment,nike_name from t_admin where name=? and password=?";
         // console.log(username, pwd);
         query(sql, [username, pwd], function (result) {
-            console.log(66766 + result);
-            // return false;
             return callback(result);
         })
 
