@@ -17,16 +17,16 @@ var admin = {
         })
 
     },
-    deleteGameImg: function (game_name, callback) {
-        var game_sql = "SELECT * FROM t_game WHERE game_name=?";
-        query(game_sql, [game_name], function (result) {
-            var set_sql = "UPDATE t_game SET game_title_img=null,icon=null WHERE game_name=?"
-            query(set_sql, [game_name], function (result) {
+    deleteGameImg: function (id, callback) {
+        var game_sql = "SELECT * FROM t_game WHERE id=?";
+        query(game_sql, [id], function (result) {
+            var set_sql = "UPDATE t_game SET game_title_img=null,icon=null WHERE id=?"
+            query(set_sql, [id], function (result) {
 
             })
 
-            var sql = 'DELETE FROM  t_game_img WHERE game_name = ?';
-            query(sql, [game_name], function (result) {
+            var sql = 'DELETE FROM  t_game_img WHERE id = ?';
+            query(sql, [id], function (result) {
 
             })
             return callback(result)

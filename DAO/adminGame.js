@@ -257,15 +257,15 @@ var game = {
             return callback(result)
         })
     },
-    updateGameIcon: function (gameName, url, callback) {
-        var sql = 'update t_game set icon = ? where game_name =?';
-        query(sql, [url, gameName], function (result) {
+    updateGameIcon: function (id, gameName, url, callback) {
+        var sql = 'update t_game set icon = ? where id=?';
+        query(sql, [url, id], function (result) {
             return callback(result)
         })
     },
-    updateGameTitleImg: function (gameName, url, callback) {
-        var sql = 'update t_game set game_title_img = ? where game_name =?';
-        query(sql, [url, gameName], function (result) {
+    updateGameTitleImg: function (id, gameName, url, callback) {
+        var sql = 'update t_game set game_title_img = ? where id=?';
+        query(sql, [url, id], function (result) {
             return callback(result)
         })
     },
@@ -438,7 +438,7 @@ var game = {
     },
 
     getHasIosOrAndroid: function (obj, callback) {
-        var game_sql = "SELECT * FROM t_game WHERE game_name=?";
+        var game_sql = "SELECT * FROM t_game WHERE id=?";
 
         query(game_sql, [obj], function (game_result) {
             return callback(game_result)

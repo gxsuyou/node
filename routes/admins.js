@@ -255,7 +255,7 @@ router.get('/deleteGameImg', function (req, res) {
     if (data.id) {
         deleteFileByPrefix(qiniuBucket.img, "game/gameId" + data.id);
         admin.getHasIosOrAndroid(data.id, function (result1) {
-            admin.deleteGameImg(result1[0].game_name, function (result2) {
+            admin.deleteGameImg(result1[0].id, function (result2) {
                 res.json({state: 1});
             })
         })
@@ -390,15 +390,9 @@ router.get("/gameByType", function (req, res, next) {
 });
 router.get("/searchGameByMsg", function (req, res, next) {
     var data = req.query;
-    if (req.query) {
-        common.getGameSearch(data, function (result) {
-            res.json(result);
-        })
-    } else {
-        common.getGameSearch(data, function (result) {
-            res.json(result);
-        })
-    }
+    common.getGameSearch(data, function (result) {
+        res.json(result);
+    })
 });
 router.get("/getClsActive", function (req, res, next) {
     admin.getClsActive(function (result) {

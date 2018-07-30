@@ -196,8 +196,8 @@ router.get('/updateDownloadApp', function (req, res, next) {
 });
 router.get('/addGameImg', function (req, res, next) {
     var data = req.query;
-    if (data.game_name && data.url) {
-        game.getHasIosOrAndroid(data.game_name, function (game_result) {
+    if (data.id && data.url) {
+        game.getHasIosOrAndroid(data.id, function (game_result) {
             for (var i in game_result) {
                 game.addGameImg(game_result[i].id, data.url, data.game_name, function (result) {
 
@@ -211,15 +211,9 @@ router.get('/addGameImg', function (req, res, next) {
 });
 router.get('/updateGameIcon', function (req, res) {
     var data = req.query;
-    if (data.game_name && data.url) {
-        game.getHasIosOrAndroid(data.game_name, function (game_result) {
-            if (game_result.length) {
-                game.updateGameIcon(data.game_name, data.url, function (result) {
-                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0})
-            }
+    if (data.id && data.url) {
+        game.updateGameIcon(data.id, data.url, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {
         res.json({state: 0})
@@ -227,15 +221,9 @@ router.get('/updateGameIcon', function (req, res) {
 });
 router.get('/updateGameTitleImg', function (req, res) {
     var data = req.query;
-    if (data.game_name && data.url) {
-        game.getHasIosOrAndroid(data.game_name, function (game_result) {
-            if (game_result.length) {
-                game.updateGameTitleImg(data.game_name, data.url, function (result) {
-                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0})
-            }
+    if (data.id && data.url) {
+        game.updateGameTitleImg(data.id, data.url, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
         })
     } else {
         res.json({state: 0})
