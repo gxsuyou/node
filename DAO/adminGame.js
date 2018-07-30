@@ -11,7 +11,7 @@ var game = {
         // var sql = "insert into t_game (game_name,game_url_scheme,game_packagename,game_download_ios,game_recommend,game_version,game_update_date,game_company,sys,add_time,update_detail,game_detail,admin,type,cls_ids) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = [
             obj.gameName, obj.gameUrlScheme, obj.gamePackagename, obj.gameDownloadIos, obj.gameRecommend,
-            obj.gameVersion, obj.gameUpdateDate, obj.gameCompany, obj.sys, obj.addTime, obj.updateDetail, obj.admin,
+            obj.gameVersion, obj.gameUpdateDate, obj.gameCompany, obj.sys, obj.addTime, obj.gameDetail, obj.admin,
             obj.type, obj.cls_ids, obj.strategy_head,
         ];
         //for (var x in obj) {

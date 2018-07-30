@@ -91,6 +91,7 @@ router.get('/addGameMsg', function (req, res, next) {
                     strategy_head: data.strategy_head || 0//攻略游戏头部
                     //tag_ids: data.tag ? data.tag : tag
                 };
+                console.log()
                 game.addGameMsg(gameMsg, function (result) {
                     if (result.insertId) {
                         var cls = data.cls.split(',');
@@ -528,7 +529,7 @@ router.get('/addTag', function (req, res) {
     if (data.name) {
         game.hasTag(decodeURI(data.name), function (tag_result) {
             if (tag_result.length) {
-                res.json({state: 0})
+                res.json({state: 0, info: "标签已存在"})
                 return false
             }
             game.addTag(decodeURI(data.name), function (result) {
