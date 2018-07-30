@@ -36,9 +36,9 @@ router.get('/gameAdmin', function (req, res, next) {
     var sys = req.query.sys > 0 ? req.query.sys : 2;
     var sort = " t_game.id desc,t_game.add_time desc ";
     if (gameSortType == "sort") {
-        sort = " t_game.sort desc limit 100";
+        sort = " t_game.sort desc ";
     } else if (gameSortType == "sort2") {
-        sort = " t_game.sort2 desc limit 100";
+        sort = " t_game.sort2 desc ";
     } else if (gameSortType == "downNum") {
         sort = " t_game.game_download_num desc";
     }
