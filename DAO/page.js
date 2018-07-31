@@ -19,7 +19,7 @@ var page = {
         var fields = field ? field : "*";
         var LEFT = "";
         var sysWhere = where.sys > 0 ? " AND sys = " + where.sys : ""
-        var sort = where.gameSort ? where.gameSort : "";
+        var sort = where.sortType ? where.sortType : "";
         var sortWhere = "";
         if (sort != 'null') {
             sortWhere = " AND " + sort + " <> 0"

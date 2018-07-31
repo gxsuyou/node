@@ -46,7 +46,7 @@ router.get('/gameAdmin', function (req, res, next) {
     var where = {
         where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + s_where + " order by " + sort,
         sys: sys,
-        gameSort: gameSortType
+        sortType: gameSortType
     };
     var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
 
