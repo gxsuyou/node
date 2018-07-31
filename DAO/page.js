@@ -21,7 +21,7 @@ var page = {
         var sysWhere = where.sys > 0 ? " AND sys = " + where.sys : ""
         var sort = where.sortType ? where.sortType : "";
         var sortWhere = "";
-        if (sort != 'null') {
+        if (sort != 'null' || sort != null) {
             sortWhere = " AND " + sort + " <> 0 "
         }
 
