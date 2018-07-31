@@ -22,7 +22,7 @@ var page = {
         var sort = where.sortType ? where.sortType : "";
         var sortWhere = "";
         if (sort != 'null') {
-            sortWhere = " AND " + sort + " <> 0"
+            sortWhere = " AND " + sort + " <> 0 "
         }
 
         var sql = "SELECT COUNT(*) AS count FROM `" + tables + "` WHERE id > 0" + sysWhere + sortWhere;
