@@ -36,19 +36,17 @@ router.get('/gameAdmin', function (req, res, next) {
     var sys = req.query.sys > 0 ? req.query.sys : 2;
     var sort = " t_game.id desc,t_game.add_time desc ";
     var s_where = "";
-    if (gameSortType == "sort") {
-        sort = " t_game.sort desc ";
-        s_where = " AND t_game.sort <> 0 "
-    } else if (gameSortType == "sort2") {
-        sort = " t_game.sort2 desc ";
-        s_where = " AND t_game.sort2 <> 0 "
-    } else if (gameSortType == "downNum") {
-        sort = " t_game.game_download_num desc";
+
+    if (gameSortType != "null") {
+        sort = " t_game." + gameSortType + " desc ";
+        s_where = " AND t_game." + gameSortType + " <> 0 "
     }
+
     var tables = ['t_game', 't_admin'];
     var where = {
         where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + s_where + " order by " + sort,
-        sys: sys
+        sys: sys,
+        gameSort: gameSortType
     };
     var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
 

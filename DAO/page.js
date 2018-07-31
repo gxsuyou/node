@@ -18,10 +18,16 @@ var page = {
         var sqlTypes = sqlType;
         var fields = field ? field : "*";
         var LEFT = "";
-        var sysWhere = where.sys > 0 ? " WHERE sys = " + where.sys : ""
-        var sql = "SELECT COUNT(*) AS count FROM `" + tables + "`" + sysWhere;
+        var sysWhere = where.sys > 0 ? " AND sys = " + where.sys : ""
+        var sort = where.gameSort ? where.gameSort : "";
+        var sortWhere = "";
+        if (sort != 'null') {
+            sortWhere = " AND " + sort + " <> 0"
+        }
+
+        var sql = "SELECT COUNT(*) AS count FROM `" + tables + "` WHERE id > 0" + sysWhere + sortWhere;
         if (sqlTypes == "left") {//关联查询
-            sql = "SELECT COUNT(*) AS count FROM `" + tables[0] + "`" + sysWhere;
+            sql = "SELECT COUNT(*) AS count FROM `" + tables[0] + "` WHERE id > 0 " + sysWhere + sortWhere;
         }
         query(sql, [], function (result) {
             if (result[0].count > 0) {
