@@ -256,13 +256,13 @@ var game = {
             return callback(result)
         })
     },
-    updateGameIcon: function (id, gameName, url, callback) {
+    updateGameIcon: function (id, url, callback) {
         var sql = 'update t_game set icon = ? where id=?';
         query(sql, [url, id], function (result) {
             return callback(result)
         })
     },
-    updateGameTitleImg: function (id, gameName, url, callback) {
+    updateGameTitleImg: function (id, url, callback) {
         var sql = 'update t_game set game_title_img = ? where id=?';
         query(sql, [url, id], function (result) {
             return callback(result)
