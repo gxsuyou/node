@@ -197,9 +197,8 @@ router.get('/addGameImg', function (req, res, next) {
     var data = req.query;
     if (data.id && data.url) {
         game.getHasIosOrAndroid(data.id, function (game_result) {
-            console.log(game_result);
             if (game_result) {
-                game.addGameImg(game_result[i].id, data.url, data.game_name, function (result) {
+                game.addGameImg(game_result[0].id, data.url, data.game_name, function (result) {
                     res.json({state: 1})
                 })
             }
