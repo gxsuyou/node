@@ -23,7 +23,7 @@ var admin = {
 
             })
 
-            var sql = 'DELETE FROM  t_game_img WHERE id = ?';
+            var sql = 'DELETE FROM  t_game_img WHERE game_id = ?';
             query(sql, [id], function (result) {
 
             })
