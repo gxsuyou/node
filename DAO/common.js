@@ -85,6 +85,11 @@ var common = {
                 };
                 // res.json(arr);
                 return callback(arr);
+            } else {
+                arr = {
+                    result: [],
+                };
+                return callback(arr);
             }
         });
     },

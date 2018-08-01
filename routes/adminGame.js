@@ -227,6 +227,15 @@ router.get('/updateGameTitleImg', function (req, res) {
         res.json({state: 0})
     }
 });
+router.get('/searchGameByMsg', function (req, res, next) {
+    var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
+    if (req.query) {
+        common.getGameSearch(data, function (result) {
+            res.json(result);
+        })
+    }
+});
 router.get('/activeSearch', function (req, res, next) {
     var data = req.query;
     data.sys = data.sys > 0 ? data.sys : 2;
