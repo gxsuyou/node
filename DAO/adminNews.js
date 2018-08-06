@@ -6,9 +6,16 @@ var news = {
             return callback(result);
         })
     },
+    hasgame: function (obj, callback) {
+        var sql = "SELECT * FROM t_game WHERE id = ?";
+        query(sql, [obj], function (result) {
+            return callback(result);
+        })
+    },
     addNews: function (obj, callback) {
-        var sql = "INSERT INTO t_news (title,img,add_time,detail,game_id,add_admin) VALUES (?,?,?,?,?,?)";
-        query(sql, [obj.title, obj.img, obj.add_time, obj.detail, obj.game_id, obj.admin_id], function (result) {
+        var sql = "INSERT INTO t_news (title,img,add_time,detail,game_id,game_name,add_admin) " +
+            "VALUES (?,?,?,?,?,?,?)";
+        query(sql, [obj.title, obj.img, obj.add_time, obj.detail, obj.game_id, obj.game_name, obj.admin_id], function (result) {
             return callback(result);
         })
     },
