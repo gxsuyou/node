@@ -88,14 +88,10 @@ router.post("/addNews", function (req, res, next) {
             admin_id: data.admin
         };
         news.hasgame(gameId, function (game) {
-            if (game) {
-                newsdata.game_name = game[0].game_name;
-                news.addNews(newsdata, function (result) {
-                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
-                })
-            } else {
-                res.json({state: 0})
-            }
+            newsdata.game_name = game.length ? game[0].game_name : null;
+            news.addNews(newsdata, function (result) {
+                result.insertId ? res.json({state: 1}) : res.json({state: 0})
+            })
         })
     } else {
         res.json({state: 0})
