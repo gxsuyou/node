@@ -519,7 +519,7 @@ router.get('/deleteActiveById', function (req, res) {
     if (data.activityId) {
         game.getActiveById(data.activityId, function (activeInfo) {
             if (activeInfo[0].active_img.indexOf("activityType") > -1) {
-                deleteFileByPrefix(qiniuBucket.img, "activity/activityType" + activeInfo[0].type + "gameId" + activeInfo[0].game_id);
+                deleteFileByPrefix(qiniuBucket.img, "activity/activityType" + activeInfo[0].type + "/gameId" + activeInfo[0].game_id);
             }
 
             game.deleteActiveById(data.activityId, function (result) {
