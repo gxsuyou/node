@@ -384,6 +384,12 @@ var game = {
             return callback(result)
         })
     },
+    getActiveById: function (id, callback) {
+        var sql = 'SELECT * FROM t_activity WHERE id = ?';
+        query(sql, [id], function (result) {
+            return callback(result)
+        })
+    },
     deleteActiveById: function (id, callback) {
         var sql = 'delete from t_activity where id = ?';
         query(sql, [id], function (result) {

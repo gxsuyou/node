@@ -6,6 +6,27 @@ var PATH = require("../path");
 var resource = PATH.resource;
 var path = require("path");
 var fs = require("fs");
+
+var qiniu = require('qiniu');
+var config = new qiniu.conf.Config();
+var formUploader = new qiniu.form_up.FormUploader(config);
+var putExtra = new qiniu.form_up.PutExtra();
+var accessKey = 'Uusbv77fI10iNTVF3n7EZWbksckUrKYwUpAype4i';
+var secretKey = 'dEDgtx_QEJxfs2GltCUVgDIqyqiR6tKjStQEnBVq';
+var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
+// 空间对应的机房
+config.zone = qiniu.zone.Zone_z2;
+var bucketManager = new qiniu.rs.BucketManager(mac, config);
+
+var qiniuBucket = {
+    img: "oneyouxiimg",
+    apk: "oneyouxiapk",
+    ipa: "oneyouxiipa"
+// img:"oneyouxitestimg",
+// apk: "oneyouxitestapk"
+};
+
+
 Date.prototype.Format = function (formatStr) {
     var str = formatStr;
     var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -495,10 +516,15 @@ router.get('/deleteTagById', function (req, res) {
 });
 router.get('/deleteActiveById', function (req, res) {
     var data = req.query;
-    // console.log(data);
     if (data.activityId) {
-        game.deleteActiveById(data.activityId, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        game.getActiveById(data.activityId, function (activeInfo) {
+            if (activeInfo[0].active_img.indexOf("activityType") > -1) {
+                deleteFileByPrefix(qiniuBucket.img, activeInfo[0].active_img);
+            }
+
+            game.deleteActiveById(data.activityId, function (result) {
+                result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+            })
         })
     } else {
         res.json({state: 0})
@@ -540,4 +566,68 @@ router.get('/upTag', function (req, res) {
         res.json({state: 0})
     }
 });
+
+function deleteFileByPrefix(bucket, prefix) {
+// @param options 列举操作的可选参数
+//                prefix    列举的文件前缀
+//                marker    上一次列举返回的位置标记，作为本次列举的起点信息
+//                limit     每次返回的最大列举文件数量
+//                delimiter 指定目录分隔符
+    var bucket = bucket;
+    var options = {
+        limit: 20,
+        prefix: prefix
+    };
+    bucketManager.listPrefix(bucket, options, function (err, respBody, respInfo) {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        if (respInfo.statusCode == 200) {
+            //如果这个nextMarker不为空，那么还有未列举完毕的文件列表，下次调用listPrefix的时候，
+            //指定options里面的marker为这个值
+            // var nextMarker = respBody.marker;
+            var commonPrefixes = respBody.commonPrefixes;
+            var items = respBody.items;
+            var deleteOperations = [];
+            items.forEach(function (item) {
+                deleteOperations.push(qiniu.rs.deleteOp(bucket, item.key));
+
+                console.log(item.key);
+                // console.log(item.putTime);
+                // console.log(item.hash);
+                // console.log(item.fsize);
+                // console.log(item.mimeType);
+                // console.log(item.endUser);
+                // console.log(item.type);
+            });
+            // console.log(deleteOperations);
+            //每个operations的数量不可以超过1000个，如果总数量超过1000，需要分批发送
+            bucketManager.batch(deleteOperations, function (err, respBody, respInfo) {
+                if (err) {
+                    console.log(err);
+                    //throw err;
+                } else {
+                    // 200 is success, 298 is part success
+                    if (parseInt(respInfo.statusCode / 100) == 2) {
+                        respBody.forEach(function (item) {
+                            if (item.code == 200) {
+                                console.log(item.code + "\tsuccess");
+                            } else {
+                                console.log(item.code + "\t" + item.data.error);
+                            }
+                        });
+                    } else {
+                        console.log(respInfo.deleteusCode);
+                        console.log(respBody);
+                    }
+                }
+            });
+        } else {
+            console.log(respInfo.statusCode);
+            console.log(respBody);
+        }
+    });
+}
+
 module.exports = router;
