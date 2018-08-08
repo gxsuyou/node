@@ -549,8 +549,14 @@ router.get('/addTag', function (req, res) {
 router.get('/editTag', function (req, res) {
     var data = req.query;
     if (data.tagId && data.name) {
-        game.editTag(data.tagId, decodeURI(data.name), function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        game.hasTag(decodeURI(data.name), function (tag_result) {
+            if (tag_result.length) {
+                res.json({state: 0, info: "标签已存在"})
+                return false
+            }
+            game.editTag(data.tagId, decodeURI(data.name), function (result) {
+                result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+            })
         })
     } else {
         res.json({state: 0})
