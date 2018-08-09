@@ -147,6 +147,7 @@ router.get('/deleteStrategy', function (req, res) {
                 var imgReg = /<img.*?(?:>|\/>)/gi;
                 var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
                 var arr = str.match(imgReg);
+                
                 if (arr) {
                     for (var i = 0; i < arr.length; i++) {
                         var src = arr[i].match(srcReg);
