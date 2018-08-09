@@ -300,7 +300,7 @@ router.get('/deleteGame', function (req, res, next) {
     if (id) {
         admin.getGameMsgById(id, function (game) {
             if (game.length) {
-                admin.delectGameByID(req.query.id, function (result) {
+                admin.deleteGame(id, function (result) {//删除分类
                     if (result.affectedRows) {
                         // try {
                         //     fs.exists(path + req.query.name, function (exists) {

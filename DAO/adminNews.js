@@ -56,10 +56,32 @@ var news = {
         })
     },
     deleteNewsById: function (id, callback) {
-        var sql = "delete from t_news where id=?";
-        query(sql, [id], function (result) {
-            return callback(result);
+        var getNews = "SELECT * FROM t_news WHERE id=?"
+        query(getNews, [id], function (newsInfo) {//查询当前资讯
+            if (newsInfo) {
+                var getComment = "SELECT * FROM t_news_comment WHERE targetid=? ";
+                query(getComment, [id], function (comments) {//查询与当前资讯的所有评论
+                    for (var i in comments) {//删除tip表中tip_id与t_news_comment表中关联的id数据
+                        var tip = "DELETE FROM t_tip WHERE tip_id=? AND type=1";
+                        query(tip, [comments[i].id], function (result1) {
+
+                        });
+                    }
+                })
+
+                var sql_com = "DELETE FROM t_strategy_comment WHERE newsid=? ";
+                query(sql_com, [id], function (result2) {//删除资讯评论数据
+
+                });
+
+
+                var sql = "DELETE FROM t_news WHERE id=?";
+                query(sql, [id], function (result) {//删除资讯
+                    return callback(result);
+                })
+            }
         })
+
     },
     addHeadGame: function (game_id, img, sys, callback) {
         var sql = "insert into t_news_headgame (game_id,img,sys) values (?,?,?)";

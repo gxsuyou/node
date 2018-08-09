@@ -153,20 +153,52 @@ var admin = {
             return callback(result)
         })
     },
-    delectGameByID: function (id, callback) {
-        var clsSql = "DELETE FROM t_game_cls_relation where game_id = ?";
-        query(clsSql, [id], function (result) {
+    deleteGame: function (id, callback) {
+        var getNews = "SELECT * FROM t_game WHERE id=?"
+        query(getNews, [id], function (newsInfo) {//查询当前游戏
+            if (newsInfo) {
+                var getComment = "SELECT * FROM t_game_comment WHERE game_id=? ";
+                query(getComment, [id], function (comments) {//查询与当前游戏的所有评论
+                    for (var i in comments) {//删除tip表中tip_id与t_game_comment表中关联的id数据
+                        var tip = "DELETE FROM t_tip WHERE tip_id=? AND type=3 OR type IS null";
+                        query(tip, [comments[i].id], function (result1) {
 
-            var tagSql = "DELETE FROM t_tag_relation where game_id = ?";
-            query(tagSql, [id], function (result) {
+                        });
+
+                        var like = "DELETE FROM t_game_comment_like WHERE comment_id=?";
+                        query(like, [comments[i].id], function (result1) {//删除关注评论
+
+                        });
+                    }
+                })
+
+                var sql_com = "DELETE FROM t_game_comment WHERE game_id=? ";
+                query(sql_com, [id], function (result2) {//删除游戏评论数据
+
+                });
+
+
+                var sql = "DELETE FROM t_game_img WHERE game_id=?";
+                query(sql, [id], function (result) {//删除游戏截图
+
+                })
+
+                var clsSql = "DELETE FROM t_game_cls_relation where game_id = ?";
+                query(clsSql, [id], function (result) {//删除分类关联
+
+                })
+
+                var tagSql = "DELETE FROM t_tag_relation where game_id = ?";
+                query(tagSql, [id], function (result) {//删除标签关联
+
+                })
 
                 var sql = "DELETE FROM t_game where id=?";
-                query(sql, [id], function (result) {
+                query(sql, [id], function (result) {//删除游戏
                     return callback(result);
                 })
-            })
+            }
         })
-
     },
     getGameMsgById: function (id, callback) {
         var sql = 'select * from t_game where id=?';
