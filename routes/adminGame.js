@@ -250,7 +250,6 @@ router.get('/updateGameTitleImg', function (req, res) {
 });
 router.get('/searchGameByMsg', function (req, res, next) {
     var data = req.query;
-    // data.sys = data.sys > 0 ? data.sys : 2;
     if (req.query) {
         common.getGameSearch(data, function (result) {
             res.json(result);

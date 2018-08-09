@@ -22,8 +22,8 @@ var common = {
      * 分页page
      * @param tables 表名
      * @param p 当前页
-     * @param where
-     * @param sqlType
+     * @param where 条件
+     * @param sqlType left关联
      * @param field 查找的字段
      * @param callback
      */
