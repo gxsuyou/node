@@ -135,6 +135,11 @@ var strategy = {
                         query(tip, [comments[i].id], function (result1) {
 
                         });
+
+                        var like = "DELETE FROM t_strategy_like WHERE comment_id=?";
+                        query(like, [comments[i].id], function (result1) {//删除关注评论
+
+                        });
                     }
                 })
 
