@@ -140,14 +140,14 @@ router.get('/essence', function (req, res) {
 router.get('/deleteStrategy', function (req, res) {
     var data = req.query;
     if (data.strategyId) {
-        strategy.getStratgyMsg(data.strategyId, function (s_result) {
+        strategy.getStratgyMsg(data, function (s_result) {
             /**删除图片文件*/
             if (s_result) {
                 var str = s_result[0].detail;
                 var imgReg = /<img.*?(?:>|\/>)/gi;
                 var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
                 var arr = str.match(imgReg);
-                
+
                 if (arr) {
                     for (var i = 0; i < arr.length; i++) {
                         var src = arr[i].match(srcReg);

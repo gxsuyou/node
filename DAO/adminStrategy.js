@@ -107,7 +107,7 @@ var strategy = {
     },
     getStratgyMsg: function (obj, callback) {
         var sql = 'select * from t_strategy where id=?'
-        query(sql, [obj], function (result) {
+        query(sql, [obj.id], function (result) {
             return callback(result);
         })
     },
