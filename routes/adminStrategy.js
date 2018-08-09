@@ -140,6 +140,7 @@ router.get('/essence', function (req, res) {
 router.get('/deleteStrategy', function (req, res) {
     var data = req.query;
     if (data.strategyId) {
+        data.id = data.strategyId
         strategy.getStratgyMsg(data, function (s_result) {
             /**删除图片文件*/
             if (s_result) {
