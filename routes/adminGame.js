@@ -178,6 +178,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         activation: data.activation || null,
         company: data.company || null,
         version: data.version || null,
+        gamePackagename: data.gamePackagename || null,
         gameDownloadIos: data.gameDownloadIos || null,
         download_num: data.download_num || null,
         game_recommend: data.game_recommend || null,
