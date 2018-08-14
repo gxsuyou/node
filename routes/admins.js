@@ -294,7 +294,9 @@ router.get('/getUptokenByMsg', function (req, res, next) {
     }
 
 });
-
+/**
+ * 删除游戏
+ */
 router.get('/deleteGame', function (req, res, next) {
     var id = req.query.id;
     if (id) {

@@ -426,8 +426,15 @@ router.get('/getSubjectGame', function (req, res) {
 router.get('/deleteSubject', function (req, res) {
     var data = req.query;
     if (data.subjectId) {
-        game.deleteSubject(data.subjectId, function (result) {
-            result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        game.hasSubject(data.subjectId, function (s_result) {
+            if (s_result) {
+                if (s_result[0].img) {
+                    deleteFileByPrefix(qiniuBucket.img, s_result[0].img);
+                }
+                game.deleteSubject(data.subjectId, function (result) {
+                    result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+                })
+            }
         })
     } else {
         res.json({state: 0})

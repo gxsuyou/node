@@ -7,6 +7,40 @@ var common = require('../DAO/common');
 // var imageMagick = gm.subClass({imageMagick: true});
 var path = require("path");
 var fs = require("fs");
+
+//qiniu
+var qiniu = require('qiniu');
+var config = new qiniu.conf.Config();
+var accessKey = 'Uusbv77fI10iNTVF3n7EZWbksckUrKYwUpAype4i';
+var secretKey = 'dEDgtx_QEJxfs2GltCUVgDIqyqiR6tKjStQEnBVq';
+var mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
+// 空间对应的机房
+config.zone = qiniu.zone.Zone_z2;
+var bucketManager = new qiniu.rs.BucketManager(mac, config);
+
+function deleteByBucketKey(bucket, key, error, callback) {
+    bucketManager.delete(bucket, key, function (err, respBody, respInfo) {
+        if (err) {
+            console.log(err);
+            // return error(err)
+            //throw err;
+        } else {
+            console.log(respInfo.statusCode);
+            console.log(respBody);
+            // return callback(respBody)
+        }
+    });
+};
+
+var qiniuBucket = {
+    img: "oneyouxiimg",
+    // apk:"oneyouxiapk"
+    // img:"oneyouxitestimg",
+    // apk:"oneyouxitestapk"
+    base64: 'onebase64'
+};
+//qiniu
+
 Date.prototype.Format = function (formatStr) {
     var str = formatStr;
     var Week = ['日', '一', '二', '三', '四', '五', '六'];
@@ -144,6 +178,7 @@ router.get('/deleteStrategy', function (req, res) {
         strategy.getStratgyMsg(data, function (s_result) {
             /**删除图片文件*/
             if (s_result) {
+                deleteByBucketKey(qiniuBucket.img, "startegy/startegyId" + s_result[0].id);
                 var str = s_result[0].detail;
                 var imgReg = /<img.*?(?:>|\/>)/gi;
                 var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;

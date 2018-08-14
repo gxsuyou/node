@@ -353,6 +353,12 @@ var game = {
             })
         })
     },
+    hasSubject: function (subjectId, callback) {
+        var sql = 'SELECT * FROM t_subject WHERE id = ?';
+        query(sql, [subjectId], function (result) {
+            return callback(result);
+        })
+    },
     setTagAndCls: function (gameId, tagId, clsId, callback) {
         var sql = "update t_game set tag_ids = ?, cls_ids = ? where id = ?"
         query(sql, [tagId, clsId, gameId], function (result) {
