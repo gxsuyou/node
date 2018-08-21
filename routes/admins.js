@@ -790,6 +790,63 @@ router.get("/delFeedBack", function (req, res, next) {
     }
 });
 
+router.get("/delFeedBacks", function (req, res, next) {
+    var data = req.query;
+    var ids = data.ids;
+    for (var i in ids) {
+        deleteFileByPrefix(qiniuBucket.img, "feedback/feedbackId" + ids[i] + "/")
+        admin.delFeedBack(ids[i], function (results) {
+            // result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+        })
+    }
+
+    var p = req.query.p > 0 ? req.query.p : 1;
+    var tables = [
+        't_feedback',
+        't_user',
+        // 't_feedback_img'
+    ];
+    var where = {
+        // left_on: "t_feedback.id = t_feedback_img.feedback_id ",
+        where: "t_feedback.user_id = t_user.id ORDER BY t_feedback.id DESC",
+    };
+
+    var field = "t_feedback.*,t_user.nick_name";
+
+    common.page(tables, p, where, "left", field, function (result) {
+        res.json(result);
+    });
+
+});
+
+
+router.get("/userCount", function (req, res, next) {
+    // 今天
+    var today = new Date();
+//     today.setHours(0);
+//     today.setMinutes(0);
+//     today.setSeconds(0);
+//     today.setMilliseconds(0);
+//     var today = today.getTime() / 1000;
+//     var oneday = 60 * 60 * 24;
+// // 昨天
+//     var yesterday = {
+//         start: today - oneday,
+//         end: today - 1,
+//     }
+//     admin.getYesterDayCount(yesterday, function (result) {
+//
+//     })
+    res.json(today.getTime())
+// 上周一
+//     var lastMonday = new Date(today - oneday * (today.getDay() + 6));
+//     alert(lastMonday);
+// 上个月1号
+//     var lastMonthFirst = new Date(today - oneday * today.getDate());
+//     lastMonthFirst = new Date(lastMonthFirst - oneday * (lastMonthFirst.getDate() - 1));
+//     alert(lastMonthFirst);
+})
+
 function getDate(index) {
     var date = new Date(); //当前日期
     var newDate = new Date();

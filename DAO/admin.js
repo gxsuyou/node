@@ -416,6 +416,12 @@ var admin = {
                 return callback(result)
             })
         })
+    },
+    getYesterDayCount: function (obj, callback) {
+        var reg_sql = "SELECT count(*) FROM t_user WHERE time_logon BETWEEN " + obj.start + " AND " + obj.end;
+        query(reg_sql, [], function (results) {
+            // var log_sql =
+        })
     }
 };
 

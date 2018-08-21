@@ -23,6 +23,7 @@ var adminNews = require('./routes/adminNews');
 var adminH5 = require('./routes/adminH5');
 var adminGame = require('./routes/adminGame');
 var adminStrategy = require("./routes/adminStrategy");
+var common = require("./routes/common");
 var app = express();
 app.use('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -50,7 +51,7 @@ app.use(function getIp(req, res, next) {
             ip = ip.split("::ffff:").join("");
         }
         console.log(ip)
-        if (req.url.indexOf("www") > -1 || req.url.indexOf("/img?") > -1) {
+        if (req.url.indexOf("www") > -1 || req.url.indexOf("/img?") > -1 || req.url.indexOf("/common/") > -1) {
             next();
         } else {
             if (ips.toString().indexOf(ip) < 0) {
@@ -98,6 +99,7 @@ app.use('/adminH5', adminH5);
 app.use('/adminNews', adminNews);
 app.use('/adminGame', adminGame);
 app.use("/adminStrategy", adminStrategy);
+app.use("/common", common);
 app.use(favicon(__dirname + "/public/ico/favicon.ico"))
 
 // catch 404 and forward to error handler
