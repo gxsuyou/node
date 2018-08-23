@@ -35,6 +35,12 @@ var game = {
             return callback(result)
         })
     },
+    getAllGame: function (callback) {
+        var sql = "SELECT game_name FROM t_game ORDER BY id DESC";
+        query(sql, [], function (result) {
+            return callback(result)
+        })
+    },
     hasAndroid: function (obj, callback) {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var arr = {};

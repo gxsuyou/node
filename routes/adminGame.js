@@ -75,6 +75,11 @@ router.get('/gameAdmin', function (req, res, next) {
         res.json(result);
     });
 });
+router.get("/allGame", function (req, res, next) {
+    game.getAllGame(function (result) {
+        res.json(result);
+    })
+})
 router.get('/gameAdmin', function (req, res, next) {
     admin.getGameByStartAdmin(req.query.start, req.query.id, function (result) {
         res.json({game: result[0], cls: result[1]});
