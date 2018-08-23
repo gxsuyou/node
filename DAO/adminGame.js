@@ -35,9 +35,9 @@ var game = {
             return callback(result)
         })
     },
-    getAllGame: function (callback) {
-        var sql = "SELECT game_name FROM t_game ORDER BY id DESC";
-        query(sql, [], function (result) {
+    getAllGame: function (sys, callback) {
+        var sql = "SELECT game_name FROM t_game WHERE sys=? ORDER BY id DESC";
+        query(sql, [sys], function (result) {
             return callback(result)
         })
     },

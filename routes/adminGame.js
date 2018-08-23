@@ -76,7 +76,9 @@ router.get('/gameAdmin', function (req, res, next) {
     });
 });
 router.get("/allGame", function (req, res, next) {
-    game.getAllGame(function (result) {
+    var data = req.query;
+    data.sys = data.sys > 0 ? data.sys : 2;
+    game.getAllGame(data.sys, function (result) {
         res.json(result);
     })
 })
