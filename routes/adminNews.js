@@ -180,6 +180,7 @@ router.get("/deleteNewsById", function (req, res, next) {
 router.get("/addHeadGame", function (req, res, next) {
     if (req.query.game_id && req.query.img) {
         var data = req.query;
+        data.sys = data.sys > 0 ? data.sys : 2
         news.getHeadGameByGameId(data.game_id, function (result) {
             !result.length ? news.addHeadGame(data.game_id, data.img, data.sys, function (result) {
                 result.insertId ? res.json({state: 1}) : res.json({state: 0})
