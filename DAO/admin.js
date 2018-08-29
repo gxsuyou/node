@@ -402,6 +402,12 @@ var admin = {
             "FROM t_feedback " +
             "LEFT JOIN t_user ON t_user.id = t_feedback.user_id WHERE t_feedback.id = ?"
         query(sql, [obj], function (result) {
+
+            var set_sql = "UPDATE t_feedback SET status=1 WHERE id=?"
+            query(set_sql, [obj], function () {
+
+            })
+
             var sql2 = "SELECT * FROM t_feedback_img WHERE feedback_id = ?"
             query(sql2, [obj], function (result_img) {
                 return callback({result: result[0], img: result_img})
