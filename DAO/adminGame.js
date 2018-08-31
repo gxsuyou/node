@@ -68,7 +68,7 @@ var game = {
         var sql = "update t_game set game_name=?,activation=?,game_company=?,game_packagename=?," +
             "game_version=?,game_download_ios=?,game_download_num=?,game_recommend=?,sort=?,game_size=?," +
             "game_detail=?,sort2=?,sort3=?,up_time=?,up_admin=?,strategy_head=? where id =?";
-        query(sql, [obj.name, obj.activation, obj.company, obj.gamePackagename, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.game_detail, obj.sort2,obj.sort3, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
+        query(sql, [obj.name, obj.activation, obj.company, obj.gamePackagename, obj.version, obj.gameDownloadIos, obj.download_num, obj.game_recommend, obj.sort, obj.size, obj.game_detail, obj.sort2, obj.sort3, obj.up_time, obj.up_admin, obj.strategy_head, obj.id], function (result) {
             return callback(result)
         })
     },
@@ -311,8 +311,8 @@ var game = {
 
     },
     setActive: function (obj, callback) {
-        var sql = "UPDATE t_activity SET name = ?, title = ?, active_img = ?, active = ? WHERE id = ?";
-        query(sql, [obj.name, obj.title, obj.active_img, obj.active, obj.id], function (result) {
+        var sql = "UPDATE t_activity SET name = ?, title = ?, sort = ?, active_img = ?, active = ? WHERE id = ?";
+        query(sql, [obj.name, obj.title, obj.sort, obj.active_img, obj.active, obj.id], function (result) {
             return callback(result)
         })
 

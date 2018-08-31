@@ -356,7 +356,7 @@ router.get('/setGameActive', function (req, res) {
             id: data.id,
             name: data.name || "",
             title: data.title || "",
-            //sort: sort,
+            sort: data.sort || 0,
             active_img: data.active_img || "",
             active: data.active || "",
             game_id: data.game_id || "",
