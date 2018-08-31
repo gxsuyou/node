@@ -87,7 +87,7 @@ router.get('/gameAdmin', function (req, res, next) {
         res.json({game: result[0], cls: result[1]});
     })
 });
-router.get('/addGameMsg', function (req, res, next) {
+router.post('/addGameMsg', function (req, res, next) {
     var data = req.query;
     var date = new Date();
     var cls = ',0,';
@@ -192,6 +192,7 @@ router.post('/SetGameMsg', function (req, res, next) {
         game_detail: data.game_detail || null,
         sort: data.sort || null,
         sort2: data.sort2 || null,
+        sort3: data.sort3 || null,
         size: data.size || null,
         id: data.id || null,//id
         // up_time: date.Format("yyyy-MM-dd HH:mm") || null,
