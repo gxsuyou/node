@@ -88,7 +88,7 @@ router.get('/gameAdmin', function (req, res, next) {
     })
 });
 router.post('/addGameMsg', function (req, res, next) {
-    var data = req.query;
+    var data = req.body;
     var date = new Date();
     var cls = ',0,';
     var tag = '0';
