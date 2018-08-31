@@ -72,12 +72,12 @@ router.get("/getNewsByPage", function (req, res, next) {
 });
 
 router.post("/addNews", function (req, res, next) {
-    if (req.body.title && req.body.detail) {
-        var date = new Date();
-        var data = req.body;
+    var date = new Date();
+    var data = req.body;
+    if (data.title && data.detail) {
         var gameId = data.game_id > 0 ? data.game_id : 0;
         var newsdata = {
-            title: decodeURI(data.title) || "",
+            title: data.title || "",
             detail: data.detail,
             img: data.img,
             like: 0,
