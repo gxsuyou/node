@@ -7,7 +7,7 @@ routes-demo
 /views
 /www
 /routes/adminStrategy1.js
-/DAO/common-demo.js
+/DAO/commonCore-demo.js
 /DAO/admin-demo.js
 /DAO/page-demo.js
 /routes/admin-demo.js

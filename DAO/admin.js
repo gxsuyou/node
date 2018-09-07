@@ -39,7 +39,6 @@ var admin = {
                 return callback(result)
             })
         })
-
     },
     updateGameSizeById: function (id, size, callback) {
         var sql = "update t_game set game_size=? where id =?";
@@ -423,12 +422,25 @@ var admin = {
             })
         })
     },
-    getYesterDayCount: function (obj, callback) {
-        var reg_sql = "SELECT count(*) FROM t_user WHERE time_logon BETWEEN " + obj.start + " AND " + obj.end;
-        query(reg_sql, [], function (results) {
-            // var log_sql =
+
+    getFeedbackById: function (obj, callback) {
+        var sql = "SELECT * FROM t_feedback WHERE id=?"
+        query(sql, [obj], function (result) {
+            var upSql = "UPDATE t_feedback SET status=1 WHERE id =?";
+            query(upSql, [obj], function () {
+
+            })
+            return callback(result);
         })
-    }
+    },
+
+    getUserFeedback: function (obj, callback) {
+        var add_sql = "INSERT INTO t_tip (`tip_id`,`user_id`,`type`,`state`,`add_time`,`detail`) " +
+            "VALUES (?,?,7,0,?,?)"
+        query(add_sql, [obj.id, obj.user_id, obj.add_time, obj.detail], function (result) {
+            return callback(result);
+        })
+    },
 };
 
 

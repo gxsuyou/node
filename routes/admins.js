@@ -819,32 +819,40 @@ router.get("/delFeedBacks", function (req, res, next) {
 
 });
 
-router.get("/userCount", function (req, res, next) {
-    // 今天
-    var today = new Date();
-//     today.setHours(0);
-//     today.setMinutes(0);
-//     today.setSeconds(0);
-//     today.setMilliseconds(0);
-//     var today = today.getTime() / 1000;
-//     var oneday = 60 * 60 * 24;
-// // 昨天
-//     var yesterday = {
-//         start: today - oneday,
-//         end: today - 1,
-//     }
-//     admin.getYesterDayCount(yesterday, function (result) {
+/*查看意见触发反馈给用户*/
+router.post("/getUserFeedback", function (req, res, next) {
+    var data = req.body;
+    var date = new Date();
+    var add_time = date.getTime() / 1000;
+
+
+    if (data.id && data.detail) {
+        admin.getFeedbackById(data.id, function (feed) {
+            if (feed.length) {
+                // var detail = '亲，您所提的建议：“' + feed[0].detail + '”，我们已经认真阅读，感谢您提交的宝贵建议'
+                var detail = data.detail
+                var obj = {
+                    id: data.id,
+                    user_id: feed[0].user_id,
+                    add_time: add_time,
+                    detail: detail,
+                }
+                admin.getUserFeedback(obj, function (result) {
+                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                })
+            }
+        })
+    }
+});
+
+// router.get("/getChangeFace", function (req, res, next) {
+//     var data = req.query;
+//     if (data.content) {
+//         face(data.content, function (result) {
 //
-//     })
-    res.json(today.getTime())
-// 上周一
-//     var lastMonday = new Date(today - oneday * (today.getDay() + 6));
-//     alert(lastMonday);
-// 上个月1号
-//     var lastMonthFirst = new Date(today - oneday * today.getDate());
-//     lastMonthFirst = new Date(lastMonthFirst - oneday * (lastMonthFirst.getDate() - 1));
-//     alert(lastMonthFirst);
-})
+//         })
+//     }
+// })
 
 function getDate(index) {
     var date = new Date(); //当前日期
