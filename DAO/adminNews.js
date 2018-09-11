@@ -59,7 +59,7 @@ var news = {
         var getNews = "SELECT * FROM t_news WHERE id=?"
         query(getNews, [id], function (newsInfo) {//查询当前资讯
             if (newsInfo) {
-                var getComment = "SELECT * FROM t_news_comment WHERE targetid=? ";
+                var getComment = "SELECT * FROM t_news_comment WHERE newsid=? ";
                 query(getComment, [id], function (comments) {//查询与当前资讯的所有评论
                     for (var i in comments) {//删除tip表中tip_id与t_news_comment表中关联的id数据
                         var tip = "DELETE FROM t_tip WHERE tip_id=? AND type=1";
@@ -69,7 +69,7 @@ var news = {
                     }
                 })
 
-                var sql_com = "DELETE FROM t_strategy_comment WHERE newsid=? ";
+                var sql_com = "DELETE FROM t_news_comment WHERE newsid=? ";
                 query(sql_com, [id], function (result2) {//删除资讯评论数据
 
                 });
