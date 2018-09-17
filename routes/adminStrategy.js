@@ -95,7 +95,7 @@ router.post('/addStrategy', function (req, res, next) {
     var date = new Date();
     if (data.title) {
         strategy.hasUserAndGame(data, function (result) {
-            if (result.admin) {
+            if (result.length) {
                 data.game_name = data.game_name || null
                 data.add_time = parseInt(date.getTime() / 1000);
                 data.adminstatus = 1;
@@ -109,6 +109,27 @@ router.post('/addStrategy', function (req, res, next) {
         })
     }
 });
+router.get("/setImg", function (req, res, next) {
+    var data = req.query;
+    if (data.id) {
+        strategy.getStratgyMsg(data, function (result) {
+            if (result.length) {
+                if (result[0].top_img_src.indexOf("strategyTitle") > -1) {
+                    var newImg = result[0].top_img_src.substr(result[0].top_img_src.indexOf("strategyTitle"));
+                    deleteByBucketKey(qiniuBucket.img, "/strategy/strategyTitle" + newImg);
+                } else if (result[0].top_img_src.indexOf("www") > -1) {
+                    var imgUrl = result[0].top_img_src.substr(result[0].top_img_src.indexOf("www"))//获取图片地址，并从www开始截取后面的字符
+                    if (fs.existsSync(path.join(__dirname, '../' + imgUrl))) {//查看文件是否存在，是返回true，否返回fales
+                        fs.unlinkSync(path.join(__dirname, '../' + imgUrl));//执行删除文件
+                    }
+                }
+                res.json({state: 1})
+            }
+        })
+    } else {
+        res.json({state: 0})
+    }
+})
 router.post('/addStrategyGetApp', function (req, res, next) {
     var data = req.body
     var date = new Date();

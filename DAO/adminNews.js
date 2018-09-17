@@ -37,9 +37,9 @@ var news = {
 
 
     },
-    editNewsById: function (id, title, detail, agree, browse, comment, up_time, callback) {
-        var sql = "update t_news set title=?,detail=?,agree=?,browse=?,comment=?,up_time=? where id=?";
-        query(sql, [title, detail, agree, browse, comment, up_time, id], function (result) {
+    editNewsById: function (obj, callback) {
+        var sql = "update t_news set title=?,img=?,detail=?,agree=?,browse=?,comment=?,up_time=? where id=?";
+        query(sql, [obj.title, obj.img, obj.detail, obj.agree, obj.browse, obj.comment, obj.up_time, obj.id], function (result) {
             return callback(result)
         })
     },

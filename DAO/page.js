@@ -42,6 +42,7 @@ var page = {
                     sql_1 = "SELECT " + fields + " FROM " + tables[0] + " \n " + LEFT +
                         "LEFT JOIN  " + tables[1] + "\n " +
                         "ON " + where.where + " limit ?,?";
+
                 }
                 query(sql_1, [(pages - 1) * page, page], function (lists) {
                     var arr = {

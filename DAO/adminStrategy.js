@@ -58,22 +58,7 @@ var strategy = {
     hasUserAndGame: function (obj, callback) {
         var admin_sql = "select id from t_admin where id = ?";
         query(admin_sql, [obj.admin], function (admin_result) {
-            if (admin_result.length) {
-                var game_sql = "select * from t_game where game_name = ?";
-                query(game_sql, [obj.game_name], function (game_result) {
-                    if (game_result.length) {
-                        var arr = {
-                            game_id: game_result[0].id,
-                            admin: admin_result[0].id
-                        }
-                        return callback(arr);
-                    } else {
-                        return callback(game_result)
-                    }
-                })
-            } else {
-                return callback(admin_result)
-            }
+            return callback(admin_result)
         })
 
     },
