@@ -173,6 +173,42 @@ var common = {
             return callback(result);
         })
     },
+
+    /**
+     *
+     * @param obj {uid,coin,balance,types,b_types}
+     * @param uid 用户id
+     * @param coin 活动金额
+     * @param balance 结算后余额
+     * @param types 1：增加，2：扣减
+     * @param b_types 结算类型，SIGNIN 签到，REC 推荐，ESSENCE 精华，BROWSE 浏览数，AGREE 点赞数，UNKNOWN 其他
+     * @param add_time 添加时间
+     * @param memo 备注说明
+     * @param state 状态 1 已结算，0 未结算
+     * @param callback
+     */
+    getAddCoinLog: function (obj, add_time, memo, state, callback) {
+        var userSql = "SELECT * FROM t_user WHERE id = ?";
+        query(userSql, [obj.uid], function (userInfo) {
+            if (userInfo.length) {
+                var newCoin = Number(userInfo[0].coin) + Number(obj.coin);
+                if (obj.types == 2) {
+                    newCoin = Number(userInfo[0].coin) - Number(obj.coin);
+                }
+                var upUser = "UPDATE t_user SET coin=? WHERE id=?";
+                query(upUser, [newCoin, obj.uid], function () {
+
+                })
+
+                var addLog = "INSERT INTO t_coin_log (`uid`,`coin`,`balance`,`types`,`b_types`,`add_time`,`memo`,`state`) VALUES (?,?,?,?,?,?,?,?)"
+                var arr = [obj.uid, obj.coin, newCoin, obj.types, obj.b_types, add_time, memo, state]
+                query(addLog, arr, function (result) {
+                    return result;
+                })
+            }
+        })
+
+    }
 }
 
 module.exports = common;

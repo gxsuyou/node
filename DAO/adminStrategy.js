@@ -1,4 +1,5 @@
 var query = require('../config/config');
+var common = require('../DAO/common');
 var strategy = {
     getStrategyByMsg: function (sort, page, callback) {
         var sql = 'SELECT t_strategy.*,t_strategy_img.src,t_user.`nick_name`,t_user.portrait ' +
@@ -44,8 +45,20 @@ var strategy = {
         })
     },
     essence: function (strategyId, callback) {
+        var date = new Date();
+        var nowTime = date.getTime() / 1000;
+
         var sql = "update t_strategy set essence=1 where id=?";
         query(sql, [strategyId], function (result) {
+
+            var findSql = "SELECT * FROM t_strategy WHERE id=?"
+            query(findSql, [strategyId], function (find) {
+                if (find[0].admin < 1 && find[0].essence_coin < 1) {
+
+                    var logMemo = "发布文章被列为精华，获得500金币";
+                    addCoinLog(find[0].user_id, 500, nowTime, "文章标题：" + find[0].title, logMemo, "ESSENCE")
+                }
+            })
             return callback(result)
         })
     },
@@ -149,4 +162,19 @@ var strategy = {
     }
 
 };
+
+function addCoinLog(userId, coin, nowTime, target, memo, b_types = "UNKNOWN", types = 1, state = 1) {
+    var log = {
+        uid: userId,
+        target: target,
+        coin: coin,
+        types: types,
+        b_types: b_types
+    }
+    common.getAddCoinLog(log, parseInt(nowTime), memo, state, function () {
+
+    })
+    return true
+}
+
 module.exports = strategy;
