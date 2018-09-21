@@ -52,7 +52,7 @@ Date.prototype.Format = function (formatStr) {
 // });
 router.get('/gameAdmin', function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-    var gameSortType = req.query.sortType ? req.query.sortType : "";
+    var gameSortType = req.query.sortType ? req.query.sortType : "null";
     // var sys = req.query.sys > 0 ? " AND t_game.sys = " + req.query.sys : " AND t_game.sys = " + req.query.sys;
     var sys = req.query.sys > 0 ? req.query.sys : 2;
     var sort = " t_game.id desc,t_game.add_time desc ";
@@ -591,6 +591,38 @@ router.get('/upTag', function (req, res) {
         res.json({state: 0})
     }
 });
+
+router.post('getAddTicket', function (req, res, next) {
+    var data = req.body;
+    var date = new Date();
+    var nowTime = date.getTime() / 1000;
+    if (data.names && data.coin && data.a_coin) {
+        var gameId = data.game_id > 0 ? data.game_id : 0;
+        var uuid = common.getUuid();
+        var state = data.state > 0 ? data.state : 0;
+        var types = data.types > 0 ? data.types : 1;
+        if (types == 1) {//通用
+
+        } else if (types == 2) {//针对游戏
+
+        }
+        var newArr = {
+            names: data.names,
+            uuid: uuid,
+            game_id: gameId,
+            game_name: data.game_name,
+            types: types,
+            coin: data.coin,
+            a_coin: data.a_coin,
+            add_time: parseInt(nowTime),
+            memo: data.memo || null,
+            state: state,
+        }
+        game.getAddTicket(newArr, function (result) {
+            result.insertId ? res.json({state: 1}) : res.json({state: 0});
+        })
+    }
+})
 
 function deleteFileByPrefix(bucket, prefix) {
 // @param options 列举操作的可选参数

@@ -2,6 +2,7 @@ var query = require('../config/config');
 var crypto = require('crypto');
 
 var page = require("../DAO/page")
+var uuid = require('node-uuid');
 
 
 var common = {
@@ -16,6 +17,12 @@ var common = {
         var pwd = md5.update(pwd).digest('hex')
         return pwd;
         //return callback(result)
+    },
+
+    getUuid: function (obj) {
+        // var newUuid = uuid.v1()
+        var newUuid = uuid.v4()
+        return newUuid;
     },
 
     /**

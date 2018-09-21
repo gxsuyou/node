@@ -440,6 +440,13 @@ var game = {
             return callback(game_result)
         })
     },
+
+    getAddTicket: function (obj, callback) {
+        var sql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`a_coin`,`add_time`,`memo`,`state`) VALUSE (?,?,?,?,?,?,?,?,?)"
+        query(sql, [obj.names, obj.uuid, obj.game_id, obj.game_name, obj.coin, obj.a_coin, obj.add_time, obj.memo, obj.state], function (result) {
+            return callback(result)
+        })
+    }
 };
 
 module.exports = game;
