@@ -592,7 +592,32 @@ router.get('/upTag', function (req, res) {
     }
 });
 
-router.post('getAddTicket', function (req, res, next) {
+router.get("/uuid", function (req, res, next) {
+    var uuid = common.getUuid();
+
+    res.json({uuid: uuid})
+})
+
+router.get("/getAddTicketGame", function (req, res, next) {
+    var data = req.query;
+    var gameId = data.game_id > 0 ? data.game_id : 0;
+    var sys = data.sys > 0 ? data.sys : 2;
+    var arr = {
+        game_id: gameId,
+        game_name: data.game_name || "通用券",
+        sys: sys,
+    }
+    game.getAddTicketGame(arr, function (result) {
+        if (result.state > 0) {
+            result.insertId ? res.json({state: 1}) : res.json({state: 0});
+        } else {
+            res.json({state: 0, info: "游戏已添加，不用重复添加", result: result})
+        }
+    })
+
+})
+
+router.post('/getAddTicket', function (req, res, next) {
     var data = req.body;
     var date = new Date();
     var nowTime = date.getTime() / 1000;

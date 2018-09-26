@@ -441,6 +441,21 @@ var game = {
         })
     },
 
+    getAddTicketGame: function (obj, callback) {
+        var gameSql = "SELECT * FROM t_ticket_game WHERE game_id=?"
+        query(gameSql, [obj.game_id], function (result) {
+            if (result.length) {
+                return callback({state: 0, result: result})
+            } else {
+                var addSql = "INSERT INTO t_ticket_game (`game_id`,`game_name`,`state`,`sys`) " +
+                    "VALUES (?,?,1,?)"
+                query(addSql, [obj.game_id, obj.game_name, obj.sys], function (result) {
+                    return callback({state: 1, result: result})
+                })
+            }
+        })
+    },
+
     getAddTicket: function (obj, callback) {
         var sql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`a_coin`,`add_time`,`memo`,`state`) VALUSE (?,?,?,?,?,?,?,?,?)"
         query(sql, [obj.names, obj.uuid, obj.game_id, obj.game_name, obj.coin, obj.a_coin, obj.add_time, obj.memo, obj.state], function (result) {
