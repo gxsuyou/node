@@ -207,10 +207,12 @@ router.get("/addHeadGame", function (req, res, next) {
     }
 });
 router.get("/addSlideGame", function (req, res, next) {
-    if (req.query.game_id) {
-        var id = req.query.game_id;
+    var data = req.query;
+    if (data.game_id) {
+        var id = data.game_id;
+        var sys = data.sys > 0 ? data.sys : 2;
         news.getSlideGameByGameId(id, function (result) {
-            !result.length ? news.addSlideGame(id, function (result) {
+            !result.length ? news.addSlideGame(id, sys, function (result) {
                 result.insertId ? res.json({state: 1}) : res.json({state: 0})
             }) : res.json({state: 2})
         })

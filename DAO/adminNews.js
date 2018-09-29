@@ -89,9 +89,9 @@ var news = {
             return callback(result)
         })
     },
-    addSlideGame: function (game_id, callback) {
-        var sql = "insert into t_news_slidegame (game_id) values (?)";
-        query(sql, [game_id], function (result) {
+    addSlideGame: function (game_id, sys, callback) {
+        var sql = "insert into t_news_slidegame (game_id,sys) values (?,?)";
+        query(sql, [game_id, sys], function (result) {
             return callback(result)
         })
     },
