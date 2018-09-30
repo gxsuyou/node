@@ -188,7 +188,7 @@ var common = {
      * @param coin 活动金额
      * @param balance 结算后余额
      * @param types 1：增加，2：扣减
-     * @param b_types 结算类型，SIGNIN 签到，REC 推荐，ESSENCE 精华，BROWSE 浏览数，AGREE 点赞数，UNKNOWN 其他
+     * @param b_types 结算类型，SIGNIN 签到，REC 推荐，ESSENCE 精华，BROWSE 浏览，AGREE 点赞，TICKET 抵用券使用，WITHDRAW 提现，UNKNOWN 其他
      * @param add_time 添加时间
      * @param memo 备注说明
      * @param state 状态 1 已结算，0 未结算

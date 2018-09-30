@@ -845,6 +845,30 @@ router.post("/getUserFeedback", function (req, res, next) {
     }
 });
 
+router.get("/getGameTicket", function (req, res, next) {
+    var date = new Date();
+    var add_time = date.getTime() / 1000;
+    admin.getGameList(function (games) {
+
+        // var ii = 1
+        // for (var i in games) {
+        var uuid = common.getUuid();
+        var arr = {
+            addTime: add_time,
+            uuid: uuid,
+            // game_id: games[i].game_id,
+            // game_name: games[i].game_name,
+        }
+        admin.addTicket(arr, function () {
+
+        })
+        //     ii++
+        // }
+
+        res.json({state: 1})
+    })
+})
+
 
 // router.get("/getChangeFace", function (req, res, next) {
 //     var data = req.query;

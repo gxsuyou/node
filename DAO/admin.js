@@ -441,6 +441,21 @@ var admin = {
             return callback(result);
         })
     },
+
+    getGameList: function (callback) {
+        var sql = "SELECT * FROM t_ticket_game WHERE sys=2 AND id >=1 AND id<500 "
+        query(sql, [], function (result) {
+            return callback(result);
+        })
+    },
+
+    addTicket: function (obj, callback) {
+        var sql = "INSERT INTO t_ticket (names,uuid,game_id,types,coin,a_coin,reback,add_time,sort,state) VALUES (?,?,0,1,20,100,2000,?,0,1)";
+        var names = "20元通用券"
+        query(sql, [names, obj.uuid, obj.game_id, obj.game_name, obj.addTime], function (result) {
+            return callback(result);
+        })
+    }
 };
 
 

@@ -21,6 +21,12 @@ var game = {
             return callback(result)
         })
     },
+    addGameTicket: function (obj, callback) {
+        var sql = "INSERT INTO (game_id, game_name, state, sys) VALUES (?,?,1,?)";
+        query(sql, [obj.id, obj.game_name, obj.sys], function (result) {
+
+        })
+    },
     addGameMsgIos: function (obj, callback) {
         // var sql="call addGameMsg(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         var sql = "UPDATE t_game SET game_title_img=?, icon=? WHERE id=?"
@@ -265,6 +271,10 @@ var game = {
     updateGameIcon: function (id, url, callback) {
         var sql = 'update t_game set icon = ? where id=?';
         query(sql, [url, id], function (result) {
+            var upSql = "UPDATE t_ticket_game SET icon = ? WHERE game_id=?";
+            query(upSql, [url, id], function () {
+
+            })
             return callback(result)
         })
     },

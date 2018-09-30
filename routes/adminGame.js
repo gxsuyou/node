@@ -137,6 +137,16 @@ router.post('/addGameMsg', function (req, res, next) {
                                 }
                             })
                         }
+
+                        var tArr = {
+                            id: result.insertId,
+                            game_name: data.gameName,
+                            sys: data.sys,
+                        }
+                        game.addGameTicket(tArr, function (ticket) {
+
+                        })
+
                         res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片和安装包"})
                     } else {
                         res.json({state: 0, info: "添加失败"})
@@ -596,6 +606,28 @@ router.get("/uuid", function (req, res, next) {
     var uuid = common.getUuid();
 
     res.json({uuid: uuid})
+})
+
+router.get("/getTicketGame", function (req, res, next) {
+    var data = req.query;
+    var sys = data.sys > 0 ? data.sys : 2;
+
+    var p = data.p > 0 ? data.p : 1;
+    var tables = 't_ticket_game';
+    var where = {where: " WHERE sys=" + sys + " ORDER BY id DESC "};
+    common.page(tables, p, where, "", "", function (result) {
+        res.json(result);
+    })
+})
+router.get("/getTicketList", function (req, res, next) {
+    var data = req.query;
+
+    var p = data.p > 0 ? data.p : 1;
+    var tables = 't_ticket';
+    var where = {where: " WHERE game_id=" + data.game_id + " ORDER BY id DESC "};
+    common.page(tables, p, where, "", "", function (result) {
+        res.json(result);
+    })
 })
 
 router.get("/getAddTicketGame", function (req, res, next) {
