@@ -137,16 +137,6 @@ router.post('/addGameMsg', function (req, res, next) {
                                 }
                             })
                         }
-
-                        var tArr = {
-                            id: result.insertId,
-                            game_name: data.gameName,
-                            sys: data.sys,
-                        }
-                        game.addGameTicket(tArr, function (ticket) {
-
-                        })
-
                         res.json({state: 1, info: "添加游戏信息成功，请添加游戏图片和安装包"})
                     } else {
                         res.json({state: 0, info: "添加失败"})
