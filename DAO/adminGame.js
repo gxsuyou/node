@@ -1,4 +1,5 @@
 var query = require('../config/config');
+var common = require('../DAO/common');
 var fs = require('fs');
 var path = require('path');
 var game = {
@@ -460,15 +461,30 @@ var game = {
                 var addSql = "INSERT INTO t_ticket_game (`game_id`,`game_name`,`state`,`sys`) " +
                     "VALUES (?,?,1,?)"
                 query(addSql, [obj.game_id, obj.game_name, obj.sys], function (result) {
+                    var ticketArr = [200, 100, 50, 30]
+                    var ticketCoinArr = [50, 20, 9, 5]
+                    var ticketNameArr = ["50元抵用券", "20元抵用券", "9元抵用券", "5元抵用券"]
+                    for (var i in ticketArr) {
+                        var uuid = common.getUuid();
+                        var a_coin = ticketArr[i]
+                        var coin = ticketCoinArr[i]
+                        var names = ticketNameArr[i]
+                        var addTicketSql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`a_coin`,`add_time`,`memo`,`state`) VALUSE (?,?,?,?,?,?,?,?,?)"
+                        query(addTicketSql, [names, uuid, obj.game_id, obj.game_name, coin, a_coin, obj.addTime, 1], function () {
+
+                        })
+                    }
+
+
                     return callback({state: 1, result: result})
                 })
             }
         })
     },
 
-    getAddTicket: function (obj, callback) {
-        var sql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`a_coin`,`add_time`,`memo`,`state`) VALUSE (?,?,?,?,?,?,?,?,?)"
-        query(sql, [obj.names, obj.uuid, obj.game_id, obj.game_name, obj.coin, obj.a_coin, obj.add_time, obj.memo, obj.state], function (result) {
+    setTicket: function (obj, callback) {
+        var sql = "UPDATE t_ticket SET coin=?, a_coin=?, reback=? state=? WHERE id=?"
+        query(sql, [obj.coin, obj.a_coin, obj.reback, obj.state, obj.id], function (result) {
             return callback(result)
         })
     }

@@ -632,50 +632,36 @@ router.get("/getTicketList", function (req, res, next) {
 
 router.get("/getAddTicketGame", function (req, res, next) {
     var data = req.query;
-    var gameId = data.game_id > 0 ? data.game_id : 0;
-    var sys = data.sys > 0 ? data.sys : 2;
-    var arr = {
-        game_id: gameId,
-        game_name: data.game_name || "通用券",
-        sys: sys,
+    var date = new Date();
+    var nowTime = date.getTime() / 1000;
+    if (data.game_id) {
+        game.gameMsgDetail(data.game_id, function (gameInfo) {
+            if (gameInfo.length) {
+                data.game_name = gameInfo[0].game_name
+                data.sys = gameInfo[0].sys
+                data.addTime = parseInt(nowTime);
+                game.getAddTicketGame(data, function (result) {
+                    result.insertId ? res.json({state: 1}) : res.json({state: 0})
+                })
+            }
+        })
     }
-    game.getAddTicketGame(arr, function (result) {
-        if (result.state > 0) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0});
-        } else {
-            res.json({state: 0, info: "游戏已添加，不用重复添加", result: result})
-        }
-    })
-
 })
 
-router.post('/getAddTicket', function (req, res, next) {
+router.get('/setTicket', function (req, res, next) {
     var data = req.body;
     var date = new Date();
     var nowTime = date.getTime() / 1000;
-    if (data.names && data.coin && data.a_coin) {
-        var gameId = data.game_id > 0 ? data.game_id : 0;
-        var uuid = common.getUuid();
-        var state = data.state > 0 ? data.state : 0;
-        var types = data.types > 0 ? data.types : 1;
-        if (types == 1) {//通用
-
-        } else if (types == 2) {//针对游戏
-
-        }
+    if (data.id && data.coin && data.a_coin && data.reback) {
+        var state = data.state > 0 ? data.state : 1;
         var newArr = {
-            names: data.names,
-            uuid: uuid,
-            game_id: gameId,
-            game_name: data.game_name,
-            types: types,
+            id: data.id,
             coin: data.coin,
             a_coin: data.a_coin,
-            add_time: parseInt(nowTime),
-            memo: data.memo || null,
+            reback: data.reback,
             state: state,
         }
-        game.getAddTicket(newArr, function (result) {
+        game.setTicket(newArr, function (result) {
             result.insertId ? res.json({state: 1}) : res.json({state: 0});
         })
     }
