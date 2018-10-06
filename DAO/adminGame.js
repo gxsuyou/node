@@ -452,9 +452,9 @@ var game = {
             if (result.length) {
                 return callback({state: 0, result: result})
             } else {
-                var addSql = "INSERT INTO t_ticket_game (`game_id`,`game_name`,`state`,`sys`) " +
-                    "VALUES (?,?,1,?)"
-                query(addSql, [obj.game_id, obj.game_name, obj.sys], function (result) {
+                var addSql = "INSERT INTO t_ticket_game (`game_id`,`game_name`,`icon`,`state`,`sys`) " +
+                    "VALUES (?,?,?,1,?)"
+                query(addSql, [obj.game_id, obj.game_name, obj.icon, obj.sys], function (result) {
                     var ticketArr = [200, 100, 50, 30];
                     var ticketCoinArr = [50, 20, 9, 5];
                     var ticketNumArr = [2000, 2000, 2000, 2000];
@@ -465,22 +465,50 @@ var game = {
                         var coin = ticketCoinArr[i];
                         var names = ticketNameArr[i];
                         var num = ticketNumArr[i];
-                        var addTicketSql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`reback`,`num`,`a_coin`,`add_time`,`memo`,`state`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-                        query(addTicketSql, [names, uuid, obj.game_id, obj.game_name, coin, a_coin, coin, num, obj.addTime, 1], function () {
+                        var addTicketSql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`types`,`coin`,`reback`,`num`,`a_coin`,`add_time`,`state`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                        query(addTicketSql, [names, uuid, obj.game_id, obj.game_name, 2, coin, coin, num, a_coin, obj.addTime, 1], function () {
 
                         })
                     }
 
 
-                    return callback({state: 1, result: result})
+                    return callback(result)
+                })
+            }
+        })
+    },
+
+    setTicketInfo: function (obj, callback) {
+        var sql = "SELECT * FROM t_ticket WHERE game_id=? ORDER BY coin DESC";
+        query(sql, [obj.game_id], function (result) {
+            return callback(result)
+        })
+    },
+    delTicketInfo: function (obj, callback) {
+        var gameSql = "SELECT * FROM t_ticket_game WHERE id = ?";
+        query(gameSql, [obj.id], function (result) {
+            if (result.length) {
+                var sql1 = "DELETE FROM t_ticket_user WHERE game_id=?";
+                query(sql1, [result[0].game_id], function () {
+
+                })
+
+                var sql2 = "DELETE FROM t_ticket WHERE game_id=?";
+                query(sql2, [result[0].game_id], function () {
+
+                })
+
+                var sql3 = "DELETE FROM t_ticket_game WHERE game_id=?";
+                query(sql3, [result[0].game_id], function () {
+                    return callback(result)
                 })
             }
         })
     },
 
     setTicket: function (obj, callback) {
-        var sql = "UPDATE t_ticket SET coin=?, a_coin=?, reback=? state=? WHERE id=?"
-        query(sql, [obj.coin, obj.a_coin, obj.reback, obj.state, obj.id], function (result) {
+        var sql = "UPDATE t_ticket SET num=? WHERE id=?"
+        query(sql, [obj.num, obj.id], function (result) {
             return callback(result)
         })
     }

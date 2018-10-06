@@ -630,30 +630,60 @@ router.get("/getAddTicketGame", function (req, res, next) {
                 data.game_name = gameInfo[0].game_name
                 data.sys = gameInfo[0].sys
                 data.addTime = parseInt(nowTime);
+                data.icon = gameInfo[0].icon;
                 game.getAddTicketGame(data, function (result) {
                     result.insertId ? res.json({state: 1}) : res.json({state: 0})
                 })
             }
         })
+    } else {
+        res.json({state: 0});
     }
 })
 
 router.get('/setTicket', function (req, res, next) {
-    var data = req.body;
-    var date = new Date();
-    var nowTime = date.getTime() / 1000;
-    if (data.id && data.coin && data.a_coin && data.reback) {
-        var state = data.state > 0 ? data.state : 1;
-        var newArr = {
-            id: data.id,
-            coin: data.coin,
-            a_coin: data.a_coin,
-            reback: data.reback,
-            state: state,
-        }
-        game.setTicket(newArr, function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0});
+    var data = req.query;
+    if (data.game_id) {
+        game.setTicketInfo(data, function (result) {
+            res.json(result);
         })
+    } else {
+        res.json({state: 0});
+    }
+})
+router.post('/setTicket', function (req, res, next) {
+    var data = req.body;
+    if (data.ids && data.nums) {
+        var t_IdsArr = data.ids.split(",");
+        var t_NumArr = data.nums.split(",");
+        for (var i in  t_IdsArr) {
+            var id = t_IdsArr[i] > 0 ? t_IdsArr[i] : 0;
+            var num = t_NumArr[i] > 0 ? t_NumArr[i] : 0;
+
+            var newArr = {
+                id: parseInt(id),
+                num: num,
+            };
+            game.setTicket(newArr, function (result) {
+
+            })
+        }
+        res.json({state: 1});
+        return false
+    } else {
+        res.json({state: 0});
+    }
+});
+
+router.get("/delTicketGame", function (req, res, next) {
+    var data = req.query;
+    console.log(data)
+    if (data.id) {
+        game.delTicketInfo(data, function (result) {
+            res.json({state: 1});
+        })
+    } else {
+        res.json({state: 0});
     }
 })
 
