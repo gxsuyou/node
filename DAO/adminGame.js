@@ -455,16 +455,18 @@ var game = {
                 var addSql = "INSERT INTO t_ticket_game (`game_id`,`game_name`,`state`,`sys`) " +
                     "VALUES (?,?,1,?)"
                 query(addSql, [obj.game_id, obj.game_name, obj.sys], function (result) {
-                    var ticketArr = [200, 100, 50, 30]
-                    var ticketCoinArr = [50, 20, 9, 5]
-                    var ticketNameArr = ["50元抵用券", "20元抵用券", "9元抵用券", "5元抵用券"]
+                    var ticketArr = [200, 100, 50, 30];
+                    var ticketCoinArr = [50, 20, 9, 5];
+                    var ticketNumArr = [2000, 2000, 2000, 2000];
+                    var ticketNameArr = ["50元抵用券", "20元抵用券", "9元抵用券", "5元抵用券"];
                     for (var i in ticketArr) {
                         var uuid = common.getUuid();
-                        var a_coin = ticketArr[i]
-                        var coin = ticketCoinArr[i]
-                        var names = ticketNameArr[i]
-                        var addTicketSql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`a_coin`,`add_time`,`memo`,`state`) VALUSE (?,?,?,?,?,?,?,?,?)"
-                        query(addTicketSql, [names, uuid, obj.game_id, obj.game_name, coin, a_coin, obj.addTime, 1], function () {
+                        var a_coin = ticketArr[i];
+                        var coin = ticketCoinArr[i];
+                        var names = ticketNameArr[i];
+                        var num = ticketNumArr[i];
+                        var addTicketSql = "INSERT INTO t_ticket (`names`,`uuid`,`game_id`,`game_name`,`coin`,`reback`,`num`,`a_coin`,`add_time`,`memo`,`state`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                        query(addTicketSql, [names, uuid, obj.game_id, obj.game_name, coin, a_coin, coin, num, obj.addTime, 1], function () {
 
                         })
                     }
