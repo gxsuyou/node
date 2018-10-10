@@ -207,8 +207,8 @@ var common = {
 
                 })
 
-                var addLog = "INSERT INTO t_coin_log (`uid`,`coin`,`balance`,`types`,`b_types`,`add_time`,`memo`,`state`) VALUES (?,?,?,?,?,?,?,?)"
-                var arr = [obj.uid, obj.coin, newCoin, obj.types, obj.b_types, add_time, memo, state]
+                var addLog = "INSERT INTO t_coin_log (`uid`,target_memo,`coin`,`balance`,`types`,`b_types`,`add_time`,`memo`,`state`) VALUES (?,?,?,?,?,?,?,?,?)"
+                var arr = [obj.uid, obj.target, obj.coin, newCoin, obj.types, obj.b_types, add_time, memo, state]
                 query(addLog, arr, function (result) {
                     return result;
                 })

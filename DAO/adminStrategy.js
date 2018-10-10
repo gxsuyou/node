@@ -71,7 +71,18 @@ var strategy = {
     hasUserAndGame: function (obj, callback) {
         var admin_sql = "select id from t_admin where id = ?";
         query(admin_sql, [obj.admin], function (admin_result) {
-            return callback(admin_result)
+            if (admin_result.length) {
+                var userSql = "SELECT id FROM t_user WHERE a_id=? AND is_inside=1"
+                query(userSql, [obj.admin], function (userInfo) {
+                    if (userInfo.length) {
+                        return callback(userInfo)
+                    } else {
+                        return callback(admin_result)
+                    }
+                })
+            } else {
+                return callback(admin_result)
+            }
         })
 
     },
