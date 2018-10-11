@@ -81,12 +81,18 @@ router.get('/getStrategyByMsgPage', function (req, res) {
     var tables = ["t_strategy", "t_user"];
     var where = {
         where: "t_strategy.user_id = t_user.id " +
-        "LEFT JOIN t_admin ON t_user.a_id = t_admin.id AND t_strategy.admin = 1 " +
+        "LEFT JOIN t_admin a ON t_user.a_id = a.id AND t_strategy.admin = 1 " +
+        "LEFT JOIN t_admin b ON t_strategy.user_id = b.id AND t_strategy.admin = 1 " +
         "WHERE title LIKE '%" + msg + "%' ORDER BY t_strategy.id DESC"
     };
 
-    var field = "t_strategy.*,t_user.nick_name,t_admin.comment AS admin_comment";
+    var field = "t_strategy.*,t_user.nick_name, a.`comment` AS admin_comment, b.`comment` AS b_comment";
     common.page(tables, p, where, "left", field, function (result) {
+        for (var i in result.result) {
+            if (!result.result[i].admin_comment && result.result[i].b_comment) {
+                result.result[i].admin_comment = result.result[i].b_comment
+            }
+        }
         res.json(result);
     })
 });
