@@ -43,12 +43,23 @@ Date.prototype.Format = function (formatStr) {
 router.get("/getUserFind", function (req, res, next) {
     var data = req.query;
     if (data.user) {
-        user.getUserInfo(data, function (result) {
+        user.getBindingInfo(data, function (result) {
             res.json(result);
         })
     }
 });
 
+/**
+ * 绑定前台帐号初始化
+ */
+router.get("/getBindingInfo", function (req, res, next) {
+    var data = req.query;
+    if (data.id) {
+        user.getBindingInfo(data, function (result) {
+            res.json(result);
+        })
+    }
+});
 /**
  * 绑定前台帐号
  */
@@ -56,8 +67,10 @@ router.get("/getUserBinding", function (req, res, next) {
     var data = req.query;
     if (data.user && data.id) {
         user.getBinding(data, function (result) {
-            result.insertId ? res.json({state: 1}) : res.json({state: 0});
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0});
         })
+    } else {
+        res.json({state: 0})
     }
 });
 

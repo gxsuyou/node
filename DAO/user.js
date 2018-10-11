@@ -12,12 +12,18 @@ var user = {
             return callback(userInfo);
         })
     },
+    getBindingInfo: function (obj, callback) {
+        var sqlUser = "SELECT id,nick_name,only_id,tel,a_id FROM t_user WHERE a_id = ? AND is_inside = 1";
+        query(sqlUser, [obj.id], function (userInfo) {
+            return callback(userInfo);
+        })
+    },
     getBinding: function (obj, callback) {
-        var sqlUser = "SELECT * FROM t_user WHERE only_id=? OR tel=? OR nick_name=?";
-        query(sqlUser, [obj.user, obj.user, obj.user], function (userInfo) {
+        var sqlUser = "SELECT * FROM t_user WHERE only_id=? AND a_id <> ? AND is_inside <> 1";
+        query(sqlUser, [obj.user, obj.id], function (userInfo) {
             if (userInfo.length) {
-                var upSql = "UPDATE t_user SET is_inside=1, a_id=?";
-                query(upSql, [obj.id], function (result) {
+                var upSql = "UPDATE t_user SET is_inside=1, a_id=? WHERE only_id=?";
+                query(upSql, [obj.id, obj.user], function (result) {
                     return callback(result);
                 })
             } else {
