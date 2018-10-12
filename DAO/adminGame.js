@@ -511,6 +511,19 @@ var game = {
         query(sql, [obj.num, obj.id], function (result) {
             return callback(result)
         })
+    },
+    setTicket2: function (obj, callback) {
+        var sqlGame = "SELECT * FROM t_ticket WHERE game_id=? AND num>0"
+        query(sqlGame, [obj.game_id], function (tGame) {
+            if (!tGame.length) {
+                var upTGame = "UPDATE t_ticket_game SET state=0 WHERE game_id=?"
+                query(upTGame, [obj.game_id], function (result) {
+                    return callback(result)
+                })
+            } else {
+                return callback(tGame)
+            }
+        })
     }
 };
 

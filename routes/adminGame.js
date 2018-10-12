@@ -668,6 +668,11 @@ router.post('/setTicket', function (req, res, next) {
 
             })
         }
+
+        game.setTicket2(data, function (result) {
+
+        })
+
         res.json({state: 1});
         return false
     } else {
