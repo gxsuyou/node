@@ -663,15 +663,12 @@ router.post('/setTicket', function (req, res, next) {
             var newArr = {
                 id: parseInt(id),
                 num: num,
+                game_id: data.game_id,
             };
             game.setTicket(newArr, function (result) {
 
             })
         }
-
-        game.setTicket2(data, function (result) {
-
-        })
 
         res.json({state: 1});
         return false
