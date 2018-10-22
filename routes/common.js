@@ -10,7 +10,7 @@ var getStart = date.setHours(0, 0, 0, 0) / 1000;//今天0时
 var getEnd = getStart + 86400 - 1;//明天的0时减1秒
 
 /**
- * 每日0点自动执行添加下载日志
+ * demo：每日0点自动执行添加下载日志
  */
 router.get("/getDownLoadDay", function (req, res, next) {
     /**
@@ -78,35 +78,35 @@ router.get("/getDownLoadUp", function (req, res, next) {
 })
 
 /**
- * 用户登录日志
+ * demo：用户登录日志
  */
-// router.get("/getUserLog", function (req, res, next) {
-//     /**
-//      * 请求url：http://域名/common/getUserLog?uid=*type=2
-//      */
-//     var data = req.query;
-//     if (!data.uid || !data.type) {
-//         res.json({state: 1});
-//         return false;
-//     }
-//     var msg = {
-//         uid: data.uid,
-//         start: getStart,
-//         end: getEnd
-//     }
-//     common.hasUserLog(msg, function (result_user) {
-//         if (!result_user.length) {
-//             var userMsg = {
-//                 uid: data.uid,
-//                 addTime: getTime
-//             }
-//             common.getUserLogAdd(userMsg, function (result) {
-//                 result.insertId ? res.json({state: 1}) : res.json({state: 0})
-//             })
-//         } else {
-//             res.json({state: 1})
-//         }
-//     })
-// });
+router.get("/getUserLog", function (req, res, next) {
+    /**
+     * 请求url：http://域名/common/getUserLog?uid=*type=2
+     */
+    var data = req.query;
+    if (!data.uid || !data.type) {
+        res.json({state: 1});
+        return false;
+    }
+    var msg = {
+        uid: data.uid,
+        start: getStart,
+        end: getEnd
+    }
+    common.hasUserLog(msg, function (result_user) {
+        if (!result_user.length) {
+            var userMsg = {
+                uid: data.uid,
+                addTime: getTime
+            }
+            common.getUserLogAdd(userMsg, function (result) {
+                result.insertId ? res.json({state: 1}) : res.json({state: 0})
+            })
+        } else {
+            res.json({state: 1})
+        }
+    })
+});
 
 module.exports = router;
