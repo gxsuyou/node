@@ -119,6 +119,12 @@ var news = {
             return callback(result)
         })
     },
+    setHeadGameById: function (obj, callback) {
+        var sql = "UPDATE t_news_headgame SET img = ? WHERE id =?"
+        query(sql, [obj.img, obj.id], function (result) {
+            return callback(result)
+        })
+    },
     deleteHeadGameById: function (id, callback) {
         var sql = "delete from t_news_headgame where id=?";
         query(sql, [id], function (result) {

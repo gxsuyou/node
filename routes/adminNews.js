@@ -190,7 +190,7 @@ router.get("/deleteNewsById", function (req, res, next) {
             }
         })
     } else {
-        res.json({state: 0});
+        res.json({state: 0})
     }
 });
 router.get("/addHeadGame", function (req, res, next) {
@@ -259,6 +259,14 @@ router.get("/deleteSlideGameById", function (req, res) {
         })
     } else {
         res.json({state: 0})
+    }
+});
+router.get("/setHeadGameById", function (req, res, next) {
+    var data = req.query;
+    if (data.id && data.img) {
+        news.setHeadGameById(data, function (result) {
+            result.affectedRows ? res.json({state: 1}) : res.json({state: 0});
+        })
     }
 });
 router.get("/deleteHeadGameById", function (req, res) {

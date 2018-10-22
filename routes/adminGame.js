@@ -592,12 +592,6 @@ router.get('/upTag', function (req, res) {
     }
 });
 
-router.get("/uuid", function (req, res, next) {
-    var uuid = common.getUuid();
-
-    res.json({uuid: uuid})
-})
-
 router.get("/getTicketGame", function (req, res, next) {
     var data = req.query;
     var sys = data.sys > 0 ? data.sys : 2;

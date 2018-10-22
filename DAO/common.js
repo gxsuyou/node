@@ -101,19 +101,6 @@ var common = {
         });
     },
 
-    postMsgcheck: function (post, callback) {
-        var info = ""
-        var msg = {state: 1};
-        for (var i in post) {
-            if (post[i] == null) {
-                info = "提交参数不能为空";
-                msg = {state: 0, info: info}
-                break;
-            }
-        }
-        return callback(msg);
-    },
-
     getGameSearch: function (obj, callback) {
         var sysSql = obj.sys > 0 ? " AND a.sys=" + obj.sys : "";
         var sql = 'SELECT a.*,FROM_UNIXTIME(a.add_time,"%Y-%m-%d") as add_time,b.comment ' +

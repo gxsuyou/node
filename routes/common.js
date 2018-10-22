@@ -5,9 +5,9 @@ var fs = require("fs");
 var common = require('../DAO/common');
 //时间
 var date = new Date();
+var getTime = date.getTime() / 1000;
 var getStart = date.setHours(0, 0, 0, 0) / 1000;//今天0时
 var getEnd = getStart + 86400 - 1;//明天的0时减1秒
-var getTime = date.getTime() / 1000;
 
 /**
  * 每日0点自动执行添加下载日志
@@ -60,21 +60,21 @@ router.get("/getDownLoadUp", function (req, res, next) {
         sys: data.sys || 2,
         num: data.num || 1,
     }
-    common.hasDownLoadDay(msg, function (has) {//查询今天的记录是否已经生成
-        if (has.length) {
-            var upData = {
-                id: has[0].id,
-                num: Number(has[0].num) + 1
-            };
-            common.getDownLoadDayUp(upData, function (result) {
-                result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
-            })
-        } else {//如果没有则添加
-            common.getDownLoadDay(msg, function (result) {
-                result.insertId ? res.json({state: 1}) : res.json({state: 0})
-            })
-        }
+    // common.hasDownLoadDay(msg, function (has) {//查询今天的记录是否已经生成
+    //     if (has.length) {
+    //         var upData = {
+    //             id: has[0].id,
+    //             num: Number(has[0].num) + 1
+    //         };
+    //         common.getDownLoadDayUp(upData, function (result) {
+    //             result.affectedRows ? res.json({state: 1}) : res.json({state: 0})
+    //         })
+    //     } else {//如果没有则添加
+    common.getDownLoadDay(msg, function (result) {
+        result.insertId ? res.json({state: 1}) : res.json({state: 0})
     })
+    //     }
+    // })
 })
 
 /**
