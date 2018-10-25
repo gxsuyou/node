@@ -29,7 +29,7 @@ var rmdirSync = (function () {
 
     return function (dir, cb) {
         cb = cb || function () {
-            };
+        };
         var dirs = [];
 
         try {
@@ -89,7 +89,9 @@ router.get('/addH5', function (req, res, next) {
 router.get("/getH5", function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var tables = "t_h5";
-    var where = {where:"order by id desc"};
+    var where = {
+        where: " id >0 order by id desc"
+    };
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
@@ -115,6 +117,7 @@ router.post("/editH5", function (req, res, next) {
         })
     }
 });
+
 function h5UploadQiniu(path, bucket, name, id, key) {
     qiniu.uploadQiniu(path, bucket, name, function (respInfo, respBody) {
         if (respInfo.statusCode == 200) {
@@ -132,4 +135,5 @@ function h5UploadQiniu(path, bucket, name, id, key) {
         }
     });
 }
+
 module.exports = router;

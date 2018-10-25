@@ -78,15 +78,15 @@ router.get('/getStrategyByMsg', function (req, res) {
 router.get('/getStrategyByMsgPage', function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var msg = req.query.msg;
-    var tables = ["t_strategy", "t_user"];
+    var tables = ["t_strategy", "t_user b", "t_admin c", "t_admin"];
     var where = {
-        where: "t_strategy.user_id = t_user.id " +
-        "LEFT JOIN t_admin a ON t_user.a_id = a.id AND t_strategy.admin = 1 " +
-        "LEFT JOIN t_admin b ON t_strategy.user_id = b.id AND t_strategy.admin = 1 " +
-        "WHERE title LIKE '%" + msg + "%' ORDER BY t_strategy.id DESC"
+        left1: " t_strategy.user_id = b.id ",
+        left2: " b.a_id = c.id AND t_strategy.admin = 1 ",
+        left_moer: " LEFT JOIN t_admin d ON t_strategy.user_id = d.id AND t_strategy.admin = 1 ",
+        where: " t_strategy.title LIKE '%" + msg + "%' ORDER BY t_strategy.id DESC"
     };
 
-    var field = "t_strategy.*,t_user.nick_name, a.`comment` AS admin_comment, b.`comment` AS b_comment";
+    var field = "t_strategy.*,b.nick_name, c.`comment` AS admin_comment, d.`comment` AS b_comment ";
     common.page(tables, p, where, "left", field, function (result) {
         for (var i in result.result) {
             if (!result.result[i].admin_comment && result.result[i].b_comment) {

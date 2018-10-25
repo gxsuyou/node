@@ -455,7 +455,25 @@ var admin = {
         query(sql, [names, obj.uuid, obj.game_id, obj.game_name, obj.addTime], function (result) {
             return callback(result);
         })
-    }
+    },
+    getConfig: function (obj, callback) {
+        var sql = "SELECT * FROM t_config"
+        query(sql, [], function (result) {
+            return callback(result);
+        })
+    },
+    getConfigInfo: function (obj, callback) {
+        var sql = "SELECT * FROM t_config WHERE id=? AND types=?"
+        query(sql, [obj.id, obj.types], function (result) {
+            return callback(result);
+        })
+    },
+    setConfigInfo: function (obj, objString, callback) {
+        var sql = "UPDATE t_config SET values=? WHERE id=? AND types=?"
+        query(sql, [objString, obj.id, obj.types], function (result) {
+            return callback(result);
+        })
+    },
 };
 
 

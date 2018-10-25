@@ -63,13 +63,12 @@ router.get('/gameAdmin', function (req, res, next) {
         s_where = " AND t_game." + gameSortType + " <> 0 "
     }
 
-    var tables = ['t_game', 't_admin'];
+    var tables = ['t_game', 't_admin b'];
     var where = {
-        where: "t_game.admin = t_admin.id WHERE t_game.sys = " + sys + s_where + " order by " + sort,
-        sys: sys,
-        sortType: gameSortType
+        left1: " t_game.admin = b.id ",
+        where: " t_game.sys = " + sys + s_where + " order by " + sort,
     };
-    var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,t_admin.comment";
+    var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,b.comment";
 
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
@@ -382,7 +381,9 @@ router.get('/addSubject', function (req, res) {
 router.get('/getSubject', function (req, res) {
     var p = 1;
     var tables = 't_subject';
-    var where = {where: " order by id desc "};
+    var where = {
+        where: " id>0 order by id desc "
+    };
     if (req.query.p > 0) {
         p = req.query.p;
     }
@@ -453,7 +454,9 @@ router.get('/getTag', function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
 
     var tables = 't_tag';
-    var where = {where: " ORDER BY active DESC, id DESC "};
+    var where = {
+        where: " id>0 ORDER BY active DESC, id DESC "
+    };
 
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
@@ -598,7 +601,7 @@ router.get("/getTicketGame", function (req, res, next) {
 
     var p = data.p > 0 ? data.p : 1;
     var tables = 't_ticket_game';
-    var where = {where: " WHERE sys=" + sys + " ORDER BY id DESC "};
+    var where = {where: " id>0 AND sys=" + sys + " ORDER BY id DESC "};
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })

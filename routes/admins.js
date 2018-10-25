@@ -9,6 +9,7 @@ var resource = PATH.resource;
 var admin = require('../DAO/admin');
 var common = require('../DAO/common');
 var page = require('../DAO/page');
+var querystring = require('querystring');
 
 //qiniu
 var qiniu = require('qiniu');
@@ -401,7 +402,7 @@ router.get('/active', function (req, res, next) {
     var sys = req.query.sys > 0 ? req.query.sys : 2;
     var tables = 't_activity';
     var where = {
-        where: " WHERE sys=" + sys + " order by id desc ",
+        where: " sys=" + sys + " order by id desc ",
         sys: sys
     };
 
@@ -756,15 +757,16 @@ router.get("/getFeedBack", function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var tables = [
         't_feedback',
-        't_user',
+        't_user b',
         // 't_feedback_img'
     ];
     var where = {
+        left1: " t_feedback.user_id = b.id ",
         // left_on: "t_feedback.id = t_feedback_img.feedback_id ",
-        where: "t_feedback.user_id = t_user.id ORDER BY t_feedback.id DESC",
+        where: " t_feedback.id>0 ORDER BY t_feedback.id DESC",
     };
 
-    var field = "t_feedback.*,t_user.nick_name";
+    var field = "t_feedback.*,b.nick_name";
 
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
@@ -869,7 +871,6 @@ router.get("/getGameTicket", function (req, res, next) {
     })
 })
 
-
 // router.get("/getChangeFace", function (req, res, next) {
 //     var data = req.query;
 //     if (data.content) {
@@ -878,6 +879,75 @@ router.get("/getGameTicket", function (req, res, next) {
 //         })
 //     }
 // })
+/**
+ * 初始化配置参数
+ */
+router.get("/getConfigInfo", function (req, res, next) {
+    var data = req.query;
+    admin.getConfig(data, function (result) {
+        for (var i in result) {
+            result[i].setType = querystring.parse(result[i].types);
+            result[i].setVal = querystring.parse(result[i].values);
+            result[i].setVal.setTime = timestampToTime(result[i].setVal.upTime)
+        }
+        res.json(result)
+    })
+})
+
+/**
+ * 修改配置参数
+ */
+router.post("/setConfigInfo", function (req, res, next) {
+    //参数 id=*&types=*&version=*&totalSize=*
+    var data = req.body;
+    var date = new Date();
+    var now = date.getTime() / 1000;
+    if (data.id) {
+        // data.typesString = querystring.stringify(data.setType);
+        admin.getConfigInfo(data, function (config) {
+            if (config.length) {
+                switch (data.setType.type) {
+                    case "APP_SET":
+                        setApp(data, now);
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                res.json({state: 0, info: "找不到配置信息"})
+            }
+
+        })
+    } else {
+        res.json({state: 0, info: "参数错误"})
+    }
+})
+
+function setApp(data, now) {
+    var newArr = {
+        Version: data.version,
+        totalSize: data.totalSize,
+        upTime: parseInt(now),
+    }
+    data.values = querystring.stringify(newArr);
+    admin.setConfigInfo(data, newArr, function (result) {
+
+    });
+    return true;
+}
+
+
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var i = date.getMinutes() + ':';
+    var s = date.getSeconds();
+    // return Y + M + D + h + i + s;
+    return Y + M + D;
+}
 
 function getDate(index) {
     var date = new Date(); //当前日期

@@ -57,15 +57,15 @@ var qiniuBucket = {
 
 router.get("/getNewsByPage", function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
-    var tables = ['t_news', 't_user'];
+    var tables = ['t_news', 't_user b', 't_admin c'];
     var where = {
-        where: "t_news.add_user = t_user.id " +
-        "LEFT JOIN t_admin ON t_news.add_admin = t_admin.id " +
-        "ORDER BY t_news.up DESC, t_news.id DESC "
+        left1: " t_news.add_user = b.id  ",
+        left2: " t_news.add_admin = c.id  ",
+        where: " t_news.id > 0 ORDER BY t_news.up DESC, t_news.id DESC "
     };
 
     var field = "t_news.id,t_news.title,t_news.img,t_news.agree,t_news.`comment`,t_news.browse," +
-        "t_news.up,FROM_UNIXTIME(t_news.add_time,'%Y-%m-%d %H:%i') as add_time,t_user.nick_name,t_admin.comment AS admin_comment"
+        "t_news.up,FROM_UNIXTIME(t_news.add_time,'%Y-%m-%d %H:%i') as add_time,b.nick_name,c.comment AS admin_comment"
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
@@ -224,14 +224,13 @@ router.get("/getHeadGame", function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var sys = req.query.sys > 0 ? req.query.sys : 2;
 
-    var tables = ["t_news_headGame", "t_game"];
+    var tables = ["t_news_headGame", "t_game b"];
     var where = {
-        where: " t_news_headGame.`game_id`=t_game.`id` " +
-        "WHERE t_game.sys = " + sys + " order by t_news_headGame.id desc ",
-        sys: sys,
+        left1: " t_news_headGame.`game_id`=b.`id` ",
+        where: " t_news_headGame.sys = " + sys + " order by t_news_headGame.id desc ",
     };
 
-    var field = "t_game.game_name,t_game.sys,t_news_headGame.id";
+    var field = "b.game_name,b.sys,t_news_headGame.id";
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
@@ -240,14 +239,13 @@ router.get("/getSlideGame", function (req, res) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var sys = req.query.sys > 0 ? req.query.sys : 2;
 
-    var tables = ["t_news_slideGame", "t_game"];
+    var tables = ["t_news_slideGame", "t_game b"];
     var where = {
-        where: "t_news_slideGame.`game_id`=t_game.`id` " +
-        "WHERE t_game.sys=" + sys + " order by t_news_slideGame.id desc",
-        sys: sys,
+        left1: " t_news_slideGame.`game_id`=b.`id` ",
+        where: " t_news_slideGame.sys=" + sys + " order by t_news_slideGame.id desc",
     };
 
-    var field = "t_game.game_name,t_game.sys,t_news_slideGame.id";
+    var field = "b.game_name,b.sys,t_news_slideGame.id";
     common.page(tables, p, where, "left", field, function (result) {
         res.json(result);
     })
