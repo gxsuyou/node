@@ -3,6 +3,7 @@ var router = express.Router();
 var path = require("path");
 var fs = require("fs");
 var common = require('../DAO/common');
+var querystring = require('querystring');
 //时间
 var date = new Date();
 var getTime = date.getTime() / 1000;
@@ -108,5 +109,37 @@ router.get("/getUserLog", function (req, res, next) {
         }
     })
 });
+
+router.get("/getAORIVersion", function (req, res, next) {
+    var data = req.query;
+    if (data.type && data.platform) {
+        var newArr = {
+            type: data.type,
+            platform: data.platform,
+        }
+        var newString = querystring.stringify(newArr);
+        common.getAppPlatform(newString, function (result) {
+            if (result.length) {
+                result[i].setType = querystring.parse(result[i].types);
+                result[i].setVal = querystring.parse(result[i].values);
+                result[i].setVal.setTime = timestampToTime(result[i].setVal.upTime)
+            }
+        })
+    } else {
+        res.json({state: 0})
+    }
+})
+
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var i = date.getMinutes() + ':';
+    var s = date.getSeconds();
+    // return Y + M + D + h + i + s;
+    return Y + M + D;
+}
 
 module.exports = router;

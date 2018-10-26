@@ -55,18 +55,18 @@ router.get('/gameAdmin', function (req, res, next) {
     var gameSortType = req.query.sortType ? req.query.sortType : "null";
     // var sys = req.query.sys > 0 ? " AND t_game.sys = " + req.query.sys : " AND t_game.sys = " + req.query.sys;
     var sys = req.query.sys > 0 ? req.query.sys : 2;
-    var sort = " t_game.id desc,t_game.add_time desc ";
+    var sort = " t_game.id DESC,t_game.add_time DESC ";
     var s_where = "";
 
     if (gameSortType != "null") {
-        sort = " t_game." + gameSortType + " desc ";
+        sort = " t_game." + gameSortType + " DESC ";
         s_where = " AND t_game." + gameSortType + " <> 0 "
     }
 
     var tables = ['t_game', 't_admin b'];
     var where = {
         left1: " t_game.admin = b.id ",
-        where: " t_game.sys = " + sys + s_where + " order by " + sort,
+        where: " t_game.sys = " + sys + s_where + " ORDER BY " + sort,
     };
     var field = "t_game.*,FROM_UNIXTIME(t_game.add_time,'%Y-%m-%d') as add_time,b.comment";
 
@@ -382,7 +382,7 @@ router.get('/getSubject', function (req, res) {
     var p = 1;
     var tables = 't_subject';
     var where = {
-        where: " id>0 order by id desc "
+        where: " id>0 ORDER BY id DESC "
     };
     if (req.query.p > 0) {
         p = req.query.p;
@@ -602,16 +602,6 @@ router.get("/getTicketGame", function (req, res, next) {
     var p = data.p > 0 ? data.p : 1;
     var tables = 't_ticket_game';
     var where = {where: " id>0 AND sys=" + sys + " ORDER BY id DESC "};
-    common.page(tables, p, where, "", "", function (result) {
-        res.json(result);
-    })
-})
-router.get("/getTicketList", function (req, res, next) {
-    var data = req.query;
-
-    var p = data.p > 0 ? data.p : 1;
-    var tables = 't_ticket';
-    var where = {where: " WHERE game_id=" + data.game_id + " ORDER BY id DESC "};
     common.page(tables, p, where, "", "", function (result) {
         res.json(result);
     })

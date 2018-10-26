@@ -227,7 +227,7 @@ router.get("/getHeadGame", function (req, res) {
     var tables = ["t_news_headGame", "t_game b"];
     var where = {
         left1: " t_news_headGame.`game_id`=b.`id` ",
-        where: " t_news_headGame.sys = " + sys + " order by t_news_headGame.id desc ",
+        where: " t_news_headGame.sys = " + sys + " ORDER BY t_news_headGame.id DESC ",
     };
 
     var field = "b.game_name,b.sys,t_news_headGame.id";
@@ -242,7 +242,7 @@ router.get("/getSlideGame", function (req, res) {
     var tables = ["t_news_slideGame", "t_game b"];
     var where = {
         left1: " t_news_slideGame.`game_id`=b.`id` ",
-        where: " t_news_slideGame.sys=" + sys + " order by t_news_slideGame.id desc",
+        where: " t_news_slideGame.sys=" + sys + " ORDER BY t_news_slideGame.id DESC",
     };
 
     var field = "b.game_name,b.sys,t_news_slideGame.id";

@@ -90,7 +90,7 @@ router.get("/getH5", function (req, res, next) {
     var p = req.query.p > 0 ? req.query.p : 1;
     var tables = "t_h5";
     var where = {
-        where: " id >0 order by id desc"
+        where: " id >0 ORDER BY id DESC"
     };
 
     common.page(tables, p, where, "", "", function (result) {

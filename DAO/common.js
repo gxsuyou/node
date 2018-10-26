@@ -204,6 +204,13 @@ var common = {
 
     },
 
+    getAppPlatform: function (obj, callback) {
+        var sql = "SELECT * FROM t_config WHRER type=?"
+        query(sql, [obj], function (result) {
+            return callback(result);
+        })
+    }
+
 }
 
 module.exports = common;

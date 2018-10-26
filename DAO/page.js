@@ -37,10 +37,10 @@ var page = {
                     var LEFT1 = " LEFT JOIN " + tables[1] + " ON " + where.left1 + " ";
                     var LEFT2 = "";
                     if (tables[2]) {//第三个表
-                        LEFT2 = "LEFT JOIN  " + tables[2] + " ON " + where.left2 + " ";
+                        LEFT2 = " LEFT JOIN " + tables[2] + " ON " + where.left2 + " ";
                     }
-                    var FREE_LEFT = tables[3] ? where.left_moer : ""
-                    sql_1 = "SELECT " + fields + " FROM " + tables[0] + " " + LEFT1 + LEFT2 + FREE_LEFT +
+                    var LEFT_MOER = tables[3] ? where.left_moer : ""
+                    sql_1 = "SELECT " + fields + " FROM " + tables[0] + " " + LEFT1 + LEFT2 + LEFT_MOER +
                         " WHERE " + where.where + " limit ?,?";
 
                 }

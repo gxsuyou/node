@@ -402,7 +402,7 @@ router.get('/active', function (req, res, next) {
     var sys = req.query.sys > 0 ? req.query.sys : 2;
     var tables = 't_activity';
     var where = {
-        where: " sys=" + sys + " order by id desc ",
+        where: " sys=" + sys + " ORDER BY id DESC ",
         sys: sys
     };
 
