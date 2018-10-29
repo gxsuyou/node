@@ -89,7 +89,7 @@ var strategy = {
     addStratgy: function (obj, callback) {
         var sql = "INSERT INTO t_strategy (user_id,title,detail,game_name,add_time,admin,top_img_src) " +
             "VALUES (?,?,?,?,?,?,?)"
-        var arr = [obj.admin, obj.title, obj.detail, obj.game_name, obj.add_time, obj.adminstatus, obj.img_src];
+        var arr = [obj.uid, obj.title, obj.detail, obj.game_name, obj.add_time, obj.adminstatus, obj.img_src];
         query(sql, arr, function (result) {
             return callback(result);
             //if (result.insertId) {

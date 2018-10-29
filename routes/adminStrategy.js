@@ -106,6 +106,8 @@ router.post('/addStrategy', function (req, res, next) {
                 data.add_time = parseInt(date.getTime() / 1000);
                 data.adminstatus = 1;
                 data.img_src = "http://img.oneyouxi.com.cn/" + data.img_src;
+                data.uid = result[0].id
+                console.log(data)
                 strategy.addStratgy(data, function (add_result) {
                     add_result.insertId ? res.json({state: 1, id: add_result.insertId}) : res.json({state: 0})
                 })
