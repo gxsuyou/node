@@ -120,9 +120,11 @@ router.get("/getAORIVersion", function (req, res, next) {
         var newString = querystring.stringify(newArr);
         common.getAppPlatform(newString, function (result) {
             if (result.length) {
-                result[i].setType = querystring.parse(result[i].types);
-                result[i].setVal = querystring.parse(result[i].values);
-                result[i].setVal.setTime = timestampToTime(result[i].setVal.upTime)
+                result[0].setType = querystring.parse(result[0].types);
+                result[0].setVal = querystring.parse(result[0].values);
+                result[0].setVal.setTime = timestampToTime(result[0].setVal.upTime)
+            } else {
+                res.json({state: 0})
             }
         })
     } else {
