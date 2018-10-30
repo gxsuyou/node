@@ -205,7 +205,7 @@ var common = {
     },
 
     getAppPlatform: function (obj, callback) {
-        var sql = "SELECT * FROM t_config WHRER type=?"
+        var sql = "SELECT * FROM t_config WHERE types=?"
         query(sql, [obj], function (result) {
             return callback(result);
         })
