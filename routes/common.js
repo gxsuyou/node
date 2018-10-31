@@ -123,6 +123,8 @@ router.get("/getAORIVersion", function (req, res, next) {
                 result[0].setType = querystring.parse(result[0].types);
                 result[0].setVal = querystring.parse(result[0].values);
                 result[0].setVal.setTime = timestampToTime(result[0].setVal.upTime)
+
+                res.json(result[0])
             } else {
                 res.json({state: 0})
             }
