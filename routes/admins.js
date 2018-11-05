@@ -926,7 +926,8 @@ router.post("/setConfigInfo", function (req, res, next) {
 function setApp(data, now) {
     var newArr = {
         Version: data.version,
-        totalSize: data.totalSize,
+        wgtSize: data.wgtSize,
+        appSize: data.appSize,
         upTime: parseInt(now),
     }
     data.values = querystring.stringify(newArr);

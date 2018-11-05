@@ -110,6 +110,9 @@ router.get("/getUserLog", function (req, res, next) {
     })
 });
 
+/**
+ * 在官网上展示的版本号
+ */
 router.get("/getAORIVersion", function (req, res, next) {
     var data = req.query;
     if (data.type && data.platform) {
